@@ -5,12 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="custardpy",
-    version="0.1.2",
+    version="0.1.7",
     license="GPL3.0",
     install_requires=[
-        "os",
-        "sys",
-        "argparse>=1.0",
         "numpy>=1.18",
         "pandas>=1.3.0",
         "scipy>=1.3",
