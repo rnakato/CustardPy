@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
-from loadData import loadDenseMatrix
+from custardpy.loadData import loadDenseMatrix
 
 def calceach(mat, squaresize, resolution):
     matsize = int(squaresize / resolution)

@@ -3,7 +3,7 @@ import scipy.stats as sp
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import linear_model
-from module.HiCmodule import *
+#from module.HiCmodule import *
 
 class MAdata: # log, asinhを仮定
     def __init__(self, mat1, mat2):
@@ -27,7 +27,7 @@ class MAdata: # log, asinhを仮定
 
         self.Aadjust = self.Alim
         self.Madjust = self.Mlim - self.clf.coef_ * self.Alim - self.clf.intercept_
-        
+
     def plot(self, ax, label, *, isMAnorm=False, isLineFitted=False):
         from matplotlib import lines
 #        if plottype == "trim":
@@ -42,7 +42,7 @@ class MAdata: # log, asinhを仮定
         else:
             ax.hlines(y=0, xmin=0, xmax=8, colors='r', linewidths=2)
         ax.set_title(label)
-        
+
     def plotMAnorm(self):
         fig = plt.figure(figsize=(14, 3))
         ax1 = fig.add_subplot(1,3,1)

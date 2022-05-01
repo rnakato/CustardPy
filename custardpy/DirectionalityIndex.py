@@ -4,8 +4,8 @@
 import numpy as np
 import pandas as pd
 import argparse
-from loadData import loadDenseMatrix
-from InsulationScore import MultiInsulationScore
+from custardpy.loadData import loadDenseMatrix
+from custardpy.InsulationScore import MultiInsulationScore
 
 def calcDI(mat, resolution, *, distance=1000000):
     def getDI(mat, i, len):

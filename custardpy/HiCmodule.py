@@ -5,10 +5,9 @@ import scipy.stats as sp
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-from InsulationScore import *
-from DirectionalityIndex import *
-from loadData import loadDenseMatrix
-from generateCmap import *
+from custardpy.InsulationScore import *
+from custardpy.DirectionalityIndex import *
+from custardpy.loadData import loadDenseMatrix
 
 def getNonZeroMatrix(A, lim_pzero):
     A = A.fillna(0)

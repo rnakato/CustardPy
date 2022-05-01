@@ -4,14 +4,12 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
-from HiCmodule import JuicerMatrix
-from DirectionalityIndex import getDirectionalityIndexOfMultiSample
-from InsulationScore import getInsulationScoreOfMultiSample
-from generateCmap import *
-from loadData import *
-from PlotModule import *
-from DirectionalFreqRatio import *
-#import pysnooper
+from custardpy.HiCmodule import JuicerMatrix
+from custardpy.DirectionalityIndex import getDirectionalityIndexOfMultiSample
+from custardpy.InsulationScore import getInsulationScoreOfMultiSample
+from custardpy.loadData import *
+from custardpy.PlotModule import *
+from custardpy.DirectionalFreqRatio import *
 
 def mergeState(df):
     length = df.shape[0]
