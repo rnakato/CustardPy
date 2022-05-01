@@ -5,7 +5,7 @@ import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
 from HiCmodule import JuicerMatrix
-from generateCmap import *
+from custardpy.generateCmap import *
 from PlotModule import *
 from loadData import *
 

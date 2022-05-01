@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import ndimage
 from HiCmodule import JuicerMatrix
-from generateCmap import *
+from custardpy.generateCmap import *
 from PlotModule import *
 from DirectionalFreqRatio import *
 

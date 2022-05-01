@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from HiCmodule import JuicerMatrix
 from InsulationScore import getInsulationScoreOfMultiSample
-from generateCmap import *
+from custardpy.generateCmap import *
 from loadData import *
 from PlotModule import *
 

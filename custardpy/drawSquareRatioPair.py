@@ -7,7 +7,7 @@ import seaborn as sns
 import sys
 from scipy import ndimage
 from HiCmodule import JuicerMatrix
-from generateCmap import *
+from custardpy.generateCmap import *
 from PlotModule import *
 from DirectionalFreqRatio import *
 
