@@ -1,6 +1,6 @@
 # Custardpy
 
-Hi-C analysis tools by Python3
+Hi-C analysis tools by Python3 and Docker
 
 ## QC
 ### distance_vs_count.Juicer
