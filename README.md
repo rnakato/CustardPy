@@ -2,6 +2,18 @@
 
 Hi-C analysis tools by Python3 and Docker
 
+
+## Requirements
+
+The following are required before installing CustardPy:
+
+- Python 3.7+
+
+## Installation
+
+    pip3 install custardpy
+
+
 ## QC
 ### distance_vs_count.Juicer
 Count genomic distance of read pairs in the input file (supposing align/merged_nodups.txt.gz in Juicer output.)
