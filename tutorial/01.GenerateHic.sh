@@ -6,7 +6,7 @@ enzyme=MboI
 
 gt=/work/Database/UCSC/$build/genome_table
 gene=/work/Database/UCSC/$build/refFlat.txt
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rnakato_juicer.1.6.2.sif"
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"
 tmpdir=/tmp/juicer.1.6.1.`date +%Y%m%d%H%M`
 
 cell=Hap1-A
