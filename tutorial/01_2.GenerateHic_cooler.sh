@@ -23,13 +23,34 @@ mkdir -p $idir/bam $idir/pairs $idir/log $idir/temp
 #samtools index $idir/bam/mapped.final.sort.bam
 #python /work/sakata/python/get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/pairs.stats.txt
 
-$sing bgzip $idir/pairs/mapped.bwa.pairs
+#$sing bgzip $idir/pairs/mapped.bwa.pairs
 mkdir -p $idir/hic $idir/cool
 pair=$idir/pairs/mapped.bwa.pairs.gz
+#$sing pairix -p pairs $pair
+
+enzyme=HindIII
+#restrictionsite=/work/Database/HiC-restriction_sites/${enzyme}_resfrag_$build.bed
+restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
+mkdir -p $idir/hic $idir/cool
+
+$sing bgzip -d -c $input_pairs | $sing fragment_4dnpairs.pl -a - $idir/pairs/mapped.bwa.ff.pairs $restrictionsite
+$sing fragment_4dnpairs.pl -a $idir/pairs/mapped.bwa.pairs $idir/pairs/mapped.bwa.ff.pairs $restrictionsite
+$sing bgzip $idir/pairs/mapped.bwa.ff.pairs
+pair=$idir/pairs/mapped.bwa.ff.pairs.gz
 $sing pairix -p pairs $pair
-$sing gunzip -c $input_pairs | $sing /usr/local/bin/pairix/util/fragment_4dnpairs.pl -a - out.ff.pairs $restrictionsite
+
+max_split=2
+binsize_min=5000
+binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
+tool=chromap
+$sing python /opt/scripts/pairsqc.py -p $pair -c $gt -tP -s $tool -O $idir/qc.$tool -M 8.4
+#$sing Rscript plot.r 4 $idir/qc.${tool}_report
+#$sing cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.$tool.cool
+#$sing cooler balance -p $ncore $idir/cool/$prefix.$tool.cool
+#$sing run-cool2multirescool.sh -i $idir/cool/$prefix.$tool.cool -p $ncore -o $idir/cool/$prefix.$tool -u $binsize_multi
 
 exit
+
 
 gt=/work/Database/UCSC/$build/genome_table
 enzyme=MboI

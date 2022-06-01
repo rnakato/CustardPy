@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="custardpy",
-    version="0.1.10",
+    version="0.1.11",
     license="GPL3.0",
     install_requires=[
         "numpy>=1.18",
@@ -25,6 +25,7 @@ setuptools.setup(
     url="https://github.com/rnakato/custardpy",
     keywords="Hi-C analysis, 3D genome, NGS",
     scripts=['custardpy/checkHiCfile.py',
+             'custardpy/convert_JuicerDump_to_dense.py',
              'custardpy/drawSquareMulti.py',
              'custardpy/drawSquarePair.py',
              'custardpy/drawSquareRatioMulti.py',
@@ -40,5 +41,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 )

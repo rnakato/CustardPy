@@ -18,7 +18,7 @@ mkdir -p $dir
 
 hic=$odir/aligned/inter_30.hic
 $sing strawMatrixFromHiC.py $hic $dir/$cell.txt $chr --start $start --end $end
-$sing phic preprocessing --input $dir/$cell.txt --res $resolution --plt-max-c 0.1
+echo "$sing phic preprocessing --input $dir/$cell.txt --res $resolution --plt-max-c 0.1"
 
 exit
 
