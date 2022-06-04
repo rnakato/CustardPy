@@ -13,7 +13,7 @@ The following are required before installing CustardPy:
 
 ### From PyPI
 
-Core component of CustardPy can by installed using pip:
+Core components of CustardPy can by installed using pip:
 
     pip3 install custardpy
 
