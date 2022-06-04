@@ -43,3 +43,7 @@ This command mounts `/work` directory.
 ## Usage
 
 See [Custardpy Manual](https://custardpy-juicer.readthedocs.io/en/latest/index.html).
+
+## Contact
+
+Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
