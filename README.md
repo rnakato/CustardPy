@@ -42,7 +42,7 @@ This command mounts `/work` directory.
 
 ## Usage
 
-See [Custardpy Manual](https://custardpy.readthedocs.io/en/latest/).
+See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/).
 
 ## Contact
 
