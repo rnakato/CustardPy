@@ -16,6 +16,7 @@ Contents:
    content/Install
    content/QuickStart
    content/CustardPy_Juicer
+   content/Cooler
    content/Visualization
    content/Utils
 
