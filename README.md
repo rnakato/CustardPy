@@ -1,4 +1,4 @@
-# Custardpy
+# CustardPy
 
 Hi-C analysis tools by Python3 and Docker
 
