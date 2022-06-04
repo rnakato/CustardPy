@@ -19,7 +19,7 @@ Core components of CustardPy can by installed using pip:
 
 ### Docker image
 
-We recommend to use the [CustardPy Docker image](https://hub.docker.com/repository/docker/rnakato/custardpy/general) that contains additional scripts for Hi-C/Micro-C analysis.
+We recommend to use the [CustardPy Docker image](https://hub.docker.com/r/rnakato/custardpy) that contains additional scripts for Hi-C/Micro-C analysis.
 
 #### Docker 
 To use docker command, type:
