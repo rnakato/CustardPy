@@ -13,13 +13,13 @@ The following are required before installing CustardPy:
 
 ### From PyPI
 
-Core component of CustardPy can by installed using pip:
+Core components of CustardPy can by installed using pip:
 
     pip3 install custardpy
 
 ### Docker image
 
-Docker image of CustardPy that contains additional scripts for Hi-C/Micro-C analysis is available at [DockerHub](https://hub.docker.com/repository/docker/rnakato/custardpy/general).
+We recommend to use the [CustardPy Docker image](https://hub.docker.com/repository/docker/rnakato/custardpy/general) that contains additional scripts for Hi-C/Micro-C analysis.
 
 #### Docker 
 To use docker command, type:
@@ -42,7 +42,7 @@ This command mounts `/work` directory.
 
 ## Usage
 
-See [Custardpy Manual](https://custardpy.readthedocs.io/en/latest/).
+See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/).
 
 ## Contact
 
