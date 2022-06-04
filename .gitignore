@@ -4,3 +4,5 @@ dist/
 tutorial/JuicerResults/
 tutorial/fastq/
 tutorial/Cooler_hg38/
+docs/_build/
+docs/.vscode/
