@@ -1,20 +1,21 @@
 #!/bin/bash
 
 build=hg38
-fastq_post="_"  # "_" or "_R"  before .fastq.gz
-enzyme=MboI
-
 gt=/work/Database/UCSC/$build/genome_table
+bwaindex=/work/Database/bwa-indexes/UCSC-$build
 gene=/work/Database/UCSC/$build/refFlat.txt
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"
 tmpdir=/tmp/juicer.1.6.1.`date +%Y%m%d%H%M`
+fastq_post="_"  # "_" or "_R"
+enzyme=MboI
+ncore=64
 
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"
 cell=Hap1-A
 fqdir=$(pwd)/fastq/$cell/
 odir=$(pwd)/JuicerResults/$cell
 
-rm -rf $odir
-$sing juicer_map.sh -m $tmpdir $odir $build $fqdir $enzyme $fastq_post
+#rm -rf $odir
+#$sing juicer_map.sh -m $tmpdir -p $ncore $fqdir $odir $build $gt $bwaindex $enzyme $fastq_post
 
 # Optional
 $sing juicer_pigz.sh $odir

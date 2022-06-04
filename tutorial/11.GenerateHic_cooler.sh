@@ -10,26 +10,27 @@ fq1=fastq/Hap1-A/SRR5266584_1.fastq.gz
 fq2=fastq/Hap1-A/SRR5266584_2.fastq.gz
 idir=Cooler_$build/Hap1-A
 mkdir -p $idir/bam $idir/pairs $idir/log $idir/temp
-#$sing bwa mem -5SP -T0 -t $ncore $index_bwa $fq1 $fq2 | samtools sort -@2 > $idir/bam/mapped.bwa.sort.bam 2> $idir/log/bwa.log
+$sing bwa mem -5SP -T0 -t $ncore $index_bwa $fq1 $fq2 | samtools sort -@2 > $idir/bam/mapped.bwa.sort.bam 2> $idir/log/bwa.log
 
-#$sing pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 8 --nproc-out 8 --chroms-path $gt $idir/bam/mapped.bwa.sort.bam \
-#       | pairtools sort --nproc 8 --tmpdir=$idir/temp \
-#       | pairtools dedup --nproc-in 8 --nproc-out 8 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
-#       | pairtools split --nproc-in 8 --nproc-out 8 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
-#       | samtools sort -@16 -T $idir/temp/temp.bam > $idir/bam/mapped.final.sort.bam
-#rm -rf $idir/temp
+$sing pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 8 --nproc-out 8 --chroms-path $gt $idir/bam/mapped.bwa.sort.bam \
+       | pairtools sort --nproc 8 --tmpdir=$idir/temp \
+       | pairtools dedup --nproc-in 8 --nproc-out 8 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
+       | pairtools split --nproc-in 8 --nproc-out 8 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
+       | samtools sort -@16 -T $idir/temp/temp.bam > $idir/bam/mapped.final.sort.bam
+rm -rf $idir/temp
 
-#echo "samtools indexing..."
-#samtools index $idir/bam/mapped.final.sort.bam
-#python /work/sakata/python/get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/pairs.stats.txt
+echo "samtools indexing..."
+samtools index $idir/bam/mapped.final.sort.bam
+python /work/sakata/python/get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/pairs.stats.txt
 
-#$sing bgzip $idir/pairs/mapped.bwa.pairs
+$sing bgzip $idir/pairs/mapped.bwa.pairs
 mkdir -p $idir/hic $idir/cool
 pair=$idir/pairs/mapped.bwa.pairs.gz
-#$sing pairix -p pairs $pair
+$sing pairix -p pairs $pair
+
+exit
 
 enzyme=HindIII
-#restrictionsite=/work/Database/HiC-restriction_sites/${enzyme}_resfrag_$build.bed
 restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 mkdir -p $idir/hic $idir/cool
 
@@ -44,10 +45,10 @@ binsize_min=5000
 binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
 tool=chromap
 $sing python /opt/scripts/pairsqc.py -p $pair -c $gt -tP -s $tool -O $idir/qc.$tool -M 8.4
-#$sing Rscript plot.r 4 $idir/qc.${tool}_report
-#$sing cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.$tool.cool
-#$sing cooler balance -p $ncore $idir/cool/$prefix.$tool.cool
-#$sing run-cool2multirescool.sh -i $idir/cool/$prefix.$tool.cool -p $ncore -o $idir/cool/$prefix.$tool -u $binsize_multi
+$sing Rscript plot.r 4 $idir/qc.${tool}_report
+$sing cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.$tool.cool
+$sing cooler balance -p $ncore $idir/cool/$prefix.$tool.cool
+$sing run-cool2multirescool.sh -i $idir/cool/$prefix.$tool.cool -p $ncore -o $idir/cool/$prefix.$tool -u $binsize_multi
 
 exit
 
