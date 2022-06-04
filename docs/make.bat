@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=CustardPy_Juicer
+set SPHINXPROJ=CustardPy
 
 if "%1" == "" goto help
 

@@ -46,8 +46,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'CustardPy_Juicer'
-copyright = '2022-, Ryuichiro Nakato'
+project = 'CustardPy'
+copyright = '2022-2023, Ryuichiro Nakato'
 author = 'Ryuichiro Nakato'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -102,7 +102,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'CustardPy_Juicer_doc'
+htmlhelp_basename = 'CustardPy_doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -129,7 +129,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'CustardPy_Juicer.tex', 'CustardPy Documentation',
+    (master_doc, 'CustardPy.tex', 'CustardPy Documentation',
      'Ryuichiro Nakato', 'manual'),
 ]
 
@@ -139,7 +139,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'CustardPy_Juicer', 'CustardPy Documentation',
+    (master_doc, 'CustardPy', 'CustardPy Documentation',
      [author], 1)
 ]
 
@@ -150,7 +150,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'CustardPy_Juicer', 'CustardPy Documentation',
-     author, 'CustardPy_Juicer', 'One line description of project.',
+    (master_doc, 'CustardPy', 'CustardPy Documentation',
+     author, 'CustardPy', 'One line description of project.',
      'Miscellaneous'),
 ]
