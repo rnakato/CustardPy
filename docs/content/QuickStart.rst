@@ -5,7 +5,7 @@ Full command example
 ----------------------------------------------------------------
 
 These scripts assume that the fastq files are stored in ``fastq/$cell`` (e.g., ``fastq/Control_1``).
-The outputs are stored in `JuicerResults/$cell`.
+The outputs are stored in ``JuicerResults/$cell``.
 
 The whole commands using the Singularity image (``rnakato_juicer.sif``) are as follows:
 
