@@ -44,6 +44,6 @@ This command mounts `/work` directory.
 
 See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/).
 
-## Contact
+## Reference
 
-Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
+- Nakato R, Sakata T, Wang J, Nagai LAE, Oba GM, Bando M, Shirahige K, Context-dependent 3D genome regulation by cohesin and related factors, bioRxiv, 2022. doi: [10.1101/2022.05.24.493188](https://www.biorxiv.org/content/10.1101/2022.05.24.493188v1)
