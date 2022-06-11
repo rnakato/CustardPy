@@ -4,7 +4,7 @@ Installation
 CustardPy from PyPI
 ---------------------------------
 
-Core components of CustardPy can by installed using pip (>= Python 3.7):
+Core components of **CustardPy** can by installed using pip (>= Python 3.7):
 
 .. code-block:: bash
 
@@ -14,7 +14,7 @@ Core components of CustardPy can by installed using pip (>= Python 3.7):
 Docker images for CustardPy
 ---------------------------------
 
-We recommend to use the Docker image that contains additional scripts for Hi-C/Micro-C analysis.
+We recommend using a Docker image that contains additional scripts for Hi-C/Micro-C analysis.
 
 CustardPy includes two Docker images, ``CustardPy`` and ``CustardPy_Juicer``. 
 ``CustardPy_Juicer`` is separated from ``CustardPy`` because it requires older environment (``cuda:8.0-cudnn7-devel-ubuntu16.04``).
