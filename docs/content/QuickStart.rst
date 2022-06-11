@@ -14,53 +14,49 @@ The whole commands using the Singularity image (``rnakato_juicer.sif``) are as f
     build=hg38
     fastq_post="_R"  # "_" or "_R"  before .fastq.gz
     enzyme=MboI      # enzyme type
+    norm=SCALE       # normalization type
 
     gt=genome_table.$build.txt  # genome_table file
+    bwaindex=bwa-indexes/UCSC-$build  # BWA index file
     gene=refFlat.$build.txt # gene annotation (refFlat format)
-    sing="singularity exec rnakato_juicer.sif"  # singularity command
+    ncore=64 # number of CPUs
 
-    for cell in `ls fastq/* -d | grep -v .sh`
+    sing="singularity exec --nv --bind /work custardpy_juicer.sif" # singularity command
+
+    for cell in `ls fastq/* -d`  # for all directories in fastq/
     do
         cell=$(basename $cell)
+        fqdir=$(pwd)/fastq/$cell/
         odir=$(pwd)/JuicerResults/$cell
         echo $cell
 
+        # generate .hic file from fastq by Juicer
         rm -rf $odir
-        mkdir -p $odir
-        if test ! -e $odir/fastq; then ln -s $(pwd)/fastq/$cell/ $odir/fastq; fi
+        $sing juicer_map.sh -p $ncore $fqdir $odir $build $gt $bwaindex $enzyme $fastq_post
 
-        # generate .hic file by Juicer
-        $sing juicer_map.sh $odir $build $enzyme $fastq_post
+        # Compress intermediate files
+        $sing juicer_pigz.sh $odir
 
         # plot contact frequency
         if test ! -e $odir/distance; then $sing plot_distance_count.sh $cell $odir; fi
 
-        # select normalization type
-        norm=VC_SQRT
-
-        # make contact matrix for chromosomes
         hic=$odir/aligned/inter_30.hic
-        if test ! -e $odir/Matrix; then
-            $sing juicer_makematrix.sh $norm $hic $odir $gt
-        fi
-
         # call TADs (arrowHead)
-        if test ! -e $odir/TAD; then
-            $sing juicer_callTAD.sh $norm $hic $odir $gt
-        fi
-
-        # calculate Pearson coefficient and Eigenvector
-        for resolution in 25000
-        do
-                $sing makeEigen.sh Pearson $norm $odir $hic $resolution $gt $gene
-                $sing makeEigen.sh Eigen $norm $odir $hic $resolution $gt $gene
-        done
-
-        # calculate insulation score
-        if test ! -e $odir/InsulationScore; then $sing juicer_insulationscore.sh $norm $odir $gt; fi
+        $sing juicer_callTAD.sh $norm $hic $odir $gt
 
         # call loops (HICCUPS, add '--nv' option to use GPU)
-        singularity exec --nv rnakato_juicer.sif call_HiCCUPS.sh $norm $odir $hic $build
+        $sing call_HiCCUPS.sh $norm $odir $hic $build
         # motif analysis
-        $sing juicertools.sh motifs $build $motifdir $odir/loops/$norm/merged_loops.bedpe hg38.motifs.txt
+        $sing call_MotifFinder.sh $build $motifdir $odir/loops/$norm/merged_loops.bedpe
+
+        for resolution in 25000 50000 100000
+        do
+            # make contact matrix for all chromosomes
+            $sing makeMatrix_intra.sh $norm $odir $hic $resolution $gt
+            # calculate Pearson coefficient and Eigenvector
+            $sing makeEigen.sh Pearson $norm $odir $hic $resolution $gt $gene
+            $sing makeEigen.sh Eigen $norm $odir $hic $resolution $gt $gene
+            # calculate insulation score
+            $sing makeInslationScore.sh $norm $odir $resolution $gt
+        done
     done
