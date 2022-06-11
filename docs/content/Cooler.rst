@@ -1,5 +1,5 @@
-Cooler_based analysis
-===========================
+Micro-C analysis by Cooler
+===============================
 
 **CustardPy** Docker image also supports the Hi-C/Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
 
