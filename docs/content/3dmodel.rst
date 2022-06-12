@@ -4,15 +4,23 @@
 **CustardPy** has an advanced command for 3D modeling and 4D simulatuion using the Hi-C matrix.
 
 
-3Dmodeling.sh
+run-pastis.sh
 ---------------------------
 
-``3Dmodeling.sh`` implements `PASTIS <https://members.cbio.mines-paristech.fr/~nvaroquaux/pastis/>`_ and estimates 3D models from the Hi-C contact matrix.
+``run-pastis.sh`` implements `PASTIS <https://members.cbio.mines-paristech.fr/~nvaroquaux/pastis/>`_ and estimates 3D models from the Hi-C contact matrix.
 
 .. code-block:: bash
 
+    odir=JuicerResults/Sample
+    # genomic region to be simulated
+    chr=chr21
+    s=24000000
+    e=32000000
+    resolution=100000
+    norm=SCALE  # normalization type
+    
     singularity exec custardpy.sif \
-
+        run-pastis.sh $odir $chr $s $e $resolution $norm
 
 phic_processing
 ------------------------------------------------------
@@ -32,4 +40,4 @@ phic_processing
     norm=SCALE # normalization type
 
     singularity exec custardpy.sif \
-          phic_processing $odir $hic $chr $start $end $resolution $norm
+        phic_processing $odir $hic $chr $start $end $resolution $norm
