@@ -18,6 +18,7 @@ Contents:
    content/CustardPy_Juicer
    content/Cooler
    content/Visualization
+   content/3dmodel
    content/Utils
    content/API
 
