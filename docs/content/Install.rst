@@ -16,8 +16,25 @@ Docker images for CustardPy
 
 **CustardPy** has two Docker images for Hi-C/Micro-C analysis.
 
-- ``CustardPy``: An image that contains additional scripts for Hi-C/Micro-C analysis.
-- ``CustardPy_Juicer``: An image for `Juicer <https://github.com/aidenlab/juicer/wiki>`_ analysis (because Juicer requires older environment: ``cuda:8.0-cudnn7-devel-ubuntu16.04``).
+- ``CustardPy``
+    - An image that contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** itself, including:
+
+        - Cooler version 0.8.6
+        - cooltools version 0.5.1
+        - HiCExplorer version 3.5.1
+- ``CustardPy_Juicer``
+    - An image for `Juicer <https://github.com/aidenlab/juicer/wiki>`_ analysis (because Juicer requires older environment: ``cuda:8.0-cudnn7-devel-ubuntu16.04``). 
+    - This image internally implements the tools below:
+
+        - Juicer version 1.6
+        - Juicertools version 2.13.07
+        - JuiceBox version 2.13.07
+        - `BWA <http://bio-bwa.sourceforge.net/>`_ version 0.7.17
+
+See the original website for the full description about each tool.
+
+RUN
+++++++++++++++
 
 For Docker:
 

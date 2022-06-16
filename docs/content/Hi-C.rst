@@ -5,16 +5,6 @@ Hi-C analysis
 This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
 See the original website for the full description about each command.
 
-Dependencies
----------------------------
-
-**CustardPy_Juicer** internally implements the tools below:
-
-- Juicer version 1.6
-- Juicertools version 2.13.07
-- JuiceBox version 2.13.07
-- `BWA <http://bio-bwa.sourceforge.net/>`_ version 0.7.17
-
 juicer_map.sh
 ----------------------------------------------------------------
 

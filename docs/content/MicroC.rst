@@ -1,14 +1,6 @@
 MicroC analysis
 =====================
 
-**CustardPy** docker image contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** itself, including:
-
-- Cooler version 0.8.6
-- cooltools version 0.5.1
-- HiCExplorer version 3.5.1
-
-See the original website for the full description about each tool.
-
 microc_bwa
 ----------------------------------------------------------------
 
