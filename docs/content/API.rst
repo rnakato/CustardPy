@@ -1,9 +1,42 @@
 Python API
 =====================
 
-**CustardPy_Juicer** is a docker image for Juicer analysis in `CustardPy <https://github.com/rnakato/Custardpy>`_.
-This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
-See the original website for the full description about each command.
+you can import the module from a Python console or script:
+
+.. code-block:: Python3
+
+    from custardpy.HiCmodule import *
+    from custardpy.PlotModule import *
+
+The following tutorials will assume that you have loaded the fanc module in this manner.
+
+Loading datasets
+-----------------------
+
+Here we specify files of the contact matrix and eigenvector (PC1) that are stored in the directory ``JuicerResults/Hap1-A``.
+
+.. code-block:: Python3
+
+    from custardpy.HiCmodule import *
+    from custardpy.PlotModule import *
+
+    normalizetype = "RPM" # total read normalization
+    resolution = 100000
+    matrix = "JuicerResults/Hap1-A/Matrix/intrachromosomal/" + str(resolution) + "/observed.SCALE.chr21.matrix.gz"
+    eigenfile = "JuicerResults/Hap1-A/Eigen/" + str(resolution) + "/eigen.SCALE.chr21.txt.gz"
+    data = JuicerMatrix(normalizetype, matrix, resolution, eigenfile)
+
+Then you can visualize the matrix:
+
+.. code-block:: Python3
+
+    s = 20000000
+    e = 107000000
+
+    mat = Jdata[sample].getmatrix().loc[s:e,s:e]
+    plt.imshow(mat, clim=(0, 30), cmap=generate_cmap(['#FFFFFF', '#d10a3f']))
+    plt.title(sample)
+
 
 Quickstart
 ---------------------------

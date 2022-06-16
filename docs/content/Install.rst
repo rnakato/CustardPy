@@ -16,13 +16,13 @@ Docker images for CustardPy
 
 Most commands introduced in this manual are included in two Docker images for **CustardPy**.
 
-- ``CustardPy``
+- ``CustardPy``: https://hub.docker.com/r/rnakato/custardpy
     - An image that contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** itself, including:
 
         - Cooler version 0.8.6
         - cooltools version 0.5.1
         - HiCExplorer version 3.5.1
-- ``CustardPy_Juicer``
+- ``CustardPy_Juicer``: https://hub.docker.com/r/rnakato/custardpy_juicer
     - An image for `Juicer <https://github.com/aidenlab/juicer/wiki>`_ analysis (because Juicer requires older environment: ``cuda:8.0-cudnn7-devel-ubuntu16.04``). 
     - This image internally implements the tools below:
 
