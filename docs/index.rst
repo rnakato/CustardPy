@@ -16,7 +16,7 @@ Contents:
    content/Install
    content/QuickStart
    content/CustardPy_Juicer
-   content/Cooler
+   content/CustardPy_docker
    content/Visualization
    content/3dmodel
    content/Utils

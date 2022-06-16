@@ -1,4 +1,4 @@
-CustardPy_Juicer
+Hi-C analysis
 =====================
 
 **CustardPy_Juicer** is a docker image for Juicer analysis in `CustardPy <https://github.com/rnakato/Custardpy>`_.
