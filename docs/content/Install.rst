@@ -14,7 +14,7 @@ Core components of **CustardPy** can by installed using pip (>= Python 3.7):
 Docker images for CustardPy
 ---------------------------------
 
-**CustardPy** has two Docker images for Hi-C/Micro-C analysis.
+Most commands introduced in this manual are included in two Docker images for **CustardPy**.
 
 - ``CustardPy``
     - An image that contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** itself, including:
