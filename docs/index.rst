@@ -15,8 +15,8 @@ Contents:
 
    content/Install
    content/QuickStart
-   content/CustardPy_Juicer
-   content/Cooler
+   content/Hi-C
+   content/MicroC
    content/Visualization
    content/3dmodel
    content/Utils
