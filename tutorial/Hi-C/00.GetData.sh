@@ -13,4 +13,4 @@ genome=genome.hg38.fa
 indexdir=bwa-indexes
 mkdir -p $indexdir
 $sing bwa index -p $indexdir/hg38 $genome
-ln -rsf $genome $indexdir/hg38.fa
+ln -rsf $genome $indexdir/hg38

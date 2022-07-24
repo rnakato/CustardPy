@@ -57,8 +57,6 @@ exit
 
 
 gt=/work/Database/UCSC/$build/genome_table
-enzyme=MboI
-enzymelen=4
 restrictionsite=/work/Database/HiC-restriction_sites/${enzyme}_resfrag_$build.bed
 
 ####$sing pairtools sort --nproc 32 --output sorted.pair.gz CTCFKD_1.pairs

@@ -12,4 +12,4 @@ genome=genome.mm39.fa
 indexdir=bwa-indexes
 mkdir -p $indexdir
 $sing bwa index -p $indexdir/mm39 $genome
-ln -rsf $genome $indexdir/mm39.fa
+ln -rsf $genome $indexdir/mm39
