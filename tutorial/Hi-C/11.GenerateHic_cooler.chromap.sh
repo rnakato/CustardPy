@@ -20,7 +20,7 @@ genome=$Ddir/genome.fa
 mkdir -p $odir/pairs $odir/log
 
 echo "start mapping..."
-#$sing chromap --preset hic -t $ncore --remove-pcr-duplicates -x $chromap_index -r $genome -1 $fq1 -2 $fq2 -o $odir/pairs/mapped.rmdup.pairs 2> $odir/log/chromap.rmdup.log
+$sing chromap --preset hic -t $ncore --remove-pcr-duplicates -x $chromap_index -r $genome -1 $fq1 -2 $fq2 -o $odir/pairs/mapped.rmdup.pairs 2> $odir/log/chromap.rmdup.log
 echo "parse by pairtools..."
 enzyme=HindIII
 restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
@@ -54,29 +54,6 @@ $sing run-cool2multirescool.sh -i $idir/cool/$prefix.$tool.cool -p $ncore -o $id
 
 
 exit
-### bwa
-mkdir -p $idir/bam $idir/pairs $idir/temp
-$sing bwa mem -5SP -T0 -t $ncore $index_bwa $fq1 $fq2 | samtools sort -@2 > $idir/bam/mapped.bwa.sort.bam
-
-$sing pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 8 --nproc-out 8 --chroms-path $gt $idir/bam/mapped.bwa.sort.bam \
-       | pairtools sort --nproc 8 --tmpdir=$idir/temp \
-       | pairtools dedup --nproc-in 8 --nproc-out 8 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
-       | pairtools split --nproc-in 8 --nproc-out 8 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
-       | samtools sort -@16 -T $idir/temp/temp.bam > $idir/bam/mapped.final.sort.bam
-rm -rf $idir/temp
-
-echo "samtools indexing..."
-samtools index $idir/bam/mapped.final.sort.bam
-python /work/sakata/python/get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/pairs.stats.txt
-
-mkdir -p $idir/hic $idir/cool
-pair=$idir/pairs/mapped.bwa.pairs.gz
-$sing pairix -p pairs $pair
-
-#$sing genCoolHiC_from_pairs $idir/hic/q30 $idir $pair $gt
-
-
-exit
 
 
 gt=/work/Database/UCSC/$build/genome_table
@@ -95,3 +72,13 @@ input_pairs=marked.gz
 #gunzip -c $input_pairs | $sing /usr/local/bin/pairix/util/fragment_4dnpairs.pl -a - out.ff.pairs $restrictionsite
 #$sing bgzip  -f out.ff.pairs
 #$sing pairix -f out.ff.pairs.gz
+
+
+
+exit
+##### chromap
+sing="singularity exec rnakato_4dn.img"
+enzyme=MboI
+enzymelen=4
+restrictionsite=/work/Database/HiC-restriction_sites/${enzyme}_resfrag_$build.bed
+gunzip -c $input_pairs | $sing /usr/local/bin/pairix/util/fragment_4dnpairs.pl -a - out.ff.pairs $restrictionsite
