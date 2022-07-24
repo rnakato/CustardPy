@@ -6,10 +6,14 @@
 
 sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.1.0.sif"
 
-$sing getmm39genome.sh
+#$sing getmm39genome.sh
 
 genome=genome.mm39.fa
 indexdir=bwa-indexes
 mkdir -p $indexdir
-$sing bwa index -p $indexdir/mm39 $genome
-ln -rsf $genome $indexdir/mm39
+#$sing bwa index -p $indexdir/mm39 $genome
+#ln -rsf $genome $indexdir/mm39
+
+indexdir=chromap-indexes
+mkdir -p $indexdir
+chromap -i -t 12 -r $genome -o $indexdir/mm39
