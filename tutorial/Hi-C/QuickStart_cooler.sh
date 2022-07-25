@@ -26,12 +26,12 @@ norm=SCALE
 resolution=100000
 
 # Contact matrix
-$sing makeMatrix_intra.sh $norm $odir $hic $resolution $gt
+#$sing makeMatrix_intra.sh $norm $odir $hic $resolution $gt
 # InsulationScore
-$sing makeInslationScore.sh $norm $odir $resolution $gt
+#$sing makeInslationScore.sh $norm $odir $resolution $gt
 # TAD
-$sing juicer_callTAD.sh $norm $odir $hic $gt
+#$sing juicer_callTAD.sh $norm $odir $hic $gt
 # Eigen
-$sing makeEigen.sh $norm $odir $hic $resolution $gt $gene
+#$sing makeEigen.sh $norm $odir $hic $resolution $gt $gene
 # Loop
-singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif call_HiCCUPS.sh $norm $odir $hic $build
+singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif call_HiCCUPS.sh $norm $odir $hic
