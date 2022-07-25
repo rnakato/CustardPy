@@ -10,4 +10,4 @@ end=32000000
 resolution=100000
 norm=SCALE
 
-$sing phic_processing $odir $hic $chr $start $end $resolution $norm
+$sing custardpy_phic $odir $hic $chr $start $end $resolution $norm

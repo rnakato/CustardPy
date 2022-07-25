@@ -9,4 +9,4 @@ e=32000000
 resolution=100000
 norm=SCALE
 
-$sing run-pastis.sh $odir $chr $s $e $resolution $norm
+$sing custardpy_pastis $odir $chr $s $e $resolution $norm

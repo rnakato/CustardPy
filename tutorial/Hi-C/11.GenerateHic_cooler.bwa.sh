@@ -17,6 +17,6 @@ prefix=Control
 enzyme=HindIII
 
 # generate .hic and .cool files from fastq
-$sing custardpy_mapping -g $gt -i $index_bwa \
+$sing custardpy_mappingHiC -g $gt -i $index_bwa \
       -b $build -e $enzyme -p $ncore \
       $fq1 $fq2 $prefix
