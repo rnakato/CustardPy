@@ -5,5 +5,5 @@ sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardp
 
 hic=$odir/aligned/inter_30.hic
 norm=SCALE
-$sing call_HiCCUPS.sh $norm $odir $hic $build
+$sing call_HiCCUPS.sh $norm $odir $hic
 #$sing call_MotifFinder.sh $build $motifdir $odir/loops/$norm/merged_loops.bedpe

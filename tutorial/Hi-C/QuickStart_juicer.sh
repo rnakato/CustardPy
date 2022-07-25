@@ -34,4 +34,4 @@ $sing juicer_callTAD.sh $norm $odir $hic $gt
 # Eigen
 $sing makeEigen.sh $norm $odir $hic $resolution $gt $gene
 # Loop
-$sing call_HiCCUPS.sh $norm $odir $hic $build
+$sing call_HiCCUPS.sh $norm $odir $hic
