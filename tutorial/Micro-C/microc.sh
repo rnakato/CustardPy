@@ -12,8 +12,9 @@ fq2=fastq/SRR8954797_2.fastq.gz
 prefix=ESC_WT01
 
 bwa_index=bwa-indexes/mm39
-$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
+#$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
+idir=Cooler_MicroC_bwa/ESC_WT01/
 hic=$idir/hic/contact_map.q30.hic
 norm=SCALE
 #$sing_juicer call_HiCCUPS.sh $norm $idir $hic
@@ -21,7 +22,7 @@ norm=SCALE
 #idir=Results_chromap/$prefix
 chromap_index=chromap-indexes/$build
 genome=genome.$build.fa
-$sing custardpy_mappingMicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
+#$sing custardpy_mappingMicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
 hic=$idir/hic/contact_map.q30.hic
 norm=SCALE
-#$sing_juicer call_HiCCUPS.sh $norm $idir $hic
+$sing_juicer call_HiCCUPS.sh $norm $idir $hic
