@@ -1,0 +1,48 @@
+#!/bin/bash
+
+printHelpAndExit() {
+    echo "Usage: ${0##*/} <outputdir> <chr> <start> <end> <resolution> <norm>"
+    echo "  <outputdir>: directory where the output files are generaged"
+    echo "  <hic>: .hic file"
+    echo "  <chr> <start> <end>: chromosome, start and end positions for simulation"
+    echo "  <resolution>: resolution of the matrix"
+    echo "  <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)"
+    echo "  Example:"
+    echo "     ${0##*/} JuicerResults/sample1 chr21 24000000 32000000 1000000 SCALE"
+    exit 0
+}
+
+if [ $# -ne 6 ]; then
+    printHelpAndExit
+fi
+
+odir=$1
+chr=$2
+start=$3
+end=$4
+resolution=$5
+norm=$6
+
+echo "Start 3D modeling by PASTIS..."
+
+s1=$(( $start / $resolution ))
+e1=$(( $end / $resolution ))
+Matrix=$odir/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz
+Eigen=$odir/Eigen/$resolution/Compartment.$norm.$chr.All.bed
+
+dir=$odir/pastis/${resolution}/$chr/$start-$end
+
+mkdir -p $dir
+matrix2npy.py $Matrix $dir/Matrix.npy --start1 $s1 --end1 $e1 --start2 $s1 --end2 $e1
+
+config=$dir/config.ini
+echo "[all]"               > $config
+echo "verbose: 1"          >> $config
+echo "max_iter: 1000"      >> $config
+echo "normalize: True"     >> $config
+echo "output_name: $chr-$start-$end" >> $config
+echo "counts: Matrix.npy"  >> $config
+
+pastis-pm2 $dir
+addCompartment4pastis.pl $dir/PM2.$chr-$start-$end.pdb $Eigen $s1
+addChain4pastis.pl $dir/PM2.$chr-$start-$end.pdb.addCompartment.pdb

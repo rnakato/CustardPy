@@ -1,0 +1,151 @@
+#!/bin/bash
+
+printHelpAndExit() {
+    echo "Usage: ${0##*/} [options] -g <gt> -i <index> <fastq1> <fastq2> <prefix>"
+    echo "  fastq1, fastq2: paired-end fastq file"
+    echo "  prefix: prefix of output files"
+    echo -e "\n  Options:"
+    echo "    -S state : steps to be executed [all|pairs|postproc] (default: all)"
+    echo "    -t [bwa|chromap] : tool for mapping (default: bwa)"
+    echo "    -i index : index of bwa or chromap"
+    echo "    -g genometable : genome table file (describing the chromosome length)"
+    echo "    -f genome file : genome.fa (only for chromap)"
+    echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)"
+    echo "    -p ncore : number of CPUs (default: 4)"
+    echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)"
+    echo "    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)"
+    echo "    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')"
+   exit 0
+}
+
+ncore=4
+tool="bwa"
+index=""
+gt=""
+genome=""
+build="hg38"
+qthre=30
+stage="all"
+max_split=2
+max_distance=8.4
+binsize_min=5000
+binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
+
+while getopts "i:t:g:f:q:p:S:m:n:r:h" opt; do
+    case $opt in
+        i) index=$OPTARG;;
+        t) tool=$OPTARG;;
+        g) gt=$OPTARG;;
+        f) genome=$OPTARG;;
+        q) qthre=$OPTARG;;
+        p) ncore=$OPTARG;;
+        S) state=$OPTARG;;
+        m) max_distance=$OPTARG;;
+        n) binsize_min=$OPTARG;;
+        r) binsize_multi=$OPTARG;;
+        h) printHelpAndExit;;
+        [?]) printHelpAndExit;;
+        esac
+done
+
+shift $((OPTIND - 1))
+
+if [ $# -ne 3 ]; then
+    printHelpAndExit
+fi
+
+if [ ! -z "$stage" ]
+then
+    case $stage in
+       all) stage_all=1 ;;
+       pairs) stage_pairs=1 ;;
+       postproc) stage_postproc=1 ;;
+       *) echo "Error: specify [all|pairs|postproc] for stage (-S)."
+          printHelpAndExit
+    esac
+fi
+
+if test "$gt" = ""; then
+    echo "Error: specify genome table (-g)."
+    exit 0
+fi
+
+if test "$tool" != "bwa" -a "$tool" != "chromap"; then
+    echo "Error: specify bwa or chromap for -t."
+    exit 0
+fi
+
+fq1=$1
+fq2=$2
+prefix=$3
+
+idir=Cooler_MicroC_$tool/$prefix
+mkdir -p $idir
+
+if [ -z $postproc ]; then
+    if test "$index" = ""; then
+       echo "Error: specify index file (-i)."
+       exit 0
+    fi
+
+    if test "$tool" = "bwa"; then
+       echo "start mapping..."
+       tempdir=$idir/temp
+       mkdir -p $idir/bam $idir/pairs $tempdir $idir/log
+       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $idir/log/bwa.log | samtools sort -@4 > $idir/bam/mapped.bwa.sort.bam
+       echo "parse by pairtools..."
+
+       pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 4 --nproc-out 4 --chroms-path $gt $idir/bam/mapped.bwa.sort.bam \
+	   | pairtools sort --nproc 4 --tmpdir=$tempdir \
+	   | pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
+	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
+	   | samtools view -bS \
+	   | samtools sort -@$ncore -T $tempdir/temp.bam -o $idir/bam/mapped.final.sort.bam
+       samtools index $idir/bam/mapped.final.sort.bam
+
+       rm -rf $tempdir
+
+       bgzip $idir/pairs/mapped.bwa.pairs
+
+       echo "samtools indexing..."
+       samtools index $idir/bam/mapped.final.sort.bam
+       get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/mappingstats.txt
+
+       pair=$idir/pairs/mapped.bwa.pairs.gz
+    else
+       # chromap
+       if test "$genome" = ""; then
+	   echo "Error: specify genome file (-f)."
+	   exit 0
+       fi
+       echo "start mapping..."
+       mkdir -p $idir/pairs $idir/log
+       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome -1 $fq1 -2 $fq2 -o $idir/pairs/mapped.rmdup.pairs 2> $idir/log/chromap.rmdup.log
+       echo "parse by pairtools..."
+       bgzip $idir/pairs/mapped.rmdup.pairs
+       pair=$idir/pairs/mapped.rmdup.pairs.gz
+    fi
+
+    echo "mapping finished!"
+    echo "Output pairs file: $pair"
+fi
+
+if [ -z $pairs ]; then
+    echo "generate .cool file..."
+    custardpy_genCoolHiC $prefix $idir $pair $gt
+
+    mkdir -p $idir/cool
+    pairix $pair
+    #python /opt/scripts/pairsqc/pairsqc.py -p $pair -c $gt -tP -s $prefix -O $idir/qc -M $max_distance
+    #Rscript /opt/scripts/pairsqc/plot.r $enzymelen $idir/qc_report
+    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.cool
+    cooler zoomify --balance -p $ncore $idir/cool/$prefix.cool
+    #cooler balance -p $ncore $idir/cool/$prefix.cool
+    #run-cool2multirescool.sh -i $idir/cool/$prefix.cool -p $ncore -o $idir/cool/$prefix -u $binsize_multi
+
+    echo "generate .hic file..."
+    mkdir -p $idir/hic
+    juicertools.sh pre -q 30 $pair $idir/hic/contact_map.q30.hic $gt
+fi
+
+echo "${0##*/} finished!"

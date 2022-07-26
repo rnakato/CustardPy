@@ -1,0 +1,102 @@
+FROM rnakato/ubuntu:20.04
+LABEL maintainer "Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+
+WORKDIR /opt
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    bzip2 \
+    default-jdk \
+    emacs \
+    ffmpeg \
+    gawk \
+    gcc \
+    git \
+    imagemagick \
+    less \
+    libcurl4-openssl-dev \
+    liblz4-tool \
+    libncurses-dev \
+    libssl-dev \
+    libxkbcommon-x11-0 \
+    libxml2-dev \
+    make \
+    msttcorefonts \
+    r-base \
+    r-base-dev \
+    samtools \
+    time \
+    unzip \
+    vim \
+    wget \
+    zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# BWA version 0.7.17 or higher
+COPY bwa-0.7.17.tar.bz2 bwa-0.7.17.tar.bz2
+RUN tar xvfj bwa-0.7.17.tar.bz2 \
+    && cd bwa-0.7.17 \
+    && make \
+    && cd .. \
+    && rm bwa-0.7.17.tar.bz2
+
+# Chromap 0.2.1
+COPY chromap-0.2.1_x64-linux.tar.bz2 chromap-0.2.1_x64-linux.tar.bz2
+RUN tar xvfj chromap-0.2.1_x64-linux.tar.bz2 \
+     && rm chromap-0.2.1_x64-linux.tar.bz2
+
+RUN R CMD javareconf \
+    && R -e 'install.packages("devtools", repos="https://cran.ism.ac.jp/")' \
+    && R -e 'install.packages( "Nozzle.R1", type="source", repos="https://cran.ism.ac.jp/" )' \
+    && R -e 'install.packages("sm", repos="https://cran.ism.ac.jp/")' \
+    && R -e 'library(devtools); install_url("https://github.com/SooLee/plotosaurus/archive/0.9.2.zip")' \
+    && R -e 'install.packages("stringr", repos="https://cran.ism.ac.jp/" )'
+
+RUN wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+    && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -p /miniconda3 -b \
+    && rm Miniconda3-4.7.12.1-Linux-x86_64.sh
+ENV PATH=/miniconda3/bin:$PATH
+
+RUN conda install -y matplotlib numpy scipy pandas ipython jupyter jupyterlab seaborn cython
+RUN pip install cooltools --no-cache-dir
+
+RUN conda install -y -c bioconda hic2cool \
+    && conda install -c conda-forge -c bioconda pairtools hicexplorer \
+    && pip install h1d hic-straw phic --no-cache-dir
+
+# pairsqc
+RUN wget --progress=dot:giga https://github.com/4dn-dcic/pairsqc/archive/0.2.3.tar.gz \
+    && tar -xzf 0.2.3.tar.gz \
+    && rm 0.2.3.tar.gz
+
+# pastis
+RUN pip install iced --no-cache-dir \
+    && pip install pastis --no-cache-dir
+
+# JuiceBox
+RUN pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
+
+# CustardPy
+RUN pip install --no-cache-dir custardpy==0.1.0
+
+# installing gawk for juicer
+RUN echo 'alias awk=gawk' >> ~/.bashrc
+
+# wrapper
+COPY Cooler-restriction_sites /Cooler-restriction_sites
+RUN gunzip /Cooler-restriction_sites/*gz
+COPY scripts/ scripts
+RUN chmod +x /opt/scripts/* /opt/scripts/pastis/*
+
+RUN ln -s /opt/pairsqc-*/ /opt/scripts/pairsqc \
+    && ln -s /miniconda3/pkgs/pairix-*/bin/ scripts/pairix
+
+COPY juicer_tools_1.22.01.jar /opt/juicer_tools.jar
+
+# set path
+ENV PATH=$PATH:/opt:/opt/bwa-0.7.17:/opt/pairix-0.3.7:/opt/pairsqc-0.2.3:/opt/scripts:/opt/scripts/pastis:/opt/scripts/pairix:/opt/scripts/pairsqc
+
+# supporting UTF-8
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
