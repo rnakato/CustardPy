@@ -1,5 +1,5 @@
 build=hg38
-odir=JuicerResults/Hap1-A
+odir=JuicerResults_$build/Hap1-A
 
 sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"
 

@@ -13,7 +13,7 @@ fq2=fastq/SRR8954797_2.fastq.gz
 prefix=ESC_WT01
 
 bwa_index=bwa-indexes/mm39
-#$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
+$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
 odir=Cooler_MicroC_bwa/ESC_WT01/
 hic=$odir/hic/contact_map.q30.hic
