@@ -13,21 +13,14 @@ fq2=fastq/SRR8954797_2.fastq.gz
 prefix=ESC_WT01
 
 bwa_index=bwa-indexes/mm39
-$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
+#$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
-odir=Cooler_MicroC_bwa/ESC_WT01/
+sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"
+
+odir=Cooler_MicroC_bwa/$prefix
 hic=$odir/hic/contact_map.q30.hic
 norm=SCALE
 
-resolution=100000
+$sing custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
-# Contact matrix
-$sing_juicer makeMatrix_intra.sh $norm $odir $hic $resolution $gt
-# InsulationScore
-$sing_juicer makeInslationScore.sh $norm $odir $resolution $gt
-# TAD
-$sing_juicer juicer_callTAD.sh $norm $odir $hic $gt
-# Eigen
-$sing_juicer makeEigen.sh $norm $odir $hic $resolution $gt $gene
-# Loop
-singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif call_HiCCUPS.sh $norm $odir $hic
+exit

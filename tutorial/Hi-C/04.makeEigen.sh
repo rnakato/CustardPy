@@ -12,5 +12,6 @@ odir=JuicerResults_$build/Hap1-A
 hic=$odir/aligned/inter_30.hic
 norm=SCALE
 resolution=100000
+resolution=25000
 
-$sing makeEigen.sh $norm $odir $hic $resolution $gt $gene
+$sing makeEigen.sh -p 32 $norm $odir $hic $resolution $gt $gene
