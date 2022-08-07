@@ -7,13 +7,13 @@
 
 sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.1.0.sif"
 
-#$sing gethg38genome.sh
+$sing gethg38genome.sh
 
 genome=genome.hg38.fa
 indexdir=bwa-indexes
-#mkdir -p $indexdir
-#$sing bwa index -p $indexdir/hg38 $genome
-#ln -rsf $genome $indexdir/hg38
+mkdir -p $indexdir
+$sing bwa index -p $indexdir/hg38 $genome
+ln -rsf $genome $indexdir/hg38
 
 indexdir=chromap-indexes
 mkdir -p $indexdir
