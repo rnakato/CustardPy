@@ -5,7 +5,7 @@ gt=genometable.$build.txt
 bwaindex=bwa-indexes/$build
 tmpdir=/tmp/custardPy.`date +%Y%m%d%H%M`
 fastq_post="_"  # "_" or "_R"
-enzyme=HindIII
+enzyme=MboI
 ncore=64
 
 sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.1.0.sif"

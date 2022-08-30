@@ -2,7 +2,7 @@
 
 build=hg38
 fastq_post="_"  # "_" or "_R"  before .fastq.gz
-enzyme=HindIII
+enzyme=MboI
 gt=genometable.$build.txt
 gene=refFlat.$build.txt
 

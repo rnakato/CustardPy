@@ -14,7 +14,7 @@ sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.1
 fq1=fastq/Control/SRR5952305_1.fastq.gz
 fq2=fastq/Control/SRR5952305_2.fastq.gz
 prefix=Control
-enzyme=HindIII
+enzyme=MboI
 
 # generate .hic and .cool files from fastq
 $sing custardpy_mappingHiC -g $gt -i $index_bwa \

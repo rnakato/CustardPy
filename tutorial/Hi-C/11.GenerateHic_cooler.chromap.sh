@@ -13,7 +13,7 @@ odir=Cooler_$build/Hap1-A
 #fq1=fastq/Control/SRR5952305_1.fastq.gz
 #fq2=fastq/Control/SRR5952305_2.fastq.gz
 #odir=Cooler_$build/Control
-enzyme=HindIII
+enzyme=MboI
 restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 
 mkdir -p $odir/pairs $odir/log
@@ -54,7 +54,7 @@ rm ${TEMPFILE} ${TEMPFILE1}
 
 exit
 
-enzyme=HindIII
+enzyme=MboI
 mkdir -p $idir/hic $idir/cool
 
 $sing bgzip -d -c $input_pairs | $sing fragment_4dnpairs.pl -a - $idir/pairs/mapped.bwa.ff.pairs $restrictionsite
