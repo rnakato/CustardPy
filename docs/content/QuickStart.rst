@@ -31,6 +31,8 @@ You can implement whole commands for Juicer analysis using ``custardpy_juicer`` 
 
 - ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Hap1-A``). The outputs are stored in ``JuicerResults_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
+- Avaible genome build: hg19, hg38, mm10, mm39, rn7, galGal5, galGal6, ce10, ce11, danRer11, dm6, xenLae2, sacCer3
+- Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima
 
 
 Running commands separately

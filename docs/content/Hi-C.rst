@@ -126,11 +126,44 @@ The resulting observed/oe matrices are output in ``<odir>/Matrix/interchromosoma
 makeEigen.sh
 ----------------------------------------------------------------
 
-Generate eigenvector file in that +- of the value is adjusted by the number of genes
+Generate eigenvector file in that +- of the value (indicating A and B compartments) is adjusted by the number of genes.
 
 .. code-block:: bash
 
-     makeEigen.sh <normalize type (e.g. KR)> <output directory> <.hic> <resolution> <build (r.g., hg38)>
+    makeEigen.sh [options] <norm> <odir> <hic> <resolution> <genometable> <refFlat>
+       <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
+       <odir>: output directory (e.g., "JuicerResults/sample1")
+       <hic>: .hic file
+       <resolution>: resolution of matrix
+       <genometable>: genometable file
+       <refFlat>: gene annotation file (refFlat format)
+       Options:
+         -p <int>: the number of CPUs (default: 6)
+
+
+juicer_callTAD.sh
+----------------------------------------------------------------
+
+.. code-block:: bash
+
+    juicer_callTAD.sh [options] <norm> <odir> <hic> <gt>
+       <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
+       <odir>: output directory (e.g., "JuicerResults/sample1")
+       <hic>: .hic file
+       <gt>: genome table
+       Options:
+         -r resolutions: the resolutions for ArrowHead (default: "10000 25000 50000", should be quoted and separated by spaces)
+         -p ncore: number of CPUs (default: 24)
+
+
+- Output:
+    - ``\*_blocks.bedpe`` ... TAD regions (BEDPE format, default output of Juicer ArrowHead)
+    - ``\*_blocks.bed`` ... TAD regions (BED format file converted from ``\*_blocks.bedpe``)
+    - ``\*_blocks.merged.bed`` ... Non-overlapped TAD list (overlapped TAD are merged by ``bedtools merge``)
+    - ``\*_blocks.boundaries.bed`` ... TAD boundaries ("inside" window of called TADs, including boundaries of nested TADs)
+    - ``\*_blocks.TADcoverage.bed`` ... Number of TADs that cover the genomic positions (for nested TAD analysis)
+    - ``\*_blocks.TADregions.bed`` ... List of intra-TAD regions (inside of TAD boundaries)
+    - ``\*_blocks.nonTADregions.bed`` ... List of regions that are not coverted by any TADs
 
 
 makeInslationScore.sh
@@ -166,11 +199,12 @@ Supply ``--nv`` option to the singularity command to activate GPU as follows:
 
 .. code-block:: bash
 
-    call_HiCCUPS.sh <norm> <odir> <hic> <build>
+    call_HiCCUPS.sh <norm> <odir> <hic>
       <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
-      <odir>: output directory
+      <odir>: output directory (e.g., "JuicerResults/sample1")
       <hic>: .hic file
-      <build>: genome build
+      Options:
+         -r resolutions: the resolutions (default: "5000,10000,25000", should be quoted and separated by comma)
 
 - Output
 
