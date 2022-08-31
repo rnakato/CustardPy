@@ -163,7 +163,7 @@ juicer_callTAD.sh
     - ``\*_blocks.boundaries.bed`` ... TAD boundaries ("inside" window of called TADs, including boundaries of nested TADs)
     - ``\*_blocks.TADcoverage.bed`` ... Number of TADs that cover the genomic positions (for nested TAD analysis)
     - ``\*_blocks.TADregions.bed`` ... List of intra-TAD regions (inside of TAD boundaries)
-    - ``\*_blocks.nonTADregions.bed`` ... List of regions that are not coverted by any TADs
+    - ``\*_blocks.nonTADregions.bed`` ... List of regions that are not covered by any TADs
 
 
 makeInslationScore.sh
