@@ -109,16 +109,18 @@ The resulting observed/oe matrices are output in ``<odir>/Matrix/intrachromosoma
 makeMatrix_inter.sh
 ----------------------------------------------------------------
 
-``makeMatrix_inter.sh`` generates the inter-chromosomal interactions matrix for all chromsomes. The chormosome Y and M are omited.
+``makeMatrix_inter.sh`` generates the inter-chromosomal interactions matrix for a specified chromsome pair.
 
 .. code-block:: bash
 
-     makeMatrix_inter.sh <norm> <odir> <hic> <resolution> <gt> 
+    makeMatrix_inter.sh [-l] <norm> <odir> <hic> <resolution> <chr1> <chr2>
        <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
        <odir>: output directory (e.g., "JuicerResults/sample1")
        <hic>: .hic file
        <resolution>: resolution of the matrix
-       <gt>: genome table
+       <chr1, chr2>: two input chromosomes
+       Options:
+         -l: output contact matrix as a list (default: dense matrix)
 
 The resulting observed/oe matrices are output in ``<odir>/Matrix/interchromosomal/<resolution>/<chr1>-<chr2>``.
 
