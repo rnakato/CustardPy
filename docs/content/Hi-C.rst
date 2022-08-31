@@ -167,6 +167,9 @@ juicer_callTAD.sh
     - ``\*_blocks.TADregions.bed`` ... List of intra-TAD regions (inside of TAD boundaries)
     - ``\*_blocks.nonTADregions.bed`` ... List of regions that are not covered by any TADs
 
+.. note::
+
+    Because Juicer ArrowHead allows "nested TADs" and "non-TAD regions", not all genomic regions are included in TADs, and some amount of TAD boundaries may be included in a larger TADs. Make sure that the files you are using meet the criteria of your assumption.
 
 makeInslationScore.sh
 ----------------------------------------------------------------
