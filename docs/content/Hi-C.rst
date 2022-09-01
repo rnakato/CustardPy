@@ -5,6 +5,36 @@ Hi-C analysis
 This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
 See the original website for the full description about each command.
 
+
+
+custardpy_juicer
+------------------------------------------------
+
+``custardpy_juicer`` is an end-to-end pipeline for Juicer analysis.
+It executes ``juicer_map.sh``, ``juicer_pigz.sh``, ``plot_distance_count.sh``, 
+``juicer_callTAD.sh``, ``call_HiCCUPS.sh``, ``makeMatrix_intra.sh``,  ``makeEigen.sh``, and  ``makeInslationScore.sh``.
+
+.. code-block:: bash
+
+    custardpy_juicer [Options] <fastqdir> <label>
+       <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
+       <label>: label of the input (e.g., "sample1")
+       Options:
+          -i index : bwa index
+          -g genometable : genome table file (describing the chromosome length)
+          -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)
+          -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3, default: hg38)
+          -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")
+          -o outputdir : output directory (default: 'JuicerResults')
+          -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)
+          -a <refFlat>: gene annotation file
+          -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
+          -p ncore: number of CPUs (default: 32)
+          -m tmpdir: tempdir
+       Example:
+          custardpy_juicer -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A
+
+
 juicer_map.sh
 ----------------------------------------------------------------
 
