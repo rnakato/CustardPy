@@ -1,27 +1,27 @@
 Visualization
 ===============================
 
-plotHiCMatrix.py
+plotHiCMatrix
 ----------------------------------------------------------------
 
 Plot Hi-C intercation heatmap from Juicer matrix
 
 .. code-block:: bash
 
-    plotHiCMatrix.py <matrix> <output name (png)> <start> <end> <title in figure>
+    plotHiCMatrix <matrix> <output name (png)> <start> <end> <title in figure>
 
     Example:
-        plotHiCMatrix.py WT/intrachromosomal/25000/observed.KR.chr7.matrix.gz chr7/WT_chr7_25000000-31000000.png 25000000 31000000 WT
+        plotHiCMatrix WT/intrachromosomal/25000/observed.KR.chr7.matrix.gz chr7/WT_chr7_25000000-31000000.png 25000000 31000000 WT
 
 
-plotHiCfeature.py
+plotHiCfeature
 ------------------------------------------------------
 
 Plot various feature (Compartment, Directionality Index, Insulation score, etc) values of multiple Hi-C samples
 
 .. code-block:: bash
 
-     plotHiCfeature.py [-h] [--type TYPE] [--distance DISTANCE]
+     plotHiCfeature [-h] [--type TYPE] [--distance DISTANCE]
                          [-r RESOLUTION] [-s START] [-e END] [--multi]
                          [--compartment] [--di] [--dfr] [--vmax VMAX]
                          [--vmin VMIN] [-d VIZDISTANCEMAX] [--xsize XSIZE]
@@ -33,19 +33,19 @@ Plot various feature (Compartment, Directionality Index, Insulation score, etc) 
 Example::
 
      # Directionality Index
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.DI chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --di
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.DI chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --di
      # PC1 for compartment
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.compartment chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --compartment
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.compartment chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --compartment
      # multiInsulationScore
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.MultiIS chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --multi
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.MultiIS chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --multi
      # single InsulationScore
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.SingleIS chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.SingleIS chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000
      # DirectionalFreqRatio
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.DFR chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.DFR chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr
      # DirectionalFreqRatio (right)
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.DFRright chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr_right
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.DFRright chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr_right
      # DirectionalFreqRatio (left)
-     plotHiCfeature.py Ctrl:Control CTCF:siCTCF chr9left.DFRleft chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr_left
+     plotHiCfeature Ctrl:Control CTCF:siCTCF chr9left.DFRleft chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000 --dfr_left
 
 
 plotInsulationScore.py
@@ -70,22 +70,22 @@ Plot multi-scale insulation scores from Juicer matrix
                                            [--sizex SIZEX] [--sizey SIZEY]
                                            matrix output resolution
 
-drawTriangleMulti.py
+drawTriangleMulti
 ------------------------------------------------------
 
 Plot Interaction matrix from Juicer matrix
 
 .. code-block:: bash
 
-     drawTriangleMulti.py [input [input ...]] output region --type $type        # linear scale
-     drawTriangleMulti.py [input [input ...]] output region --type $type --log  # log scale
+     drawTriangleMulti [input [input ...]] output region --type $type        # linear scale
+     drawTriangleMulti [input [input ...]] output region --type $type --log  # log scale
 
-drawTriangleRatioMulti.py
+drawTriangleRatioMulti
 ------------------------------------------------------
 
 Plot Interaction ratio (from 2nd to the last samples divided by 1st sample).
 
 .. code-block:: bash
 
-     drawTriangleRatioMulti.py [input [input ...]] output region --type $type    # logratio
+     drawTriangleRatioMulti [input [input ...]] output region --type $type    # logratio
 
