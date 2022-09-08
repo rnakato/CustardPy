@@ -55,7 +55,7 @@ class DirectionalFreqRatio:
         return self.arrayplus - self.arrayminus
 
 def output_DFR(args):
-    from HiCmodule import JuicerMatrix
+    from custardpy.HiCmodule import JuicerMatrix
     resolution = args.resolution
     samples = []
     samples.append(JuicerMatrix("RPM", args.control, resolution))

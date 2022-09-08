@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 sys.path.append("/home/git/script_rnakato/Hi-C")
-from HiCmodule import *
+from custardpy.HiCmodule import *
 cm = generate_cmap(['#FFFFFF', '#d10a3f'])
 
 usage = 'Usage: \n    python {} <matrixdir> <output prefix> <start> <end> <label>'.format(__file__)

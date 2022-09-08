@@ -5,9 +5,9 @@ import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import ndimage
-from HiCmodule import JuicerMatrix
+from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
-from PlotModule import *
+from custardpy.PlotModule import *
 from DirectionalFreqRatio import *
 
 #import pdb

@@ -4,15 +4,14 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
-from HiCmodule import JuicerMatrix
-from DirectionalityIndex import getDirectionalityIndexOfMultiSample
-from InsulationScore import getInsulationScoreOfMultiSample
+
+from custardpy.HiCmodule import JuicerMatrix
+from custardpy.DirectionalityIndex import getDirectionalityIndexOfMultiSample
+from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
-from loadData import *
-from PlotModule import *
-from DirectionalFreqRatio import *
-#import pysnooper
-#import pdb
+from custardpy.loadData import *
+from custardpy.PlotModule import *
+from custardpy.DirectionalFreqRatio import *
 
 def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
                              nrow, nrow_now, nrow_feature, args):

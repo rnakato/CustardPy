@@ -4,10 +4,10 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
-from HiCmodule import JuicerMatrix
+from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
-from PlotModule import *
-from loadData import *
+from custardpy.PlotModule import *
+from custardpy.loadData import *
 
 #import pdb
 

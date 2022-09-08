@@ -1,11 +1,12 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("../README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="custardpy",
-    version="0.1.0",
+#    version="0.2.0",   # for PyPI
+    version="0.2.3",    # for test
     license="GPL3.0",
     install_requires=[
         "numpy>=1.18",
@@ -26,16 +27,16 @@ setuptools.setup(
     keywords="Hi-C analysis, 3D genome, NGS",
     scripts=['custardpy/checkHiCfile.py',
              'custardpy/convert_JuicerDump_to_dense.py',
-             'custardpy/drawSquareMulti.py',
-             'custardpy/drawSquarePair.py',
-             'custardpy/drawSquareRatioMulti.py',
-             'custardpy/drawSquareRatioPair.py',
-             'custardpy/drawTriangleMulti.py',
-             'custardpy/drawTrianglePair.py',
-             'custardpy/drawTriangleRatioMulti.py',
+             'custardpy/drawSquareMulti',
+             'custardpy/drawSquarePair',
+             'custardpy/drawSquareRatioMulti',
+             'custardpy/drawSquareRatioPair',
+             'custardpy/drawTriangleMulti',
+             'custardpy/drawTrianglePair',
+             'custardpy/drawTriangleRatioMulti',
              'custardpy/HMMDRF.py',
              'custardpy/plotCompartmentGenome.py',
-             'custardpy/plotHiCfeature.py'],
+             'custardpy/plotHiCfeature'],
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
