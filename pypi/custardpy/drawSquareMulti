@@ -4,6 +4,7 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
+import math
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
@@ -15,7 +16,7 @@ from custardpy.PlotModule import *
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input", help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
     parser.add_argument("--log", help="logged count", action='store_true')
@@ -73,7 +74,7 @@ def main():
         print(loopfile)
         loops = loadloops(loopfile, chr[3:], start=figstart, end=figend)
         # Hi-C Map
-        plt.subplot(2, len(samples)/2, i+1)
+        plt.subplot(2, math.ceil(len(samples)/2), i+1)
         if (args.log):
             drawHeatmapSquare(plt, sample.getlog(), resolution,
                                 figstart=figstart, figend=figend,

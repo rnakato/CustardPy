@@ -9,16 +9,14 @@ from scipy import ndimage
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
 from custardpy.PlotModule import *
-from DirectionalFreqRatio import *
+from custardpy.DirectionalFreqRatio import *
 
 #import pdb
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input", help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input", help="<Input matrix>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
-    parser.add_argument("chr", help="chromosome", type=str)
-    parser.add_argument("--type", help="normalize type", type=str, default="KR")
     parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
     parser.add_argument("-s", "--start", help="start bp", type=int, default=0)
     parser.add_argument("-e", "--end", help="end bp", type=int, default=1000000)
@@ -39,9 +37,7 @@ def main():
         else:
             labels.append("")
 
-    chr = args.chr
     resolution = args.resolution
-    type = args.type
     figstart = args.start
     figend = args.end
     s = int(figstart / resolution)
@@ -49,18 +45,15 @@ def main():
     vmax = args.vmax
     vmin = args.vmin
 
-    print (chr)
     print (resolution)
 
     samples = []
     for dir in dirs:
-#        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
         samples.append(JuicerMatrix("RPM", dir, resolution))
 
     smooth_median_filter = 3
     mt1 = make3dmatrixRatio([samples[0], samples[1]], smooth_median_filter)
     mt2 = make3dmatrixRatio([samples[2], samples[3]], smooth_median_filter)
-#    Combined = np.concatenate((mt1), axis=0)
 
     matrix = np.triu(mt1[0], k=1) + np.tril(mt2[0], k=-1)
 

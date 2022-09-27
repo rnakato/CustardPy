@@ -106,7 +106,7 @@ def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input",  help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input",  help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr",    help="chromosome", type=str)
     parser.add_argument("--type", help="normalize type", type=str, default="KR")

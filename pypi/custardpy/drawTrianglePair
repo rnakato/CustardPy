@@ -15,7 +15,7 @@ from custardpy.PlotModule import *
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input", help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
     parser.add_argument("--log", help="logged count", action='store_true')
@@ -58,11 +58,15 @@ def main():
     print (resolution)
     samples = []
     for dir in dirs:
+       observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+       samples.append(JuicerMatrix("RPM", observed, resolution))
+
+#    for dir in dirs:
  #       observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
 #        eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
 #        samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
  #       samples.append(JuicerMatrix("RPM", observed, resolution))
-        samples.append(JuicerMatrix("RPM", dir, resolution))
+ #       samples.append(JuicerMatrix("RPM", dir, resolution))
 
     tads = {}
     loops = {}
@@ -81,7 +85,7 @@ def main():
                             tads=tads[0], loops=loops[0],
                             tads2=tads[1], loops2=loops[1],
                             vmax=vmax, vmin=vmin, distancemax=args.vizdistancemax,
-                            label=labels[i], xticks=True)
+                            label=labels[0] + "(upper)-" + labels[1] + "(lower)", xticks=True)
 
     plt.savefig(args.output + ".pdf")
 

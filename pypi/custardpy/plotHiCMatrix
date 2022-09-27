@@ -3,12 +3,9 @@
 
 import sys
 import numpy as np
-import scipy.stats as sp
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from custardpy.HiCmodule import *
 from custardpy.generateCmap import *
 cm = generate_cmap(['#FFFFFF', '#d10a3f'])

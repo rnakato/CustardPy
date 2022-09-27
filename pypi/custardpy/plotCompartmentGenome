@@ -9,12 +9,10 @@ from custardpy.generateCmap import *
 from custardpy.PlotModule import *
 from custardpy.loadData import *
 
-#import pdb
-
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input", help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("--type", help="normalize type", type=str, default="KR")
     parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
@@ -42,8 +40,7 @@ def main():
     for chr in range(1, nchr):
         plt.subplot2grid((nchr, 4), ((chr-1), 0), rowspan=1, colspan=4)
         for i, dir in enumerate(dirs):
-            eigenfile = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + ".chr" + str(chr) + ".txt"
-            print (eigenfile)
+            eigenfile = dir + "/Eigen/" + str(resolution) + "/eigen."  + type + ".chr" + str(chr) + ".txt.gz"
             eigen = np.loadtxt(eigenfile)
             if(length==0): length = len(eigen)
 

@@ -8,13 +8,13 @@ from scipy import ndimage
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
 from custardpy.PlotModule import *
-from DirectionalFreqRatio import *
+from custardpy.DirectionalFreqRatio import *
 
 #import pdb
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
-    parser.add_argument("input", help="<Input direcoty>:<label>", type=tp, nargs='*')
+    parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
     parser.add_argument("--type", help="normalize type", type=str, default="KR")
