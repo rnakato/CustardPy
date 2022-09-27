@@ -5,6 +5,7 @@ tutorial/Hi-C/JuicerResults/
 tutorial/Hi-C/fastq/
 tutorial/Hi-C/Cooler_hg38/
 tutorial/Micro-C/fastq/
+.vscode
 docs/_build/
 docs/.vscode/
 tutorial/Hi-C/bwa-indexes/
