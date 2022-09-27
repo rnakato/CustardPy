@@ -6,7 +6,7 @@ with open("../README.md", "r") as fh:
 setuptools.setup(
     name="custardpy",
 #    version="0.2.0",   # for PyPI
-    version="0.2.7",    # for test
+    version="0.2.9",    # for test
     license="GPL3.0",
     install_requires=[
         "numpy>=1.18",
@@ -35,7 +35,9 @@ setuptools.setup(
              'custardpy/drawTrianglePair',
              'custardpy/drawTriangleRatioMulti',
              'custardpy/HMMDRF.py',
-             'custardpy/plotCompartmentGenome.py',
+             'custardpy/plotCompartmentGenome',
+             'custardpy/plotInsulationScore',
+             'custardpy/plotMultiScaleInsulationScore',
              'custardpy/plotHiCMatrix',
              'custardpy/plotHiCfeature'],
     packages=setuptools.find_packages(),
