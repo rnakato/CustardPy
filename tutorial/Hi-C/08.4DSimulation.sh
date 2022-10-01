@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.1.0.sif"
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
 
-odir=JuicerResults_$build/Hap1-A
+odir=JuicerResults_hg38/Hap1-A
 hic=$odir/aligned/inter_30.hic
 chr=chr21
 start=24000000

@@ -67,10 +67,10 @@ def main():
     parser.add_argument("--dfr_right",  help="(with --dfr) plot DirectionalFreqRatio (Right)", action='store_true')
     parser.add_argument("--dfr_left",   help="(with --dfr) plot DirectionalFreqRatio (Left)", action='store_true')
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
- #   parser.add_argument("--v4c",   help="plot virtual 4C from Hi-C data", action='store_true')
+    parser.add_argument("--v4c",   help="plot virtual 4C from Hi-C data", action='store_true')
     parser.add_argument("--vmax", help="max value of color bar", type=int, default=50)
     parser.add_argument("--vmin", help="min value of color bar", type=int, default=0)
-  #  parser.add_argument("--anchor", help="(for --v4c) anchor point", type=int, default=500000)
+    parser.add_argument("--anchor", help="(for --v4c) anchor point", type=int, default=500000)
 #    parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
 #    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
 

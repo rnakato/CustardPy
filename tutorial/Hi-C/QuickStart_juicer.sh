@@ -8,9 +8,11 @@ ncore=64
 
 sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
 
-cell=Hap1-A
 fastq_post="_"  # "_" or "_R"
 enzyme=MboI
 
-fqdir=fastq/$cell
-$sing custardpy_juicer -p $ncore -a $gene -b $build -g $gt -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
+for cell in WaplKO_3.3-A #Hap1-A
+do
+    fqdir=fastq/$cell
+    $sing custardpy_juicer -p $ncore -a $gene -b $build -g $gt -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
+done

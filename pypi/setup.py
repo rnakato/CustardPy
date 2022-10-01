@@ -5,8 +5,8 @@ with open("../README.md", "r") as fh:
 
 setuptools.setup(
     name="custardpy",
-#    version="0.2.0",   # for PyPI
-    version="0.2.9",    # for test
+    version="0.1.2",   # for PyPI
+#    version="0.2.11",    # for test
     license="GPL3.0",
     install_requires=[
         "numpy>=1.18",
