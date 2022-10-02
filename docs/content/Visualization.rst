@@ -11,8 +11,16 @@ The contact level is normalized by the total number of mapped reads for the chro
 
     plotHiCMatrix <matrix> <output name (png)> <start> <end> <title in figure>
 
-    Example:
-        plotHiCMatrix WT/intrachromosomal/25000/observed.KR.chr7.matrix.gz ContactMap_WT.chr7.25000000-31000000.png 25000000 31000000 WT
+Example:
+
+.. code-block:: bash
+     chr=chr7
+     start=15000000
+     end=40000000
+     norm=SCALE
+     cell=Hap1-A
+     binsize=100000
+     matrix=JuicerResults_hg38/$cell/Matrix/intrachromosomal/$binsize/observed.$norm.$chr.matrix.gz
 
 .. figure:: img/plotHiCMatrix.png
    :width: 500px
@@ -20,6 +28,7 @@ The contact level is normalized by the total number of mapped reads for the chro
    :alt: Alternate
 
    plotHiCMatrix 
+
 
 drawSquareMulti
 ------------------------------------------------------
@@ -56,6 +65,7 @@ Add ``--log`` option to change the contact level to log scale.
    :alt: Alternate
 
    SquareMulti (log scale)
+
 
 drawSquarePair
 ------------------------------------------------------
@@ -212,30 +222,26 @@ In default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distan
 
 .. code-block:: bash
 
-    plotHiCfeature Ctrl:Control CTCF:siCTCF MultiIS.chr9.1M-38M --multi \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
+     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
+          MultiIS.chr9.1M-38M --start 1000000 --end 38000000 \
+          --multi --type SCALE -d 5000000
 
 Other examples::
 
      # PC1 for compartment
-     plotHiCfeature Ctrl:Control CTCF:siCTCF Compartment.chr9.1M-38M --compartment \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
+     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
+          Compartment.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
+          --compartment --type SCALE -d 5000000
 
      # Directionality index
-     plotHiCfeature Ctrl:Control CTCF:siCTCF DI.chr9.1M-38M --di \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
+     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
+          DI.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
+          --di --type SCALE -d 5000000
 
      # Directional frequency ratio
-     plotHiCfeature Ctrl:Control CTCF:siCTCF DFR.chr9.1M-38M --dfr \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
-
-     # DirectionalFreqRatio (right)
-     plotHiCfeature Ctrl:Control CTCF:siCTCF DFRright.chr9.1M-38M --dfr_right \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
-
-     # DirectionalFreqRatio (left)
-     plotHiCfeature Ctrl:Control CTCF:siCTCF DFRleft.chr9.1M-38M --dfr_left \
-          chr9 --start 1000000 --end 38000000 --type SCALE -d 5000000
+     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
+          DFR.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
+          --dfr --type SCALE -d 5000000
 
 
 plotCompartmentGenome
