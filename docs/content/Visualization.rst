@@ -14,6 +14,7 @@ The contact level is normalized by the total number of mapped reads for the chro
 Example:
 
 .. code-block:: bash
+
      chr=chr7
      start=15000000
      end=40000000
@@ -27,7 +28,7 @@ Example:
    :align: center
    :alt: Alternate
 
-   plotHiCMatrix 
+   plotHiCMatrix
 
 
 drawSquareMulti
@@ -42,7 +43,7 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
      drawSquareMulti Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL SquareMulti.chr9 \
           chr9 --start 1000000 --end 38000000  --type VC_SQRT --vmax 20
 
-The black dashed lines and blue circles indicate TADs and loops, respectively. 
+The black dashed lines and blue circles indicate TADs and loops, respectively.
 
 .. figure:: img/SquareMulti.jpg
    :width: 500px
@@ -119,7 +120,7 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
 .. code-block:: bash
 
      drawSquareRatioMulti Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL drawSquareRatioMulti.chr9 \
-          chr9 --start 1000000 --end 38000000 --type VC_SQRT 
+          chr9 --start 1000000 --end 38000000 --type VC_SQRT
 
 .. figure:: img/drawSquareRatioMulti.jpg
    :width: 500px
@@ -142,9 +143,9 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
 
      # linear scale
      drawTriangleMulti Control_1:Control CTCFKD_1:siCTCF drawTriangleMulti.chr9 \
-          chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000   
+          chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000
 
-The black dashed lines and blue circles indicate TADs and loops, respectively. 
+The black dashed lines and blue circles indicate TADs and loops, respectively.
 
 .. figure:: img/drawTriangleMulti.jpg
    :width: 600px
@@ -156,7 +157,7 @@ The black dashed lines and blue circles indicate TADs and loops, respectively.
 drawTrianglePair
 ------------------------------------------------------
 
-Visualize a contact frequency of the first and second sample in upper and lower triangles, respectively. 
+Visualize a contact frequency of the first and second sample in upper and lower triangles, respectively.
 
 .. code-block:: bash
 
@@ -169,8 +170,8 @@ Visualize a contact frequency of the first and second sample in upper and lower 
    :alt: Alternate
 
    drawTrianglePair
-   
-The black dashed lines and blue circles indicate TADs and loops, respectively. 
+
+The black dashed lines and blue circles indicate TADs and loops, respectively.
 
 drawTriangleRatioMulti
 ------------------------------------------------------
@@ -201,60 +202,188 @@ Draw heatmap and line graphs for various features values of multiple Hi-C sample
 
 .. code-block:: bash
 
-     plotHiCfeature [-h] [--type TYPE] [--distance DISTANCE]
-                         [-r RESOLUTION] [-s START] [-e END] [--multi]
-                         [--compartment] [--di] [--dfr] [--vmax VMAX]
-                         [--vmin VMIN] [-d VIZDISTANCEMAX] [--xsize XSIZE]
-                         [input [input ...]] output chr
+     plotHiCfeature [-h] [-o OUTPUT] [-c CHR] [--type TYPE]
+                    [--distance DISTANCE] [-r RESOLUTION] [-s START]
+                    [-e END] [--multi] [--multidiff] [--compartment] [--di]
+                    [--dfr] [--dfr_right] [--dfr_left] [-d VIZDISTANCEMAX]
+                    [--v4c] [--vmax VMAX] [--vmin VMIN] [--anchor ANCHOR]
+                    [input [input ...]]
 
-``Input`` should be "<sample directory>:<label>", for instance:
+``Input`` should be "<sample directory>:<label>".
+``<sample directory>`` is the output directory by ``custardpy_juicer``.
+``<label>`` is the label in the figure.
+
+In default, ``plotHiCfeature`` uses a 25-kbp bin matrix. Supply ``-r`` option to change the resolution.
+
+Insulation score
++++++++++++++++++++++++++++
+
+In default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distance).
+``type`` is the normalization type defined by Juicer (SCALE/KR/VC_SQRT/NONE).
 
 .. code-block:: bash
 
-     plotHiCfeature --type SCALE --start 1000000 --end 38000000 \
-         Ctrl:Control CTCF:siCTCF InsulationScore.chr9.1M-38M 
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --type $norm -d 5000000 \
+          -o IS.$chr.$start-$end
 
-``<sample directory>`` is the output directory by ``custardpy_juicer``.
-In default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distance).
-``type`` is the normalization type defined by Juicer (SCALE/KR/VC_SQRT/NONE).
+
+.. figure:: img/plotHiCfeature_IS.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Insulation score
+
+``plotHiCfeature`` draws compartment PC1 in the second row to roughly identify compartment A/B.
+The third and fourth rows are both Insulation scores visualized as a heatmap and line plot, respectively.
+
+
+Multi-insulation score
++++++++++++++++++++++++++++
 
 ``plotHiCfeature`` can also output a multi-scale insulation score ranging 100 kbp to 1 Mbp by supplying ``--multi `` option.
 
 .. code-block:: bash
 
-     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
-          MultiIS.chr9.1M-38M --start 1000000 --end 38000000 \
-          --multi --type SCALE -d 5000000
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --multi --type $norm -d 5000000 \
+          -o MultiIS.$chr.$start-$end
 
-Other examples::
+.. figure:: img/plotHiCfeature_multiIS.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
 
-     # PC1 for compartment
-     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
-          Compartment.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
-          --compartment --type SCALE -d 5000000
+     Multi-insulation score
 
-     # Directionality index
-     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
-          DI.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
-          --di --type SCALE -d 5000000
+Red regions in the heatmap indicate the insulated regions (TAD boundaries).
+The lower and upper sides of the heatmap are 100 kbp to 1 Mbp distances, respectively.
 
-     # Directional frequency ratio
-     plotHiCfeature JuicerResults_hg38/Hap1-A JuicerResults_hg38/WaplKO_3.3-A \
-          DFR.chr9.1M-38M chr9 --start 1000000 --end 38000000 \
-          --dfr --type SCALE -d 5000000
+
+Differential multi-insulation score
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+To directory investigate the difference of multi-insulation score, we provide **differential multi-insulation score** by ``--multidiff`` option.
+
+.. code-block:: bash
+
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --multidiff --type $norm -d 5000000 \
+          -o MultiISdiff.$chr.$start-$end
+
+.. figure:: img/plotHiCfeature_multiISdiff.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Differential multi-insulation score
+
+The heatmap shows the difference **sample2 - sample1** (WaplKO - Control in this case). We can see the insulation level increases overall by WAPL depletion.
+
+Compartment PC1
++++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --compartment --type $norm -d 5000000 \
+          -o Compartment.$chr.$start-$end
+
+.. figure:: img/plotHiCfeature_compartment.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Compartment PC1
+
+Directionality index
++++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --di --type $norm -d 5000000 \
+          -o DI.$chr.$start-$end
+
+.. figure:: img/plotHiCfeature_compartment.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Compartment PC1
+
+
+Directional frequency ratio
+++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+     chr=chr20
+     start=8000000
+     end=16000000
+     norm=SCALE
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          -c $chr --start $start --end $end \
+          --dfr --type $norm -d 5000000 \
+          -o DFR.$chr.$start-$end
+
+.. figure:: img/plotHiCfeature_dfr.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Directional frequency ratio
 
 
 plotCompartmentGenome
 ------------------------------------------------------
 
-Plot a PC1 value of multiple samples for the whole genome. 
+Plot a PC1 value of multiple samples for the whole genome.
 
 .. code-block:: bash
 
      plotCompartmentGenome [-h] [--type TYPE] [-r RESOLUTION] [--heatmap]
                        [input [input ...]] output
      Example:
-        plotCompartmentGenome Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL \ 
+        plotCompartmentGenome Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL \
                CompartmentGenome -r 25000 --type VC_SQRT
 
 .. figure:: img/plotCompartmentGenome.jpg
