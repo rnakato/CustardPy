@@ -11,6 +11,14 @@ matrix=JuicerResults_hg38/$cell/Matrix/intrachromosomal/100000/observed.$norm.$c
 
 $sing plotHiCMatrix $matrix ContactMap.$cell.$chr.$start-$end.png $start $end $cell
 
+
+$sing plotHiCfeature \
+      JuicerResults_hg38/Hap1-A:Control \
+      JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+      -c $chr --start $start --end $end \
+      --type $norm -d 5000000 \
+      -o IS.$chr.$start-$end
+
 $sing plotHiCfeature \
       JuicerResults_hg38/Hap1-A:Control \
       JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
@@ -47,9 +55,13 @@ $sing plotHiCfeature \
       -o DI.$chr.$start-$end
 
 $sing drawSquarePair \
-         Control/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
-         Rad21KD_1/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
-         drawSquarePair.chr21 --start 24000000 --end 32000000
+      JuicerResults_hg38/Hap1-A/Matrix/intrachromosomal/25000/observed.$norm.$chr.matrix.gz \
+      JuicerResults_hg38/WaplKO_3.3-A/Matrix/intrachromosomal/25000/observed.$norm.$chr.matrix.gz \
+      drawSquarePair.$chr --start $start --end $end -r 25000
 
-$sing drawSquareMulti Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL SquareMulti.chr9 \
-          chr9 --start 1000000 --end 38000000  --type VC_SQRT --vmax 20
+
+$sing drawSquareMulti \
+      JuicerResults_hg38/Hap1-A:Control \
+      JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+      SquareMulti.$chr \
+      $chr --start $start --end $end --type $norm

@@ -5,8 +5,6 @@ import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
 from custardpy.HiCmodule import JuicerMatrix
-from custardpy.DirectionalityIndex import getDirectionalityIndexOfMultiSample
-from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.loadData import *
 from custardpy.PlotModule import *
 from custardpy.DirectionalFreqRatio import *
@@ -114,7 +112,6 @@ def main():
     parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
     parser.add_argument("-s", "--start", help="start bp", type=int, default=0)
     parser.add_argument("-e", "--end",   help="end bp", type=int, default=1000000)
-    parser.add_argument("--multi",       help="plot MultiInsulation Score", action='store_true')
     parser.add_argument("--compartment", help="plot Compartment (eigen)", action='store_true')
     parser.add_argument("--di",   help="plot Directionaly Index", action='store_true')
     parser.add_argument("--dfr",   help="plot DirectionalFreqRatio", action='store_true')

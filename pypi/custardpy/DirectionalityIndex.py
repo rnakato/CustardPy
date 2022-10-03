@@ -32,7 +32,7 @@ def getDirectionalityIndexOfMultiSample(samples, labels, *, distance=1000000):
         else:    Matrix = np.vstack((Matrix,sample.getDirectionalityIndex(distance=distance)))
     Matrix = pd.DataFrame(Matrix)
     Matrix = Matrix.replace(-np.inf,np.nan).fillna(0)
-    Matrix.index = labels
+#    Matrix.index = labels
     return Matrix
 
 if(__name__ == '__main__'):
