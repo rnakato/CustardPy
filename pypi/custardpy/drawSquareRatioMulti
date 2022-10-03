@@ -18,17 +18,15 @@ def main():
     parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
-    parser.add_argument("--type", help="normalize type", type=str, default="KR")
-    parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
-    parser.add_argument("-s", "--start", help="start bp", type=int, default=0)
-    parser.add_argument("-e", "--end", help="end bp", type=int, default=1000000)
-    parser.add_argument("--vmax", help="max value of color bar", type=int, default=1)
-    parser.add_argument("--vmin", help="min value of color bar", type=int, default=-1)
-    parser.add_argument("--xsize", help="xsize for figure", type=int, default=3)
-#    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+    parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
+    parser.add_argument("-r", "--resolution (default: 25000)", help="resolution", type=int, default=25000)
+    parser.add_argument("-s", "--start (default: 0)", help="start bp", type=int, default=0)
+    parser.add_argument("-e", "--end (default: 1000000)", help="end bp", type=int, default=1000000)
+    parser.add_argument("--vmax", help="max value of color bar (default: 1)", type=int, default=1)
+    parser.add_argument("--vmin", help="min value of color bar (default: -1)", type=int, default=-1)
 
     args = parser.parse_args()
-#    print(args)
+    print(args)
 
     dirs = []
     labels = []
@@ -48,7 +46,7 @@ def main():
     e = int(figend   / resolution)
     vmax = args.vmax
     vmin = args.vmin
-    figsize_y = int((figend-figstart)/2000000)
+#    figsize_y = int((figend-figstart)/2000000)
 
     print (chr)
     print (resolution)
@@ -62,11 +60,14 @@ def main():
     EnrichMatrices = make3dmatrixRatio(samples, smooth_median_filter)
 
     nsample = len(samples) -1
-    plt.figure(figsize=(nsample*args.xsize/2, figsize_y))
+
+    plt.figure(figsize=(6, 3 * max(2,math.ceil(nsample/2))))
+ #   plt.figure(figsize=(nsample*args.xsize/2, figsize_y))
 
     for i, sample in enumerate(EnrichMatrices):
         # Hi-C Map
-        plt.subplot(math.ceil(nsample/2), 2, i+1)
+#        plt.subplot(math.ceil(nsample/2), 2, i+1)
+        plt.subplot(int(len(labels)/2)+1, 2, i+1)
         drawHeatmapSquare(plt, sample, resolution,
                           figstart=figstart, figend=figend,
                           vmax=vmax, vmin=vmin,

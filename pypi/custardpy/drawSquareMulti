@@ -11,8 +11,6 @@ from custardpy.generateCmap import *
 from custardpy.loadData import *
 from custardpy.PlotModule import *
 
-#import pdb
-
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
@@ -20,17 +18,17 @@ def main():
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
     parser.add_argument("--log", help="logged count", action='store_true')
-    parser.add_argument("--type", help="normalize type", type=str, default="KR")
-    parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
-    parser.add_argument("-s", "--start", help="start bp", type=int, default=0)
-    parser.add_argument("-e", "--end", help="end bp", type=int, default=1000000)
-    parser.add_argument("--vmax", help="max value of color bar", type=int, default=50)
-    parser.add_argument("--vmin", help="min value of color bar", type=int, default=0)
-    parser.add_argument("--xsize", help="xsize for figure", type=int, default=3)
-    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+    parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
+    parser.add_argument("-r", "--resolution (default: 25000)", help="resolution", type=int, default=25000)
+    parser.add_argument("-s", "--start (default: 0)", help="start bp", type=int, default=0)
+    parser.add_argument("-e", "--end (default: 1000000)", help="end bp", type=int, default=1000000)
+    parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
+    parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
+#    parser.add_argument("--xsize", help="xsize for figure", type=int, default=3)
+#    parser.add_argument("--ysize", help="ysize for figure", type=int, default=3)
 
     args = parser.parse_args()
-#    print(args)
+    print(args)
 
     dirs = []
     labels = []
@@ -64,7 +62,7 @@ def main():
 
     ### Plot
     nsample = len(samples)
-    plt.figure(figsize=(nsample*args.xsize/2, args.ysize*2))
+    plt.figure(figsize=(6, 3 * max(2,math.ceil(nsample/2))))
 
     for i, sample in enumerate(samples):
         tadfile = dirs[i] + "/contact_domain/" + str(resolution) + "_blocks.bedpe"
@@ -74,7 +72,7 @@ def main():
         print(loopfile)
         loops = loadloops(loopfile, chr[3:], start=figstart, end=figend)
         # Hi-C Map
-        plt.subplot(2, math.ceil(len(samples)/2), i+1)
+        plt.subplot(int(len(labels)/2)+1, 2, i+1)
         if (args.log):
             drawHeatmapSquare(plt, sample.getlog(), resolution,
                                 figstart=figstart, figend=figend,

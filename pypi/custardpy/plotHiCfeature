@@ -31,10 +31,14 @@ def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
         if i==0: Matrix = array
         else:    Matrix = np.vstack((Matrix, array))
 
+    if len(samples) == 2:
+        Matrix = Matrix.reshape((1, -1))
+
     plt.subplot2grid((nrow, 5), (nrow_now, 0), rowspan=nrow_feature, colspan=5)
     plt.imshow(Matrix[:,s:e], cmap=generate_cmap(['#1310cc', '#FFFFFF', '#d10a3f']), aspect="auto")
     plt.colorbar()
     plt.yticks(np.arange(len(labels)-1), labels[1:len(labels)])
+    plt.title("Directional Frequency Ratio")
     xtickoff(plt)
 
     nrow_now += nrow_feature
@@ -47,13 +51,14 @@ def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
 
     plt.xlim([s, e])
     pltxticks(s, e, figstart, figend, 10)
+    plt.legend()
 
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
     parser.add_argument("input",  help="<Input directory>:<label>", type=tp, nargs='*')
-    parser.add_argument("output", help="Output prefix", type=str)
-    parser.add_argument("chr",    help="chromosome", type=str)
+    parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
+    parser.add_argument("-c", "--chr", help="chromosome", type=str, default="chr1")
     parser.add_argument("--type", help="normalize type", type=str, default="SCALE")
     parser.add_argument("--distance", help="distance for DI", type=int, default=500000)
     parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
@@ -75,7 +80,7 @@ def main():
 #    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
 
     args = parser.parse_args()
-#    print(args)
+    print(args)
 
     dirs = []
     labels = []
@@ -85,6 +90,10 @@ def main():
             labels.append(input[1])
         else:
             labels.append("")
+
+    if len(dirs) == 0:
+        print ("Error: specify input data (-i).")
+        exit()
 
     chr = args.chr
     resolution = args.resolution
@@ -105,6 +114,11 @@ def main():
         exit(1)
     print (chr)
     print (resolution)
+
+    if (args.dfr):
+        if len(dirs) < 2:
+            print ("Error: --dfr requires >= 2 samples.")
+            exit()
 
     samples = []
     for dir in dirs:
@@ -256,7 +270,7 @@ def main():
         for i in range(len(samples)):
             plt.plot(Matrix.iloc[s:e,i], label=labels[i])
         plt.xlim([figstart, figend])
-#        plt.legend()
+        plt.legend()
 
     plt.savefig(args.output + ".pdf")
 

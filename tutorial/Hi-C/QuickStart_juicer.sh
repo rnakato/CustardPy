@@ -11,7 +11,7 @@ sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardp
 fastq_post="_"  # "_" or "_R"
 enzyme=MboI
 
-for cell in WaplKO_3.3-A #Hap1-A
+for cell in Hap1-A WaplKO_3.3-A
 do
     fqdir=fastq/$cell
     $sing custardpy_juicer -p $ncore -a $gene -b $build -g $gt -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
