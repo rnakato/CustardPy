@@ -4,10 +4,8 @@ Quickstart
 Hi-C analysis using Juicer
 ----------------------------------------------------------------
 
-
 Running custardpy_juicer
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 You can implement whole commands for Juicer analysis using ``custardpy_juicer`` command in the Singularity image (``custardpy_juicer.sif``).
 
