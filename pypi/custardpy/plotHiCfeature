@@ -115,7 +115,7 @@ def main():
     print (chr)
     print (resolution)
 
-    if (args.dfr):
+    if (args.dfr or args.multidiff):
         if len(dirs) < 2:
             print ("Error: --dfr requires >= 2 samples.")
             exit()
@@ -175,7 +175,8 @@ def main():
         if len(samples) == 1:
             vDI = vDI.reshape((1, -1))
 
-        plt.imshow(vDI.iloc[:,s:e],
+#        plt.imshow(vDI.iloc[:,s:e],
+        plt.imshow(vDI[:,s:e],
                    clim=(-1000, 1000),
                    cmap=generate_cmap(['#1310cc', '#FFFFFF', '#d10a3f']),
                    aspect="auto")
@@ -187,8 +188,9 @@ def main():
         nrow_now += nrow_feature
         plt.subplot2grid((nrow, 5), (nrow_now, 0), rowspan=2, colspan=4)
         for i, sample in enumerate(samples):
-            plt.plot(vDI.iloc[i,s:e], label=labels[i])
+            plt.plot(vDI[i], label=labels[i])
         plt.xlim([s, e])
+        plt.ylim([-1000, 1000])
         pltxticks(s, e, figstart, figend, 10)
         plt.legend()
 
