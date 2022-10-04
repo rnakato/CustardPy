@@ -16,12 +16,12 @@ def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
     parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
-    parser.add_argument("output", help="Output prefix", type=str)
-    parser.add_argument("chr", help="chromosome", type=str)
+    parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
+    parser.add_argument("-c", "--chr", help="chromosome", type=str)
     parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
-    parser.add_argument("-r", "--resolution (default: 25000)", help="resolution", type=int, default=25000)
-    parser.add_argument("-s", "--start (default: 0)", help="start bp", type=int, default=0)
-    parser.add_argument("-e", "--end (default: 1000000)", help="end bp", type=int, default=1000000)
+    parser.add_argument("-r", "--resolution", help="resolution (default: 25000)", type=int, default=25000)
+    parser.add_argument("-s", "--start", help="start bp (default: 0)", type=int, default=0)
+    parser.add_argument("-e", "--end", help="end bp (default: 1000000)", type=int, default=1000000)
     parser.add_argument("--vmax", help="max value of color bar (default: 1)", type=int, default=1)
     parser.add_argument("--vmin", help="min value of color bar (default: -1)", type=int, default=-1)
 
@@ -36,6 +36,13 @@ def main():
             labels.append(input[1])
         else:
             labels.append("")
+
+    if len(dirs) == 0:
+        print ("Error: specify input data (-i).")
+        exit()
+    if args.chr is None:
+        print ("Error: specify chromosome (-c).")
+        exit()
 
     chr = args.chr
     resolution = args.resolution

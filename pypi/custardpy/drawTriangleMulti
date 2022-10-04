@@ -16,8 +16,8 @@ def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
     parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
-    parser.add_argument("output", help="Output prefix", type=str)
-    parser.add_argument("chr", help="chromosome", type=str)
+    parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
+    parser.add_argument("-c", "--chr", help="chromosome", type=str)
     parser.add_argument("--log", help="logged count", action='store_true')
     parser.add_argument("--type", help="normalize type", type=str, default="KR")
     parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
@@ -40,6 +40,13 @@ def main():
             labels.append(input[1])
         else:
             labels.append("")
+
+    if len(dirs) == 0:
+        print ("Error: specify input data (-i).")
+        exit()
+    if args.chr is None:
+        print ("Error: specify chromosome (-c).")
+        exit()
 
     chr = args.chr
     resolution = args.resolution

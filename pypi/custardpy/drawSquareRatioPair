@@ -37,6 +37,10 @@ def main():
         else:
             labels.append("")
 
+    if len(dirs) == 0:
+        print ("Error: specify input data (-i).")
+        exit()
+
     resolution = args.resolution
     figstart = args.start
     figend = args.end

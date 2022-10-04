@@ -11,22 +11,22 @@ from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
 from custardpy.loadData import *
 from custardpy.PlotModule import *
-from custardpy.DirectionalFreqRatio import *
+from custardpy.DirectionalRelativeFreq import *
 
-def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
+def plotDirectionalRelativeFreq(plt, samples, resolution, figstart, figend, labels,
                              nrow, nrow_now, nrow_feature, args):
     s = int(figstart / resolution)
     e = int(figend   / resolution)
     smooth_median_filter = 3
     EnrichMatrices = make3dmatrixRatio(samples, smooth_median_filter)
     for i, sample in enumerate(EnrichMatrices):
-        dfr = DirectionalFreqRatio(sample, resolution)
-        if (args.dfr_right == True):
-            array = dfr.getarrayplus()
-        elif (args.dfr_left == True):
-            array = dfr.getarrayminus()
+        drf = DirectionalRelativeFreq(sample, resolution)
+        if (args.drf_right == True):
+            array = drf.getarrayplus()
+        elif (args.drf_left == True):
+            array = drf.getarrayminus()
         else:
-            array = dfr.getarraydiff()
+            array = drf.getarraydiff()
 
         if i==0: Matrix = array
         else:    Matrix = np.vstack((Matrix, array))
@@ -45,8 +45,8 @@ def plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
     plt.subplot2grid((nrow, 5), (nrow_now, 0), rowspan=2, colspan=4)
     for i, sample in enumerate(Matrix):
         plt.plot(sample, label=labels[i+1])
-#        if (args.dfr_right == True):  plt.title("Right")
-#        elif (args.dfr_left == True): plt.title("Left")
+#        if (args.drf_right == True):  plt.title("Right")
+#        elif (args.drf_left == True): plt.title("Left")
 #        else: plt.title("Right - Left")
 
     plt.xlim([s, e])
@@ -58,23 +58,23 @@ def main():
     tp = lambda x:list(map(str, x.split(':')))
     parser.add_argument("input",  help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
-    parser.add_argument("-c", "--chr", help="chromosome", type=str, default="chr1")
-    parser.add_argument("--type", help="normalize type", type=str, default="SCALE")
-    parser.add_argument("--distance", help="distance for DI", type=int, default=500000)
-    parser.add_argument("-r", "--resolution", help="resolution", type=int, default=25000)
-    parser.add_argument("-s", "--start", help="start bp", type=int, default=0)
-    parser.add_argument("-e", "--end",   help="end bp", type=int, default=1000000)
+    parser.add_argument("-c", "--chr", help="chromosome", type=str)
+    parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
+    parser.add_argument("--distance", help="distance for DI (default: 500000)", type=int, default=500000)
+    parser.add_argument("-r", "--resolution", help="resolution (default: 25000)", type=int, default=25000)
+    parser.add_argument("-s", "--start", help="start bp (default: 0)", type=int, default=0)
+    parser.add_argument("-e", "--end",   help="end bp (default: 1000000)", type=int, default=1000000)
     parser.add_argument("--multi",       help="plot MultiInsulation Score", action='store_true')
     parser.add_argument("--multidiff",   help="plot differential MultiInsulation Score", action='store_true')
     parser.add_argument("--compartment", help="plot Compartment (eigen)", action='store_true')
     parser.add_argument("--di",    help="plot Directionaly Index", action='store_true')
-    parser.add_argument("--dfr",   help="plot DirectionalFreqRatio", action='store_true')
-    parser.add_argument("--dfr_right",  help="(with --dfr) plot DirectionalFreqRatio (Right)", action='store_true')
-    parser.add_argument("--dfr_left",   help="(with --dfr) plot DirectionalFreqRatio (Left)", action='store_true')
+    parser.add_argument("--drf",   help="plot DirectionalRelativeFreq", action='store_true')
+    parser.add_argument("--drf_right",  help="(with --drf) plot DirectionalRelativeFreq (Right)", action='store_true')
+    parser.add_argument("--drf_left",   help="(with --drf) plot DirectionalRelativeFreq (Left)", action='store_true')
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
     parser.add_argument("--v4c",   help="plot virtual 4C from Hi-C data", action='store_true')
-    parser.add_argument("--vmax", help="max value of color bar", type=int, default=50)
-    parser.add_argument("--vmin", help="min value of color bar", type=int, default=0)
+    parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
+    parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
     parser.add_argument("--anchor", help="(for --v4c) anchor point", type=int, default=500000)
 #    parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
 #    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
@@ -93,6 +93,9 @@ def main():
 
     if len(dirs) == 0:
         print ("Error: specify input data (-i).")
+        exit()
+    if args.chr is None:
+        print ("Error: specify chromosome (-c).")
         exit()
 
     chr = args.chr
@@ -115,9 +118,9 @@ def main():
     print (chr)
     print (resolution)
 
-    if (args.dfr or args.multidiff):
+    if (args.drf or args.multidiff):
         if len(dirs) < 2:
-            print ("Error: --dfr requires >= 2 samples.")
+            print ("Error: --drf requires >= 2 samples.")
             exit()
 
     samples = []
@@ -165,8 +168,8 @@ def main():
     xtickoff(plt)
     nrow_now += nrow_eigen
 
-    if (args.dfr):  # Directional Frequency Ratio
-        plotDirectionalFreqRatio(plt, samples, resolution, figstart, figend, labels,
+    if (args.drf):  # Directional Frequency Ratio
+        plotDirectionalRelativeFreq(plt, samples, resolution, figstart, figend, labels,
                                  nrow, nrow_now, nrow_feature, args)
 
     elif (args.di):  # Directionality Index

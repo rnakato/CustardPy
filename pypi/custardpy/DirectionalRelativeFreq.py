@@ -21,10 +21,10 @@ def make3dmatrixRatio(samples, smoooth=3):
     Matrix = Matrix.reshape(n-1,x,y)
     return Matrix
 
-def getDirectionalFreqRatio(mat, resolution, strand, *,
-                            startdistance=0, distance=2000000):
+def getDirectionalRelativeFreq(mat, resolution, strand, *,
+                               startdistance=0, distance=2000000):
     if (startdistance >= distance):
-        print ("getDirectionalFreqRatio: Error: startdistance > enddistance")
+        print ("getDirectionalRelativeFreq: Error: startdistance > enddistance")
         exit(1)
 
     arraysize = mat.shape[0]
@@ -40,10 +40,10 @@ def getDirectionalFreqRatio(mat, resolution, strand, *,
 
     return array
 
-class DirectionalFreqRatio:
+class DirectionalRelativeFreq:
     def __init__(self, mat, resolution, *, startdistance=0, distance=2000000):
-        self.arrayplus  = getDirectionalFreqRatio(mat, resolution, "+", startdistance=startdistance, distance=distance)
-        self.arrayminus = getDirectionalFreqRatio(mat, resolution, "-", startdistance=startdistance, distance=distance)
+        self.arrayplus  = getDirectionalRelativeFreq(mat, resolution, "+", startdistance=startdistance, distance=distance)
+        self.arrayminus = getDirectionalRelativeFreq(mat, resolution, "-", startdistance=startdistance, distance=distance)
 
     def getarrayplus(self):
         return self.arrayplus
@@ -54,7 +54,7 @@ class DirectionalFreqRatio:
     def getarraydiff(self):
         return self.arrayplus - self.arrayminus
 
-def output_DFR(args):
+def output_DRF(args):
     from custardpy.HiCmodule import JuicerMatrix
     resolution = args.resolution
     samples = []
@@ -66,20 +66,20 @@ def output_DFR(args):
 
 #    import pdb; pdb.set_trace()
 
-    dfr = DirectionalFreqRatio(EnrichMatrices[0], resolution)
-    if (args.dfr_right == True):
-        array = dfr.getarrayplus()
-    elif (args.dfr_left == True):
-        array = dfr.getarrayminus()
+    drf = DirectionalRelativeFreq(EnrichMatrices[0], resolution)
+    if (args.drf_right == True):
+        array = drf.getarrayplus()
+    elif (args.drf_left == True):
+        array = drf.getarrayminus()
     else:
-        array = dfr.getarraydiff()
+        array = drf.getarraydiff()
 
     df = pd.DataFrame(array)
-    df.columns = ["DFR"]
+    df.columns = ["DRF"]
     df["chr"] = args.chr
     df["start"] = np.arange(len(array)) * resolution
     df["end"] = df["start"] + resolution
-    df = df.loc[:,["chr","start","end","DFR"]]
+    df = df.loc[:,["chr","start","end","DRF"]]
 
     df.to_csv(args.output + ".bedGraph", sep="\t", header=False, index=False)
 #    np.savetxt(args.output, array, fmt="%0.6f")
@@ -91,10 +91,10 @@ if(__name__ == '__main__'):
     parser.add_argument("output", help="Output prefix", type=str)
     parser.add_argument("chr", help="chromosome", type=str)
     parser.add_argument("resolution", help="Resolution of the input matrix", type=int)
-    parser.add_argument("--dfr_right",   help="(with --dfr) plot DirectionalFreqRatio (Right)", action='store_true')
-    parser.add_argument("--dfr_left",   help="(with --dfr) plot DirectionalFreqRatio (Left)", action='store_true')
+    parser.add_argument("--drf_right",   help="(with --drf) plot DirectionalRelativeFreq (Right)", action='store_true')
+    parser.add_argument("--drf_left",   help="(with --drf) plot DirectionalRelativeFreq (Left)", action='store_true')
 
     args = parser.parse_args()
-    #print(args)
+    print(args)
 
-    output_DFR(args)
+    output_DRF(args)
