@@ -89,7 +89,7 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
         JuicerResults_hg38/CTCFKD:siCTCF \
         JuicerResults_hg38/NIPBLKD:siNIBPL \
         -o drawSquareRatioMulti.chr9 \
-        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT 
+        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT
 
 .. figure:: img/drawSquareRatioMulti.jpg
    :width: 500px
@@ -235,10 +235,10 @@ plotHiCfeature
                            [--dfr] [--dfr_right] [--dfr_left] [-d VIZDISTANCEMAX]
                            [--v4c] [--vmax VMAX] [--vmin VMIN] [--anchor ANCHOR]
                            [input [input ...]]
-     
+
      positional arguments:
        input                 <Input directory>:<label>
-     
+
      optional arguments:
        -h, --help            show this help message and exit
        -o OUTPUT, --output OUTPUT
@@ -363,7 +363,7 @@ The heatmap shows the difference **sample2 - sample1** (WaplKO - Control in this
 Compartment PC1
 +++++++++++++++++++++++++++
 
-While the blue line in the second row shows the PC1 value of the first sample, 
+While the blue line in the second row shows the PC1 value of the first sample,
 ``plotHiCfeature --compartment`` visualizes the PC1 values for multiple samples. This plot can be used to identify compartment switching.
 
 
@@ -391,7 +391,7 @@ While the blue line in the second row shows the PC1 value of the first sample,
 Directionality index
 +++++++++++++++++++++++++++
 
-The directionality index identifies TAD boundaries by capturing the bias in contact frequency up- and downstream of a TAD `[Dixon et al., Nature, 2012] <https://www.nature.com/articles/nature11082>`_. 
+The directionality index identifies TAD boundaries by capturing the bias in contact frequency up- and downstream of a TAD `[Dixon et al., Nature, 2012] <https://www.nature.com/articles/nature11082>`_.
 The "left side" and "right side" of a TAD are likely to have positve and negative values, respectively.
 
 .. code-block:: bash
@@ -452,10 +452,13 @@ Plot a PC1 value of multiple samples for the whole genome.
 .. code-block:: bash
 
      plotCompartmentGenome [-h] [--type TYPE] [-r RESOLUTION] [--heatmap]
-                       [input [input ...]] output
+                       [input [input ...]] [-o output]
      Example:
-        plotCompartmentGenome Control_1:Control CTCFKD_1:siCTCF NIPBLKD_1:siNIBPL \
-               CompartmentGenome -r 25000 --type VC_SQRT
+        plotCompartmentGenome
+        JuicerResults_hg38/Control_1:Control \
+        JuicerResults_hg38/CTCFKD:siCTCF \
+        JuicerResults_hg38/NIPBLKD:siNIBPL \
+        -o -o CompartmentGenome -r 25000 --type VC_SQRT
 
 .. figure:: img/plotCompartmentGenome.jpg
    :width: 700px
@@ -498,5 +501,3 @@ Plot multi-scale insulation scores from Juicer matrix
                                    matrix output resolution
      Example:
         plotInsulationScore WT/intrachromosomal/25000/observed.KR.chr7.matrix.gz MultiInsulationScore_WT.chr7.png 25000
-
-

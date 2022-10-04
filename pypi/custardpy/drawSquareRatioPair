@@ -9,9 +9,8 @@ from scipy import ndimage
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
 from custardpy.PlotModule import *
-from custardpy.DirectionalFreqRatio import *
+from custardpy.DirectionalRelativeFreq import make3dmatrixRatio
 
-#import pdb
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))

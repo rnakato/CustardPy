@@ -8,7 +8,7 @@ from scipy import ndimage
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.generateCmap import *
 from custardpy.PlotModule import *
-from custardpy.DirectionalFreqRatio import *
+from custardpy.DirectionalRelativeFreq import *
 
 def main():
     parser = argparse.ArgumentParser()
@@ -80,17 +80,17 @@ def main():
                             distancemax=args.vizdistancemax,
                             label=labels[i+1], xticks=True)
 
-        dfr = DirectionalFreqRatio(sample, resolution)
+        drf = DirectionalRelativeFreq(sample, resolution)
 
         plt.subplot2grid((nsample*rowspan, 5), (i*rowspan + rowspan_heatmap,0), rowspan=rowspan_barplot, colspan=4)
-        plt.plot(dfr.getarrayplus(), label="Right")
-        plt.plot(dfr.getarrayminus(), label="Left")
+        plt.plot(drf.getarrayplus(), label="Right")
+        plt.plot(drf.getarrayminus(), label="Left")
         plt.xlim([s,e])
         xtickoff(plt)
         plt.legend(loc='lower right')
 
         plt.subplot2grid((nsample*rowspan, 5), (i*rowspan + rowspan_heatmap + rowspan_barplot,0), rowspan=rowspan_barplot, colspan=4)
-        diff = dfr.getarraydiff()
+        diff = drf.getarraydiff()
         plt.bar(range(len(diff)), diff)
         plt.xlim([s,e])
         xtickoff(plt)
