@@ -72,8 +72,12 @@ def drawHeatmapSquare(plt, matrix, resolution, *, tads="", loops="",
         for tad in tads.itertuples(name=None):
             x1 = int(tad[2])/resolution - s
             x2 = int(tad[3])/resolution - s
-            plt.vlines(x1, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
-            plt.vlines(x2, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
+            #            plt.vlines(x1, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
+            #            plt.vlines(x2, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
+            plt.vlines(x1, x1, x2, linestyle='dashed', linewidth=0.3)
+            plt.vlines(x2, x1, x2, linestyle='dashed', linewidth=0.3)
+            plt.hlines(x1, x1, x2, linestyle='dashed', linewidth=0.3)
+            plt.hlines(x2, x1, x2, linestyle='dashed', linewidth=0.3)
 
     if (label != ""): plt.title(label)
     if (xticks):
@@ -157,7 +161,8 @@ def drawHeatmapTriangle(plt, matrix, resolution, *, tads="", loops="",
     else:
         xtickoff(plt)
 
-def drawHeatmapTrianglePair(plt, matrix1, matrix2, resolution, *, tads="", loops="", tads2="", loops2="",
+def drawHeatmapTrianglePair(plt, matrix1, matrix2, resolution, *,
+                            tads="", loops="", tads2="", loops2="",
                             figstart=0, figend=0, distancemax=5000000,
                             vmin=0, vmax=50, label="", xticks=True,
                             cmap=generate_cmap(['#FFFFFF', '#d10a3f'])):

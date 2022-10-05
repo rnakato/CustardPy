@@ -146,13 +146,12 @@ def main():
     # Hi-C Map
     plt.subplot2grid((nrow, 5), (nrow_now, 0), rowspan=nrow_heatmap, colspan=5)
 
-#    tadfile = dirs[0] + "/TAD/" + type + str(resolution) + "_blocks.bedpe"
     tadfile = dirs[0] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
     print(tadfile)
-    tads = loadTADs(tadfile, chr[3:], start=figstart, end=figend)
+    tads = loadTADs(tadfile, chr, start=figstart, end=figend)
     loopfile = dirs[0] + "/loops/" + type + "merged_loops.bedpe"
     print(loopfile)
-    loops = loadloops(loopfile, chr[3:], start=figstart, end=figend)
+    loops = loadloops(loopfile, chr, start=figstart, end=figend)
 
     drawHeatmapTriangle(plt, samples[0].getmatrix(), resolution,
                         figstart=figstart, figend=figend,

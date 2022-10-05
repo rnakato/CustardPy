@@ -66,26 +66,17 @@ def main():
     print (chr)
     print (resolution)
     samples = []
+    tads = []
+    loops = []
     for dir in dirs:
        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
        samples.append(JuicerMatrix("RPM", observed, resolution))
-
-#    for dir in dirs:
- #       observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-#        eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
-#        samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
- #       samples.append(JuicerMatrix("RPM", observed, resolution))
- #       samples.append(JuicerMatrix("RPM", dir, resolution))
-
-    tads = {}
-    loops = {}
-    for i, sample in enumerate(samples):
-        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-        print(tadfile)
-        tads[i] = loadTADs(tadfile, chr, start=figstart, end=figend)
-        loopfile = dirs[i] + "/loops/"  + type + "/merged_loops.bedpe"
-        print(loopfile)
-        loops[i] = loadloops(loopfile, chr, start=figstart, end=figend)
+       tadfile = dir + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+       print(tadfile)
+       tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
+       loopfile = dir + "/loops/"  + type + "/merged_loops.bedpe"
+       print(loopfile)
+       loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
 
     ### Plot
     drawHeatmapTrianglePair(plt, samples[0].getmatrix(), samples[1].getmatrix(),

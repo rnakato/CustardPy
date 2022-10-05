@@ -10,8 +10,6 @@ from custardpy.generateCmap import *
 from custardpy.loadData import *
 from custardpy.PlotModule import *
 
-#import pdb
-
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
@@ -67,20 +65,19 @@ def main():
     samples = []
     for dir in dirs:
         observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-        eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
-        samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+        samples.append(JuicerMatrix("RPM", observed, resolution))
 
     ### Plot
     nsample = len(samples)
     plt.figure(figsize=(figsize_x, nsample*args.ysize))
 
     for i, sample in enumerate(samples):
-        tadfile = dirs[0] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
         print(tadfile)
-        tads = loadTADs(tadfile, chr[3:], start=figstart, end=figend)
+        tads = loadTADs(tadfile, chr, start=figstart, end=figend)
         loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
         print(loopfile)
-        loops = loadloops(loopfile, chr[3:], start=figstart, end=figend)
+        loops = loadloops(loopfile, chr, start=figstart, end=figend)
         # Hi-C Map
         plt.subplot2grid((nsample*2, 4), (i*2,0), rowspan=2, colspan=4)
         if (args.log):

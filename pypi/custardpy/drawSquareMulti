@@ -72,12 +72,12 @@ def main():
     plt.figure(figsize=(6, 3 * max(2,math.ceil(nsample/2))))
 
     for i, sample in enumerate(samples):
-        tadfile = dirs[0] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
         print(tadfile)
-        tads = loadTADs(tadfile, chr[3:], start=figstart, end=figend)
+        tads = loadTADs(tadfile, chr, start=figstart, end=figend)
         loopfile = dirs[i] + "/loops/merged_loops.bedpe"
         print(loopfile)
-        loops = loadloops(loopfile, chr[3:], start=figstart, end=figend)
+        loops = loadloops(loopfile, chr, start=figstart, end=figend)
         # Hi-C Map
         plt.subplot(int(len(labels)/2)+1, 2, i+1)
         if (args.log):
