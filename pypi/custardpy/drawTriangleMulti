@@ -75,7 +75,7 @@ def main():
     plt.figure(figsize=(figsize_x, nsample*args.ysize))
 
     for i, sample in enumerate(samples):
-        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+        tadfile = dirs[0] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
         print(tadfile)
         tads = loadTADs(tadfile, chr[3:], start=figstart, end=figend)
         loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"

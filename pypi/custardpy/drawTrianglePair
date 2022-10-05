@@ -42,8 +42,8 @@ def main():
             labels.append("")
 
 
-    if len(dirs) == 0:
-        print ("Error: specify input data (-i).")
+    if len(dirs) != 2:
+        print ("Error: specify two samples (-i).")
         exit()
     if args.chr is None:
         print ("Error: specify chromosome (-c).")
@@ -82,10 +82,10 @@ def main():
     for i, sample in enumerate(samples):
         tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
         print(tadfile)
-        tads[i] = loadTADs(tadfile, chr[3:], start=figstart, end=figend)
+        tads[i] = loadTADs(tadfile, chr, start=figstart, end=figend)
         loopfile = dirs[i] + "/loops/"  + type + "/merged_loops.bedpe"
         print(loopfile)
-        loops[i] = loadloops(loopfile, chr[3:], start=figstart, end=figend)
+        loops[i] = loadloops(loopfile, chr, start=figstart, end=figend)
 
     ### Plot
     drawHeatmapTrianglePair(plt, samples[0].getmatrix(), samples[1].getmatrix(),

@@ -39,8 +39,8 @@ def main():
         else:
             labels.append("")
 
-    if len(dirs) == 0:
-        print ("Error: specify input data (-i).")
+    if len(dirs) != 2:
+        print ("Error: specify two samples (-i).")
         exit()
 
     resolution = args.resolution

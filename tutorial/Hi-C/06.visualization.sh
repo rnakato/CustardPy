@@ -57,7 +57,7 @@ $sing plotHiCfeature \
 $sing drawSquarePair \
       JuicerResults_hg38/Hap1-A/Matrix/intrachromosomal/25000/observed.$norm.$chr.matrix.gz \
       JuicerResults_hg38/WaplKO_3.3-A/Matrix/intrachromosomal/25000/observed.$norm.$chr.matrix.gz \
-      drawSquarePair.$chr --start $start --end $end -r 25000
+      SquarePair.$chr --start $start --end $end -r 25000
 
 $sing drawSquareMulti \
       JuicerResults_hg38/Hap1-A:Control \
@@ -74,17 +74,17 @@ $sing drawSquareRatioMulti \
 $sing drawTriangleMulti \
       JuicerResults_hg38/Hap1-A:Control \
       JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
-      -o SquareMulti.$chr \
+      -o TriangleMulti.$chr \
       -c $chr --start $start --end $end --type $norm -d 5000000
 
 $sing drawTrianglePair \
       JuicerResults_hg38/Hap1-A:Control \
       JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
-      -o SquareMulti.$chr \
+      -o TrianglePair.$chr \
       -c $chr --start $start --end $end --type $norm -d 5000000
 
 $sing drawTriangleRatioMulti \
       JuicerResults_hg38/Hap1-A:Control \
       JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
-      -o SquareMulti.$chr \
+      -o TriangleRatioMulti.$chr \
       -c $chr --start $start --end $end --type $norm -d 5000000
