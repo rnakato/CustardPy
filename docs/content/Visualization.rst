@@ -219,7 +219,7 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
    drawTriangleRatioMulti
 
 
-The bottom line plots are Directional frequency ratio (see `Directional frequency ratio <https://custardpy.readthedocs.io/en/latest/content/Visualization.html#directional-frequency-ratio>`_).
+The bottom line plots are Directional relative frequency (see `Directional relative frequency <https://custardpy.readthedocs.io/en/latest/content/Visualization.html#directional-relative-frequency>`_).
 
 
 plotHiCfeature
