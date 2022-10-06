@@ -72,19 +72,26 @@ def drawHeatmapSquare(plt, matrix, resolution, *, tads="", loops="",
         for tad in tads.itertuples(name=None):
             x1 = int(tad[2])/resolution - s
             x2 = int(tad[3])/resolution - s
-            #            plt.vlines(x1, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
-            #            plt.vlines(x2, 0, matrix.shape[0], linestyle='dashed', linewidth=0.3)
-            plt.vlines(x1, x1, x2, linestyle='dashed', linewidth=0.3)
-            plt.vlines(x2, x1, x2, linestyle='dashed', linewidth=0.3)
-            plt.hlines(x1, x1, x2, linestyle='dashed', linewidth=0.3)
-            plt.hlines(x2, x1, x2, linestyle='dashed', linewidth=0.3)
+            if x1 > 0:
+                plt.vlines(x1, x1, min(x2, e-s), linestyle='dashed', linewidth=0.6)
+            if x2 < e-s:
+                plt.vlines(x2, max(0, x1), x2, linestyle='dashed', linewidth=0.6)
+            if x1 > 0:
+                plt.hlines(x1, x1, min(x2, e-s), linestyle='dashed', linewidth=0.6)
+            if x2 < e-s:
+                plt.hlines(x2, max(0, x1), x2, linestyle='dashed', linewidth=0.6)
+
+    plt.xlim(0, e-s)
+    plt.ylim(e-s, 0)
 
     if (label != ""): plt.title(label)
     if (xticks):
-        pltxticks(0, e-s, figstart, figend, 10)
+        pltxticks(0, e-s, figstart, figend, 5)
     else:
         xtickoff(plt)
-        ytickoff(plt)
+
+    ytickoff(plt)
+
 
 def drawHeatmapTriangle(plt, matrix, resolution, *, tads="", loops="",
                         figstart=0, figend=0, distancemax=5000000,

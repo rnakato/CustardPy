@@ -18,6 +18,7 @@ def main():
     parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
     parser.add_argument("-c", "--chr", help="chromosome", type=str)
     parser.add_argument("--log", help="logged count", action='store_true')
+    parser.add_argument("--xtickoff", help="omit x ticks", action='store_true')
     parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
     parser.add_argument("-r", "--resolution", help="resolution (default: 25000)", type=int, default=25000)
     parser.add_argument("-s", "--start", help="start bp (default: 0)", type=int, default=0)
@@ -85,13 +86,13 @@ def main():
                                 figstart=figstart, figend=figend,
                                 tads=tads, loops=loops,
                                 vmax=vmax, vmin=vmin,
-                                label=labels[i], xticks=False)
+                                label=labels[i], xticks=(not args.xtickoff))
         else:
             drawHeatmapSquare(plt, sample.getmatrix(), resolution,
                                 figstart=figstart, figend=figend,
                                 tads=tads, loops=loops,
                                 vmax=vmax, vmin=vmin,
-                                label=labels[i], xticks=False)
+                                label=labels[i], xticks=(not args.xtickoff))
 
     plt.tight_layout()
     plt.savefig(args.output + ".pdf")
