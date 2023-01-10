@@ -76,7 +76,7 @@ def main():
         tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
         print(tadfile)
         tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-        loopfile = dirs[i] + "/loops/merged_loops.bedpe"
+        loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
         print(loopfile)
         loops = loadloops(loopfile, chr, start=figstart, end=figend)
         # Hi-C Map
