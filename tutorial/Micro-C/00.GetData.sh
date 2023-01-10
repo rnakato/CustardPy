@@ -4,7 +4,8 @@
 # instead, download the paired fastq files from our Google Drive:
 # https://drive.google.com/drive/folders/16gn5uO1u9yc5wqh7XQHg844FiYqzrnTB?usp=sharing
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.1.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+sing="singularity exec custardpy.sif"
 
 #$sing getmm39genome.sh
 

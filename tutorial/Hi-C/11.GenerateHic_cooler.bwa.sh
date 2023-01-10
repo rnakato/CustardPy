@@ -5,7 +5,8 @@ gt=genometable.hg38.txt
 index_bwa=bwa-indexes/hg38
 ncore=64
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+sing="singularity exec custardpy.sif"
 
 #fq1=fastq/Hap1-A/SRR5266584_1.fastq.gz
 #fq2=fastq/Hap1-A/SRR5266584_2.fastq.gz

@@ -8,7 +8,8 @@ fastq-dump --split-files --gzip SRR5266585 -O fastq/WaplKO_3.3-A
 # https://drive.google.com/file/d/1GDB1Y35heroYOHg1CGooQc8BF25jKZYc/view?usp=sharing
 
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+sing="singularity exec custardpy.sif"
 
 $sing gethg38genome.sh
 

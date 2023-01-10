@@ -4,8 +4,10 @@ build=hg38
 fastq_post="_"  # "_" or "_R"  before .fastq.gz
 enzyme=MboI
 
-gt=/work/Database/UCSC/$build/genome_table
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+#gt=/work/Database/UCSC/$build/genome_table
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+gt=genometable.$build.txt
+sing="singularity exec custardpy_juicer.sif"
 
 odir=JuicerResults_$build/Hap1-A
 #odir=JuicerResults_$build/WaplKO_3.3-A/

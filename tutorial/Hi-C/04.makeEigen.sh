@@ -6,7 +6,8 @@ enzyme=MboI
 gt=genometable.$build.txt
 gene=refFlat.$build.txt
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+sing="singularity exec custardpy_juicer.sif"
 
 odir=JuicerResults_$build/Hap1-A
 #odir=JuicerResults_$build/WaplKO_3.3-A

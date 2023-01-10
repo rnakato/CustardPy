@@ -6,7 +6,8 @@ gene=refFlat.$build.txt
 bwaindex=bwa-indexes/$build
 ncore=64
 
-sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
+sing="singularity exec --nv custardpy_juicer.sif"
 
 fastq_post="_"  # "_" or "_R"
 enzyme=MboI
