@@ -44,6 +44,10 @@ This command mounts `/work` directory.
 
 See https://custardpy.readthedocs.io for the detailed Manual.
 
+## Singularity images
+
+Prebuild singularity images (version 3.8.5) are available on our [Google Drive](https://drive.google.com/drive/folders/1wkw19qPKm8lnWorBXu937zOvwIANbiGw?usp=sharing).
+
 ## Reference
 
 - Nakato R, Sakata T, Wang J, Nagai LAE, Oba GM, Bando M, Shirahige K, Context-dependent 3D genome regulation by cohesin and related factors, bioRxiv, 2022. doi: [10.1101/2022.05.24.493188](https://www.biorxiv.org/content/10.1101/2022.05.24.493188v1)
