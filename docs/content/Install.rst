@@ -34,7 +34,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
 - Loop calling
     - `FitHiC <https://github.com/ay-lab/fithic>`_ v2.0.7
-    - `CHiCAGO <https://bitbucket.org/chicagoTeam/chicago/src/master/>`_
+    - `CHiCAGO <https://bitbucket.org/chicagoTeam/chicago/src/master/>`_ v1.19.0
 
 - Stripe analysis
     - `STRIPENN <https://github.com/VahediLab/stripenn>`_ v1.1.65.18
