@@ -4,6 +4,10 @@ Installation
 CustardPy Docker image
 ---------------------------------
 
+.. note::
+
+    From version 1, the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image supports all analyses previously offered by CustardPy and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_ images, rendering the latter unnecessary.
+
 Docker image of **CustardPy** is available at `DockerHub <https://hub.docker.com/r/rnakato/custardpy>`_.
 This image contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** core components as below:
 
@@ -62,10 +66,6 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `bedtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.30.0
 
 See the original website for the full description about each tool.
-
-.. note::
-
-    From version 1, the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image supports all analyses previously offered by CustardPy and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_ images, rendering the latter unnecessary.
 
 RUN
 ++++++++++++++
