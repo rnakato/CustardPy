@@ -2,7 +2,7 @@
 
 ## Docker_CustardPy
 
-### 1.0.0 (2023-05-XX)
+### 1.0.0 (2023-05-17)
 - Major Release!
 - Merged the GitHub repositories for CustardPy (this site) and [Docker_CustardPy](https://github.com/rnakato/Docker_CustardPy) into a single repository.
 - Unified the Docker images for [CustardPy](https://hub.docker.com/r/rnakato/custardpy) and [CustardPy_Juicer](https://hub.docker.com/r/rnakato/custardpy_juicer). Version 1 of the [CustardPy](https://hub.docker.com/r/rnakato/custardpy) docker image now supports all analyses previously offered by CustardPy and CustardPy_Juicer, rendering the latter unnecessary.
