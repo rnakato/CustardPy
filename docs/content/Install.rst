@@ -100,7 +100,7 @@ For Singularity:
 CustardPy from PyPI
 ---------------------------------
 
-Core components of **CustardPy** can by installed using pip (>= Python 3.7):
+Core components of **CustardPy** (e.g., commands for visualization) can by installed using pip (>= Python 3.7):
 
 .. code-block:: bash
 
