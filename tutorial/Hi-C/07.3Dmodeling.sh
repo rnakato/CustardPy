@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
 sing="singularity exec custardpy.sif"
 
 odir=JuicerResults_hg38/Hap1-A

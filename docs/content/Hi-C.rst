@@ -1,14 +1,14 @@
+Commands in CustardPy
+===========================
+
+**CustardPy** internally executes `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
+See the original website for the full description of each command.
+
 Hi-C analysis
-=====================
-
-**CustardPy_Juicer** is a docker image for Juicer analysis in `CustardPy <https://github.com/rnakato/Custardpy>`_.
-This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
-See the original website for the full description about each command.
-
-
+------------------------------------------------
 
 custardpy_juicer
-------------------------------------------------
+++++++++++++++++++++++++++
 
 ``custardpy_juicer`` is an end-to-end pipeline for Juicer analysis.
 It executes ``juicer_map.sh``, ``juicer_pigz.sh``, ``plot_distance_count.sh``, 
@@ -16,32 +16,31 @@ It executes ``juicer_map.sh``, ``juicer_pigz.sh``, ``plot_distance_count.sh``,
 
 .. code-block:: bash
 
-    custardpy_juicer [Options] <fastqdir> <label>
-       <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
-       <label>: label of the input (e.g., "sample1")
-       Options:
-          -i index : bwa index
-          -g genometable : genome table file (describing the chromosome length)
-          -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)
-          -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3, default: hg38)
-          -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")
-          -o outputdir : output directory (default: 'JuicerResults')
-          -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)
-          -a <refFlat>: gene annotation file
-          -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
-          -p ncore: number of CPUs (default: 32)
-          -m tmpdir: tempdir
-       Example:
-          custardpy_juicer -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A
-
+  custardpy_juicer [Options] <fastqdir> <label>
+      <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
+      <label>: label of the input (e.g., "sample1")
+      Options:
+        -i index : bwa index
+        -g genometable : genome table file (describing the chromosome length)
+        -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)
+        -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3, default: hg38)
+        -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")
+        -o outputdir : output directory (default: 'JuicerResults')
+        -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)
+        -a <refFlat>: gene annotation file
+        -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
+        -p ncore: number of CPUs (default: 32)
+        -m tmpdir: tempdir
+      Example:
+        custardpy_juicer -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A
 
 juicer_map.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
-``juicer_map.sh`` generates ``.hic`` file from fastq.
-The input fastq files can be gzipped (.fastq.gz).
+``juicer_map.sh`` map FASTQ files using BWA and generates ``.hic`` file using `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
+The input FASTQ files can be gzipped (.fastq.gz).
 The results including the ``.hic`` file is outputted in ``$odir``.
-The BWA index file is needed.
+The BWA index of the reference genome is necessary.
 
 .. code-block:: bash
 
@@ -62,7 +61,7 @@ The BWA index file is needed.
 
 .. note::
 
-    The input fastq files of each sample should be stored in the separated directory.
+    The input FASTQ files of each sample should be stored in the separated directory.
     For example, if there are three Hi-C samples (``sample1``, ``sample2``, and ``sample3``), the fastq files should be in ``fastq/sample1/``,  ``fastq/sample2/``, and ``fastq/sample3/``.
 
 - Output
@@ -70,23 +69,23 @@ The BWA index file is needed.
     - merged_nodups.txt ... mapped fragments
     - inter.hic ... .hic file (without quality filtering)
     - inter.txt ... stats for inter.hic
-    - inter_30.hic ... .hic file (Q>=30) 
+    - inter_30.hic ... .hic file (Q>=30)
     - inter_30.txt ... stats for inter_30.hic
 
 We recommend using ``inter_30.hic`` for the downstream analysis.
 
 (Optional) juicer_pigz.sh
------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
-The output of Juicer is quite large, we provide a script ``juicer_pigz.sh`` that compresses the intermediate files.
-This command is optional.
+Since the output files of Juicer are quite large, **CustardPy** provide a script ``juicer_pigz.sh`` that compresses the intermediate files.
+This command is optional while ``custardpy_juicer`` implements it.
 
 .. code-block:: bash
 
      juicer_pigz.sh <odir>
        <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
 
-Note that some commands provided in Juicer use the intermediate files (e.g, mega.sh).
+Note that some commands provided in Juicer use the intermediate files (e.g, ``mega.sh``).
 Because these commands do not accept the compressed format, use ``juicer_unpigz.sh`` that uncompresses the compressed files.
 
 .. code-block:: bash
@@ -95,7 +94,7 @@ Because these commands do not accept the compressed format, use ``juicer_unpigz.
        <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
 
 plot_distance_count.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 ``plot_distance_count.sh`` calcultes the fragment distance and generates a figure (.pdf).
 The result is outputted in ``distance/`` directory.
@@ -118,8 +117,77 @@ The result is outputted in ``distance/`` directory.
    :align: center
    :alt: Alternate
 
+
+Micro-C analysis
+------------------------------------------------
+
+custardpy_mappingMicroC
++++++++++++++++++++++++++++++++++++
+
+``custardpy_mappingMicroC`` generates ``.cool`` and ``.hic`` files from FASTQ files using cooltools and JuicerTools.
+The input FASTQ files can be gzipped (.fastq.gz).
+
+BWA and chromap can be used for mapping reads (use ``-t`` option).
+The results are stored in ``Cooler_MicroC_bwa/`` or ``Cooler_MicroC_chromap/``.
+
+The index file of BWA or chromap (``-i <index>``) and the fasta file of the reference genome (``-f <genome>``) are required.
+
+.. code-block:: bash
+
+  custardpy_mappingMicroC [options] -g <gt> -i <index> -f <genome> <fastq1> <fastq2> <prefix>
+  fastq1, fastq2: paired-end fastq file
+  prefix: prefix of output files
+
+  Options:
+    -S state : steps to be executed [all|pairs|postproc] (default: all)
+    -t [bwa|chromap] : tool for mapping (default: bwa)
+    -i index : index of bwa or chromap
+    -f genome file : fasta file of the reference genome (original data of the index files)
+    -g genometable : genome table file (describing the chromosome length)
+    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)
+    -p ncore : number of CPUs (default: 4)
+    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)
+    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)
+    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')
+
+- Output
+
+    - 4-minus.cool
+    - 4-minus.multires.cool
+    - bam/
+    - hic/
+    - log/
+    - loops/
+    - pairs/
+    - pairs.stats.txt
+    - qc_report/
+
+
+Common commands for Hi-C and Micro-C
+------------------------------------------------
+
+custardpy_process_hic
++++++++++++++++++++++++++++++++++++
+
+``custardpy_process_hic`` takes a ``.hic`` file as input and executes ``juicer_callTAD.sh``, ``call_HiCCUPS.sh``, ``makeMatrix_intra.sh``,  ``makeEigen.sh``, and  ``makeInslationScore.sh``.
+
+.. code-block:: bash
+
+  custardpy_process_hic [Options] <hicfile> <odir>
+    <hicfile>: .hic file genreated by Juicer
+    <odir> : output directory
+    Options:
+        -g genometable : genome table file (describing the chromosome length)
+        -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)
+        -a <refFlat>: gene annotation file
+        -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
+        -p ncore: number of CPUs (default: 32)
+    Example:
+        custardpy_process_hic -g genometable.hg38.txt -a refFlat.hg38.txt Hap1-A/inter_30.hic Hap1-A
+
+
 makeMatrix_intra.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 ``makeMatrix_intra.sh`` takes a ``.hic`` file as input and generates the matrices of intra-chromosomal interactions for all chromsomes. The chormosome Y and M are omited.
 
@@ -137,7 +205,7 @@ makeMatrix_intra.sh
 The resulting observed/oe matrices are output in ``<odir>/Matrix/intrachromosomal/<resolution>/``.
 
 makeMatrix_inter.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 ``makeMatrix_inter.sh`` generates the inter-chromosomal interactions matrix for a specified chromsome pair.
 
@@ -156,25 +224,28 @@ The resulting observed/oe matrices are output in ``<odir>/Matrix/interchromosoma
 
 
 makeEigen.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
-Generate eigenvector file in that +- of the value (indicating A and B compartments) is adjusted by the number of genes.
+``makeEigen.sh`` generates eigenvector file (compartment PC1) from a ``.hic`` file using `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_.
+The sign (+-) of the value indicating A/B compartments is adjusted by the number of genes.
 
 .. code-block:: bash
 
     makeEigen.sh [options] <norm> <odir> <hic> <resolution> <genometable> <refFlat>
-       <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
-       <odir>: output directory (e.g., "JuicerResults/sample1")
-       <hic>: .hic file
-       <resolution>: resolution of matrix
-       <genometable>: genometable file
-       <refFlat>: gene annotation file (refFlat format)
-       Options:
-         -p <int>: the number of CPUs (default: 6)
+      <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
+      <odir>: output directory (e.g., "JuicerResults/sample1")
+      <hic>: .hic file
+      <resolution>: resolution of matrix
+      <genometable>: genometable file
+      <refFlat>: gene annotation file (refFlat format)
+      Options:
+        -p <int>: the number of CPUs (default: 6)
 
 
 juicer_callTAD.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
+
+``juicer_callTAD.sh`` calls TADs from a ``.hic`` file using Juicer ArrowHead.
 
 .. code-block:: bash
 
@@ -186,7 +257,6 @@ juicer_callTAD.sh
        Options:
          -r resolutions: the resolutions for ArrowHead (default: "10000 25000 50000", should be quoted and separated by spaces)
          -p ncore: number of CPUs (default: 24)
-
 
 - Output:
     - ``\*_blocks.bedpe`` ... TAD regions (BEDPE format, default output of Juicer ArrowHead)
@@ -202,7 +272,7 @@ juicer_callTAD.sh
     Because Juicer ArrowHead allows "nested TADs" and "non-TAD regions", not all genomic regions are included in TADs, and some amount of TAD boundaries may be included in a larger TADs. Make sure that the files you are using meet the criteria of your assumption.
 
 makeInslationScore.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 ``makeInslationScore.sh`` takes the observed matrices files generated by ``makeMatrix_intra.sh`` as input and calculates the insulation score for all chromsomes. The chormosome Y and M are omited.
 
@@ -210,27 +280,28 @@ The ``<odir>`` directory should be the same with that is specified in ``makeMatr
 
 .. code-block:: bash
 
-     makeMatrix_intra.sh <norm> <odir> <hic> <resolution> <gt>
-       <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
-       <odir>: output directory (e.g., "JuicerResults/sample1")
-       <hic>: .hic file
-       <resolution>: resolution of the matrix
-       <gt>: genome table
-       Options:
-         -l: output contact matrix as a list (default: dense matrix)
+    makeMatrix_intra.sh <norm> <odir> <hic> <resolution> <gt>
+      <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
+      <odir>: output directory (e.g., "JuicerResults/sample1")
+      <hic>: .hic file
+      <resolution>: resolution of the matrix
+      <gt>: genome table
+      Options:
+        -l: output contact matrix as a list (default: dense matrix)
 
 The results are output in ``<odir>/InsulationScore/<norm>/<resolution>/``.
 
 
 call_HiCCUPS.sh (GPU required)
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 ``call_HiCCUPS.sh`` calls loops using Juicer HiCCUPS.
-Supply ``--nv`` option to the singularity command to activate GPU as follows:
+Supply ``--gpus all`` for Docker and ``--nv`` option for Singularity to activate GPU as follows:
 
 .. code-block:: bash
 
     singularity exec --nv custardpy_juicer.sif call_HiCCUPS.sh
+    docker run --rm -it --gpus all rnakato/custardpy call_HiCCUPS.sh
 
 .. code-block:: bash
 
@@ -246,7 +317,7 @@ Supply ``--nv`` option to the singularity command to activate GPU as follows:
     - merged_loops.simple.bedpe ... loop file
 
 call_MotifFinder.sh
-----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++
 
 If you have peak files of cohesin and CTCF, you can use MotifFinder by ``call_MotifFinder.sh``:
 

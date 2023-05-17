@@ -1,0 +1,101 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import matplotlib.pyplot as plt
+import seaborn as sns
+from custardpy.HiCmodule import JuicerMatrix
+from custardpy.InsulationScore import getInsulationScoreOfMultiSample
+from custardpy.generateCmap import *
+from custardpy.loadData import *
+from custardpy.PlotModule import *
+
+def main():
+    parser = argparse.ArgumentParser()
+    tp = lambda x:list(map(str, x.split(':')))
+    parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
+    parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
+    parser.add_argument("-c", "--chr", help="chromosome", type=str)
+    parser.add_argument("--log", help="logged count", action='store_true')
+    parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
+    parser.add_argument("-r", "--resolution", help="resolution (default: 25000)", type=int, default=25000)
+    parser.add_argument("-s", "--start", help="start bp (default: 0)", type=int, default=0)
+    parser.add_argument("-e", "--end",   help="end bp (default: 1000000)", type=int, default=1000000)
+    parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
+    parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
+    parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
+#    parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
+    parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+
+    args = parser.parse_args()
+#    print(args)
+
+    dirs = []
+    labels = []
+    for input in args.input:
+        dirs.append(input[0])
+        if (len(input) >1):
+            labels.append(input[1])
+        else:
+            labels.append("")
+
+    if len(dirs) == 0:
+        print ("Error: specify input data (-i).")
+        exit()
+    if args.chr is None:
+        print ("Error: specify chromosome (-c).")
+        exit()
+
+    chr = args.chr
+    resolution = args.resolution
+    type = args.type
+    figstart = args.start
+    figend = args.end
+    s = int(figstart / resolution)
+    e = int(figend   / resolution)
+    vmax = args.vmax
+    vmin = args.vmin
+    if (args.log):
+        vmax = np.log1p(vmax)
+        vmin = np.log1p(vmin)
+
+    print (chr)
+    print (resolution)
+    samples = []
+    for dir in dirs:
+        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+        samples.append(JuicerMatrix("RPM", observed, resolution))
+    nsample = len(samples)
+
+    ### Plot
+    figsize_x = max(int((figend-figstart)/2000000), 10)
+    figsize_y = nsample * args.ysize
+    plt.figure(figsize=(figsize_x, figsize_y))
+
+    for i, sample in enumerate(samples):
+        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+        print(tadfile)
+        tads = loadTADs(tadfile, chr, start=figstart, end=figend)
+        loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
+        print(loopfile)
+        loops = loadloops(loopfile, chr, start=figstart, end=figend)
+        # Hi-C Map
+        plt.subplot2grid((nsample*2, 4), (i*2,0), rowspan=2, colspan=4)
+        if (args.log):
+            drawHeatmapTriangle_subplot2grid(sample.getlog(), resolution,
+                                             figstart=figstart, figend=figend,
+                                             tads=tads, loops=loops,
+                                             vmax=vmax, vmin=vmin, distance_max=args.vizdistancemax,
+                                             label=labels[i], xticks=True)
+        else:
+            drawHeatmapTriangle_subplot2grid(sample.getmatrix(), resolution,
+                                             figstart=figstart, figend=figend,
+                                             tads=tads, loops=loops,
+                                             vmax=vmax, vmin=vmin, distance_max=args.vizdistancemax,
+                                             label=labels[i], xticks=True)
+
+    plt.tight_layout()
+    plt.savefig(args.output + ".pdf")
+
+if(__name__ == '__main__'):
+    main()

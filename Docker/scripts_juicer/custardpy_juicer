@@ -1,0 +1,116 @@
+#!/bin/bash -e
+cmdname=`basename $0`
+function usage()
+{
+    echo "$cmdname [Options] <fastqdir> <label>" 1>&2
+    echo '   <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")' 1>&2
+    echo '   <label>: label of the input (e.g., "sample1")' 1>&2
+    echo '   Options:' 1>&2
+    echo "      -i index : bwa index"
+    echo "      -g genometable : genome table file (describing the chromosome length)"
+    echo "      -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)"
+    echo "      -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3, default: hg38)"
+    echo '      -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")' 1>&2
+    echo "      -o outputdir : output directory (default: 'JuicerResults')"
+    echo "      -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)"
+    echo '      -a <refFlat>: gene annotation file' 1>&2
+    echo '      -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
+    echo '      -p ncore: number of CPUs (default: 32)' 1>&2
+    echo '      -m tmpdir: tempdir' 1>&2
+    echo '   Example:' 1>&2
+    echo "      $cmdname -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A" 1>&2
+}
+
+bwaindex=""
+gt=""
+build=hg38
+enzyme="HindIII"
+tmpdir=""
+ncore=32
+fastq_post="_"
+outputdir=""
+
+norm="SCALE"
+resolutions="25000 50000 100000"
+gene=""
+
+while getopts i:e:b:g:o:m:p:z:n:r:a: option; do
+    case ${option} in
+	i) bwaindex=${OPTARG} ;;
+	e) enzyme=${OPTARG} ;;
+	b) build=${OPTARG} ;;
+	g) gt=${OPTARG} ;;
+        o) outputdir=${OPTARG} ;;
+        m) tmpdir=${OPTARG} ;;
+        p) ncore=${OPTARG} ;;
+	z) fastq_post=${OPTARG} ;;
+	n) norm=${OPTARG} ;;
+	r) resolutions=${OPTARG} ;;
+	a) gene=${OPTARG} ;;
+        *)
+	    usage
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 2 ]; then
+  usage
+  exit 1
+fi
+
+if test "$outputdir" = ""; then
+    outputdir=JuicerResults_$build
+fi
+
+fqdir=$1
+label=$2
+odir=$outputdir/$label
+
+jdir=/opt/juicer
+
+if test "$gt" = ""; then
+    echo "Error: specify genome table (-g)."
+    exit 0
+fi
+if test "$bwaindex" = ""; then
+    echo "Error: specify bwa index (-i)."
+    exit 0
+fi
+
+if [ -n "$tmpdir" ]; then
+  param="-p $tmpdir"
+fi
+
+if [[ ${fqdir} =~ ^/.+$ ]]; then
+    fqdir=$fqdir
+else
+    fqdir=$(pwd)/$fqdir
+fi
+
+if [[ ${odir} =~ ^/.+$ ]]; then
+    odir=$odir
+else
+    odir=$(pwd)/$odir
+fi
+
+ex(){ echo $1; eval $1; }
+
+pwd=`pwd`
+ex "mkdir -p $odir"
+if test ! -e $odir/fastq; then ln -s $fqdir $odir/fastq; fi
+ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param \
+     -s $enzyme -a $label -p $gt \
+     -z $bwaindex -D $jdir -e $fastq_post -S map"
+
+ex "juicer_pigz.sh $odir"
+ex "plot_distance_count.sh $label $odir"
+
+hic=$odir/aligned/inter_30.hic
+
+if test "$gene" = ""; then
+    custardpy_process_hic -p $ncore -n $norm -g $gt $hic $odir
+else
+    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
+fi

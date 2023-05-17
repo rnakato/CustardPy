@@ -1,37 +1,71 @@
 Installation
 ================
 
-CustardPy from PyPI
+CustardPy Docker image
 ---------------------------------
 
-Core components of **CustardPy** can by installed using pip (>= Python 3.7):
+Docker image of **CustardPy** is available at `DockerHub <https://hub.docker.com/r/rnakato/custardpy>`_.
+This image contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** core components as below:
 
-.. code-block:: bash
+- Mapping
 
-    pip3 install custardpy
+    - `BWA <http://bio-bwa.sourceforge.net/>`_ v0.7.17
+    - `Bowtie2 <http://bowtie-bio.sourceforge.net/bowtie2/index.shtml>`_ v2.4.5
+    - `chromap <https://github.com/haowenz/chromap>`_ v0.2.4
 
+- Hi-C/Micro-C analysis
 
-Docker images for CustardPy
----------------------------------
+    - `Juicer <https://github.com/aidenlab/juicer/wiki>`_ v1.6
+    - `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ v2.13.07
+    - `JuiceBox <https://github.com/aidenlab/Juicebox>`_ v2.13.07
+    - `Cooler <https://cooler.readthedocs.io/en/stable/>`_ v0.9.1
+    - `cooltools <https://cooltools.readthedocs.io/en/latest/>`_ v0.5.4
+    - `pairtools <https://pairtools.readthedocs.io/en/latest/>`_ v0.3.0
+    - `coolpup.py <https://github.com/open2c/coolpuppy>`_ v1.0.0
+    - `HiCExplorer <https://hicexplorer.readthedocs.io/en/latest/>`_ v3.5.1
+    - `HOMER <http://homer.ucsd.edu/homer/interactions/index.html>`_
+    - `FAN-C <https://fan-c.readthedocs.io/en/latest/index.html>`_ v0.9.25
+    - `HiC-Pro <https://github.com/nservant/HiC-Pro>`_ v3.1.0
+    - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ v0.2.5
 
-Most commands introduced in this manual are included in two Docker images for **CustardPy**.
+- Loop calling
+    - `FitHiC <https://github.com/ay-lab/fithic>`_ v2.0.7
+    - `CHiCAGO <https://bitbucket.org/chicagoTeam/chicago/src/master/>`_
 
-- ``CustardPy``: https://hub.docker.com/r/rnakato/custardpy
-    - An image that contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** itself, including:
+- Stripe analysis
+    - `STRIPENN <https://github.com/VahediLab/stripenn>`_ v1.1.65.18
 
-        - Cooler version 0.8.6
-        - cooltools version 0.5.1
-        - HiCExplorer version 3.5.1
-- ``CustardPy_Juicer``: https://hub.docker.com/r/rnakato/custardpy_juicer
-    - An image for `Juicer <https://github.com/aidenlab/juicer/wiki>`_ analysis (because Juicer requires older environment: ``cuda:8.0-cudnn7-devel-ubuntu16.04``). 
-    - This image internally implements the tools below:
+- Chromatin hub analysis
+    - `FIREcaller <https://github.com/yycunc/FIREcaller>`_ v1.42
 
-        - Juicer version 1.6
-        - Juicertools version 2.13.07
-        - JuiceBox version 2.13.07
-        - `BWA <http://bio-bwa.sourceforge.net/>`_ version 0.7.17
+- Sample comparison
+    - `GENOVA <https://github.com/robinweide/GENOVA>`_ v1.0.1
+    - `CHESS <https://chess-hic.readthedocs.io/en/latest/index.html>`_ v0.3.7
+
+- 3D/4D modeling
+
+    - `PASTIS <https://github.com/hiclib/pastis>`_ v0.4.0
+    - `PHi-C2 <https://github.com/soyashinkai/PHi-C2>`_ v2.0.10
+
+- Hi-ChIP
+
+    - `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ v11.0
+
+- ChIA-PET
+
+    - `Mango <https://github.com/dphansti/mango>`_
+    - `ChIAPop <https://github.com/wh90999/ChIAPoP>`_
+
+- Genome analysis
+
+    - `MACS2 <https://github.com/macs3-project/MACS>`_ v2.2.6
+    - `bedtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.30.0
 
 See the original website for the full description about each tool.
+
+.. note::
+
+    From version 1, the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image supports all analyses previously offered by CustardPy and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_ images, rendering the latter unnecessary.
 
 RUN
 ++++++++++++++
@@ -41,14 +75,13 @@ For Docker:
 .. code-block:: bash
 
    # pull docker image
-   docker pull rnakato/custardpy 
-   docker pull rnakato/custardpy_juicer
+   docker pull rnakato/custardpy
    
    # container login
-   docker run [--gpus all] --rm -it rnakato/custardpy_juicer /bin/bash
+   docker run [--gpus all] --rm -it rnakato/custardpy /bin/bash
+
    # execute a command
-   docker run --rm -it rnakato/custardpy <command>
-   docker run --rm -it rnakato/custardpy_juicer <command>
+   docker run [--gpus all] --rm -it rnakato/custardpy <command>
 
 For Singularity:
 
@@ -56,11 +89,19 @@ For Singularity:
 
    # build image
    singularity build custardpy.sif docker://rnakato/custardpy
-   singularity build custardpy_juicer.sif docker://rnakato/custardpy_juicer
+
    # execute a command
-   singularity exec custardpy.sif <command>
-   singularity exec [--nv] custardpy_juicer.sif <command>
+   singularity exec [--nv] custardpy.sif <command>
 
 .. note::
 
-    ``--nv`` option allows using GPU in singularity. This option is needed only when calling loops by HiCCUPS. 
+    ``--gpus all`` for Docker and ``--nv`` option for Singularity allow using GPU. This option is needed only when calling loops by HiCCUPS.
+
+CustardPy from PyPI
+---------------------------------
+
+Core components of **CustardPy** can by installed using pip (>= Python 3.7):
+
+.. code-block:: bash
+
+    pip3 install custardpy

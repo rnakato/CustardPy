@@ -9,19 +9,18 @@ The contact level is normalized by the total number of mapped reads for the chro
 
 .. code-block:: bash
 
-    plotHiCMatrix <matrix> <output name (png)> <start> <end> <title in figure>
+    plotHiCMatrix <matrix> <output name> <start> <end> <title in figure>
 
 Example:
 
 .. code-block:: bash
 
-     chr=chr7
-     start=15000000
-     end=40000000
-     norm=SCALE
-     cell=Hap1-A
-     binsize=100000
-     matrix=JuicerResults_hg38/$cell/Matrix/intrachromosomal/$binsize/observed.$norm.$chr.matrix.gz
+     matrix=JuicerResults_hg38/Hap1-A/Matrix/intrachromosomal/100000/observed.SCALE.chr7.matrix.gz
+
+     plotHiCMatrix \
+          $matrix \
+          ContactMap.$cell.chr7.15000000-40000000.pdf \
+          15000000 40000000 Hap1-A
 
 .. figure:: img/plotHiCMatrix.png
    :width: 500px
@@ -45,8 +44,8 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
         JuicerResults_hg38/CTCFKD:siCTCF \
         JuicerResults_hg38/NIPBLKD:siNIBPL \
         -o SquareMulti.chr9 \
-        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT --vmax 20
-
+        -c chr9 --start 1000000 --end 38000000 --type SCALE \
+        --vmax 20
 
 .. figure:: img/SquareMulti.jpg
    :width: 500px
@@ -65,7 +64,7 @@ Add ``--log`` option to visualize a log-scale heatmap.
         JuicerResults_hg38/CTCFKD:siCTCF \
         JuicerResults_hg38/NIPBLKD:siNIBPL \
         -o SquareMulti.chr9 \
-        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT \
+        -c chr9 --start 1000000 --end 38000000 --type SCALE \
         --vmax 20 --log
 
 .. figure:: img/SquareMulti.log.jpg
@@ -89,7 +88,7 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
         JuicerResults_hg38/CTCFKD:siCTCF \
         JuicerResults_hg38/NIPBLKD:siNIBPL \
         -o drawSquareRatioMulti.chr9 \
-        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT
+        -c chr9 --start 1000000 --end 38000000 --type SCALE
 
 .. figure:: img/drawSquareRatioMulti.jpg
    :width: 500px
@@ -99,7 +98,6 @@ The input data is a dense matrix output from `makeMatrix_intra.sh`.
    drawSquareRatioMulti
 
 This figure shows the relative contact frequency of 2nd (siCTCF) and 3rd (siNIPBL) against 1st (Control).
-
 
 drawSquarePair
 ------------------------------------------------------
@@ -112,7 +110,7 @@ The first and second samples are visualzed in the upper and bottom triagles, res
      drawSquarePair \
          Control/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
          Rad21KD_1/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
-         drawSquarePair.chr21 --start 24000000 --end 32000000
+         -o drawSquarePair.chr21 --start 24000000 --end 32000000 -r 25000
 
 .. figure:: img/drawSquarePair.jpg
    :width: 400px
@@ -122,7 +120,6 @@ The first and second samples are visualzed in the upper and bottom triagles, res
    drawSquarePair
 
 In this case, ``Control`` and ``Rad21KD`` are visualzed in the upper and bottom triagles, respectively.
-
 
 drawSquareRatioPair
 ------------------------------------------------------
@@ -137,7 +134,7 @@ This command visualize the log-scale frequency of ``sample2/sample1`` and ``samp
           CTCFKD_1/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
           Control_2/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
           Rad21KD_1/Matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
-          drawSquareRatioPair.chr21 --start 24000000 --end 32000000
+          -o drawSquareRatioPair.chr21 --start 24000000 --end 32000000
 
 .. figure:: img/drawSquareRatioPair.jpg
    :width: 400px
@@ -196,32 +193,6 @@ Visualize a contact frequency of the first and second sample in upper and lower 
 The black dashed lines and blue circles indicate TADs and loops, respectively.
 
 
-drawTriangleRatioMulti
-------------------------------------------------------
-
-Visualize a relative contact frequency (log scale) of 2nd to the last samples against the first sample.
-The input data is a dense matrix output from `makeMatrix_intra.sh`.
-
-.. code-block:: bash
-
-     drawTriangleRatioMulti \
-        JuicerResults_hg38/Control:Control \
-        JuicerResults_hg38/CTCFKD:siCTCF \
-        JuicerResults_hg38/NIPBLKD:siNIBPL \
-        -o drawTriangleRatioMulti.chr9 \
-        -c chr9 --start 1000000 --end 38000000 --type VC_SQRT -d 5000000
-
-.. figure:: img/drawTriangleRatioMulti.jpg
-   :width: 600px
-   :align: center
-   :alt: Alternate
-
-   drawTriangleRatioMulti
-
-
-The bottom line plots are Directional relative frequency (see `Directional relative frequency <https://custardpy.readthedocs.io/en/latest/content/Visualization.html#id1>`_).
-
-
 plotHiCfeature
 ------------------------------------------------------
 
@@ -229,46 +200,57 @@ plotHiCfeature
 
 .. code-block:: bash
 
-     usage: plotHiCfeature [-h] [-o OUTPUT] [-c CHR] [--type TYPE]
-                           [--distance DISTANCE] [-r RESOLUTION] [-s START]
-                           [-e END] [--multi] [--multidiff] [--compartment] [--di]
-                           [--dfr] [--dfr_right] [--dfr_left] [-d VIZDISTANCEMAX]
-                           [--v4c] [--vmax VMAX] [--vmin VMIN] [--anchor ANCHOR]
-                           [input [input ...]]
+     plotHiCfeature [-h] [-o OUTPUT] [-c CHR] [--type TYPE]
+                    [--distance DISTANCE] [-r RESOLUTION] [-s START]
+                    [-e END] [--multi] [--multidiff] [--compartment] [--di]
+                    [--drf] [--drf_right] [--drf_left]
+                    [--triangle_ratio_multi] [-d VIZDISTANCEMAX] [--v4c]
+                    [--vmax VMAX] [--vmin VMIN] [--vmax_ratio VMAX_RATIO]
+                    [--vmin_ratio VMIN_RATIO] [--anchor ANCHOR]
+                    [--xsize XSIZE]
+                    [input [input ...]]
 
      positional arguments:
-       input                 <Input directory>:<label>
+          input                 <Input directory>:<label>
 
      optional arguments:
-       -h, --help            show this help message and exit
-       -o OUTPUT, --output OUTPUT
-                             Output prefix
-       -c CHR, --chr CHR     chromosome
-       --type TYPE           normalize type (default: SCALE)
-       --distance DISTANCE   distance for DI (default: 500000)
-       -r RESOLUTION, --resolution RESOLUTION
-                             resolution (default: 25000)
-       -s START, --start START
-                             start bp (default: 0)
-       -e END, --end END     end bp (default: 1000000)
-       --multi               plot MultiInsulation Score
-       --multidiff           plot differential MultiInsulation Score
-       --compartment         plot Compartment (eigen)
-       --di                  plot Directionaly Index
-       --dfr                 plot DirectionalFreqRatio
-       --dfr_right           (with --dfr) plot DirectionalFreqRatio (Right)
-       --dfr_left            (with --dfr) plot DirectionalFreqRatio (Left)
-       -d VIZDISTANCEMAX, --vizdistancemax VIZDISTANCEMAX
-                             max distance in heatmap
-       --v4c                 plot virtual 4C from Hi-C data
-       --vmax VMAX           max value of color bar (default: 50)
-       --vmin VMIN           min value of color bar (default: 0)
-       --anchor ANCHOR       (for --v4c) anchor point
+          -h, --help            show this help message and exit
+          -o OUTPUT, --output OUTPUT
+                              Output prefix
+          -c CHR, --chr CHR     chromosome
+          --type TYPE           normalize type (default: SCALE)
+          --distance DISTANCE   distance for DI (default: 500000)
+          -r RESOLUTION, --resolution RESOLUTION
+                              resolution (default: 25000)
+          -s START, --start START
+                              start bp (default: 0)
+          -e END, --end END     end bp (default: 1000000)
+          --multi               plot MultiInsulation Score
+          --multidiff           plot differential MultiInsulation Score
+          --compartment         plot Compartment (eigen)
+          --di                  plot Directionaly Index
+          --drf                 plot Directional Relative Frequency
+          --drf_right           (with --drf) plot DirectionalRelativeFreq (Right)
+          --drf_left            (with --drf) plot DirectionalRelativeFreq (Left)
+          --triangle_ratio_multi
+                              plot Triangle ratio multi
+          -d VIZDISTANCEMAX, --vizdistancemax VIZDISTANCEMAX
+                              max distance in heatmap
+          --v4c                 plot virtual 4C from Hi-C data
+          --vmax VMAX           max value of color bar (default: 50)
+          --vmin VMIN           min value of color bar (default: 0)
+          --vmax_ratio VMAX_RATIO
+                              max value of color bar for logratio (default: 1)
+          --vmin_ratio VMIN_RATIO
+                              min value of color bar for logratio (default: -1)
+          --anchor ANCHOR       (for --v4c) anchor point
+          --xsize XSIZE         xsize for figure (default: max(length/2M, 10))
 
 - ``Input`` should be "<sample directory>:<label>".
 
-    - ``<sample directory>`` is the output directory by ``custardpy_juicer``.
-    - ``<label>`` is the label used in the figure.
+     - ``<sample directory>`` is the output directory by ``custardpy_juicer``.
+     - ``<label>`` is the label used in the figure.
+
 - In default, ``plotHiCfeature`` uses a 25-kbp bin matrix. Supply ``-r`` option to change the resolution.
 - ``type`` is the normalization type defined by Juicer (SCALE/KR/VC_SQRT/NONE).
 
@@ -289,7 +271,6 @@ By default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distan
           -c $chr --start $start --end $end \
           --type $norm -d 5000000 \
           -o IS.$chr.$start-$end
-
 
 .. figure:: img/plotHiCfeature_IS.jpg
      :width: 400px
@@ -441,8 +422,34 @@ This score estimates the inconsistency of relative contact frequence (log scale)
 
      Directional relative frequency
 
+drawTriangleRatioMulti
+++++++++++++++++++++++++++++++++++++++
 
-See also `drawTriangleRatioMulti <https://custardpy.readthedocs.io/en/latest/content/Visualization.html#drawtriangleratiomulti>`_.
+Visualize a relative contact frequency (log scale) of 2nd to the last samples against the first sample.
+
+.. code-block:: bash
+
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          --triangle_ratio_multi \
+          -c $chr --start $start --end $end --type $norm -d 5000000 \
+          -o TriangleRatioMulti.$chr
+
+Virtual 4C
+++++++++++++++++++++++++++++++++++++++
+
+Visualize a 4C-like plot (interation from the anchor site) using Hi-C data.
+Use ``--anchor`` option to specify the anchor site.
+
+.. code-block:: bash
+
+     plotHiCfeature \
+          JuicerResults_hg38/Hap1-A:Control \
+          JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          --v4c --anchor 10400000 --vmax 100
+          -c $chr --start $start --end $end --type $norm \
+          -o Virtual4C.$chr
 
 plotCompartmentGenome
 ------------------------------------------------------

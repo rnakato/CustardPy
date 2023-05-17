@@ -2,12 +2,12 @@ Quickstart
 =====================
 
 Hi-C analysis using Juicer
-----------------------------------------------------------------
+---------------------------------------------
 
-Running custardpy_juicer
+Hi-C analysis from FASTQ files
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can implement whole commands for Juicer analysis using ``custardpy_juicer`` command in the Singularity image (``custardpy_juicer.sif``).
+You can implement whole commands for Juicer analysis from FASTQ files using ``custardpy_juicer`` command in the Singularity image (``custardpy.sif``).
 
 .. code-block:: bash
 
@@ -22,16 +22,33 @@ You can implement whole commands for Juicer analysis using ``custardpy_juicer`` 
     enzyme=MboI
 
     fqdir=fastq/$cell
-    singularity exec --nv --bind /work custardpy_juicer.0.2.0.sif \
+    singularity exec --nv --bind /work custardpy.sif \
           custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
           -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
-
 
 - ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Hap1-A``). The outputs are stored in ``JuicerResults_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Avaible genome build: hg19, hg38, mm10, mm39, rn7, galGal5, galGal6, ce10, ce11, danRer11, dm6, xenLae2, sacCer3
 - Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima
 
+Hi-C analysis from a .hic file
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Use ``custardpy_process_hic`` command to start Hi-C analysis from a ``.hic`` file.
+
+.. code-block:: bash
+
+    build=hg38   # genome build
+    gt=genometable.$build.txt # genome_table file
+    gene=refFlat.$build.txt   # gene annotation (refFlat format)
+    ncore=64  # number of CPUs
+    cell=Hap1-A
+    hic=sample.hic
+
+    singularity exec --nv --bind /work custardpy.sif \
+        custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $cell
+
+- The outputs are stored in ``$cell``.
 
 Running commands separately
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,7 +67,7 @@ You can also execute commands separately.
     gene=refFlat.$build.txt # gene annotation (refFlat format)
     ncore=64 # number of CPUs
 
-    sing="singularity exec --nv --bind /work custardpy_juicer.0.2.0.sif" # singularity command
+    sing="singularity exec --nv --bind /work custardpy.sif" # singularity command
 
     cell=Hap1-A
     fqdir=fastq/$cell/
@@ -86,6 +103,7 @@ You can also execute commands separately.
     done
     
 
+
 Micro-C analysis by Cooler
 --------------------------------------------------
 
@@ -94,7 +112,7 @@ Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>
 Micro-C using BWA
 +++++++++++++++++++++++++++++++++
 
-This command maps reads by BWA, make .cool and .hic files and call loops using Juicer HiCCUPS.
+This command maps reads by BWA, make ``.cool`` and ``.hic`` files and call loops using Juicer.
 
 .. code-block:: bash
 
@@ -103,24 +121,27 @@ This command maps reads by BWA, make .cool and .hic files and call loops using J
     gt=genome_table.$build.txt  # genome_table file
     bwa_index=bwa-indexes/UCSC-$build
 
-    prefix=SRR10480692
+    prefix=ESC_WT01   # modify this for your FASTQ data
     fq1=fastq/${prefix}_1.fastq.gz
     fq2=fastq/${prefix}_2.fastq.gz
 
-    idir=Results_bwa/$prefix
+    # Generate .hic file from FASTQ
     singularity exec --bind /work custardpy.sif \
-        microc_bwa -p $ncore $prefix $idir $fq1 $fq2 $bwa_index $gt
+        custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
-    hic=$idir/hic/contact_map.q30.hic
+    # Juicer analysis with the .hic file
+    odir=Cooler_MicroC_bwa/$prefix
+    hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
-    singularity exec --nv custardpy_juicer.sif \
-        call_HiCCUPS.sh $norm $idir $hic $build
+
+    singularity exec --bind /work --nv custardpy.sif \
+        custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
     
 Micro-C using chromap
 +++++++++++++++++++++++++++++++
 
-**CustardPy** also allows chromap for read mapping.
+**CustardPy** also supports chromap for read mapping.
 
 .. code-block:: bash
 
@@ -130,17 +151,17 @@ Micro-C using chromap
     genome=genome.$build.fa     # genome fasta file
     chromap_index=chromap-indexes/UCSC-$build
 
-    sing=""
-    sing_juicer=""
-
-    prefix=SRR10480692
+    prefix=ESC_WT01   # modify this for your FASTQ data
     fq1=fastq/${prefix}_1.fastq.gz
     fq2=fastq/${prefix}_2.fastq.gz
 
-    idir=Results_chromap/$prefix
+    # Generate .hic file from FASTQ
     singularity exec custardpy.sif \
-        microc_chromap -p $ncore $prefix $idir $fq1 $fq2 $chromap_index $gt $genome
+        custardpy_mappingMicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
 
-    hic=$idir/hic/contact_map.q30.hic
+    # Juicer analysis with the .hic file
+    odir=Cooler_MicroC_chromap/$prefix
+    hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
-    singularity exec --nv custardpy_juicer.sif call_HiCCUPS.sh $norm $idir $hic $build
+    singularity exec --nv custardpy.sif \
+        custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir

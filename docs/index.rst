@@ -2,8 +2,10 @@
 CustardPy
 ================================================================
 
-**CustardPy** is a Hi-C analysis tools by Python3 and Docker.
+**CustardPy** is a 3D genome analysis tools by Python3 and Docker.
 
+- **Major Release! (version 1)**
+   - Unified the Docker images for `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_. Version 1 of the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image now supports all analyses previously offered by CustardPy and CustardPy_Juicer, rendering the latter unnecessary.
 
 Contents:
 ---------------
@@ -16,11 +18,10 @@ Contents:
    content/Install
    content/QuickStart
    content/Hi-C
-   content/MicroC
    content/Visualization
    content/3dmodel
    content/Utils
-   content/API
+
 
 
 Citation:
@@ -31,6 +32,4 @@ Citation:
 Contact:
 --------------
 
-:Mail: rnakato AT iqb.u-tokyo.ac.jp
-:Twitter: @RyuichiroNakato
-          
+rnakato AT iqb.u-tokyo.ac.jp

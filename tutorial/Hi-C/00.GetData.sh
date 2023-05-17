@@ -3,12 +3,12 @@ mkdir -p fastq/Hap1-A fastq/WaplKO_3.3-A
 fastq-dump --split-files --gzip SRR5266584 -O fastq/Hap1-A
 fastq-dump --split-files --gzip SRR5266585 -O fastq/WaplKO_3.3-A
 
-# instead, download the paired fastq files from our Google Drive:
-# https://drive.google.com/file/d/1GA3d-TD7RpYFhP4VYcnN1WQmV3FjC58N/view?usp=sharing
-# https://drive.google.com/file/d/1GDB1Y35heroYOHg1CGooQc8BF25jKZYc/view?usp=sharing
+# Instead, download the paired fastq files from our website:
+# wget -nv --timestamping https://onl.la/CJi7U3m -O Hap1-A.zip
+# wget -nv --timestamping https://onl.la/93jAHRe -O WaplKO_3.3-A.zip
 
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.0.2.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
 sing="singularity exec custardpy.sif"
 
 $sing gethg38genome.sh
@@ -21,4 +21,4 @@ ln -rsf $genome $indexdir/hg38
 
 indexdir=chromap-indexes
 mkdir -p $indexdir
-chromap -i -t 12 -r $genome -o $indexdir/hg38
+$sing chromap -i -t 12 -r $genome -o $indexdir/hg38

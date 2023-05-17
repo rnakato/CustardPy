@@ -1,6 +1,6 @@
-pypi/build/
-pypi/custardpy.egg-info/
-pypi/dist/
+PyPI/build/
+PyPI/custardpy.egg-info/
+PyPI/dist/
 tutorial/Hi-C/JuicerResults/
 tutorial/Hi-C/fastq/
 tutorial/Hi-C/Cooler_hg38/
@@ -11,9 +11,12 @@ docs/.vscode/
 tutorial/Hi-C/bwa-indexes/
 tutorial/Hi-C/chromap-indexes/
 tutorial/Hi-C/genome.hg38.fa
-tutorial/Hi-C/old/
+tutorial/Hi-C/Figs/
+tutorial/Hi-C/JuicerResults_hg38/
 tutorial/Micro-C/Cooler_MicroC_bwa/
 tutorial/Micro-C/Cooler_MicroC_chromap/
 tutorial/Micro-C/bwa-indexes/
 tutorial/Micro-C/chromap-indexes/
 tutorial/Micro-C/genome.mm39.fa
+tutorial/Micro-C/genome.mm39.fa.fai
+tutorial/Micro-C/JuicerResults_mm39/

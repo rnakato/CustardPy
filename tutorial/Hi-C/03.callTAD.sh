@@ -6,8 +6,8 @@ enzyme=MboI
 #gt=/work/Database/UCSC/$build/genome_table
 gt=genometable.$build.txt
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy_juicer.0.2.0.sif"
-sing="singularity exec custardpy_juicer.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
+sing="singularity exec custardpy.sif"
 
 odir=JuicerResults_$build/Hap1-A
 
