@@ -13,6 +13,7 @@ tutorial/Hi-C/chromap-indexes/
 tutorial/Hi-C/genome.hg38.fa
 tutorial/Hi-C/Figs/
 tutorial/Hi-C/JuicerResults_hg38/
+tutorial/Hi-C/CoolerResults_hg38/
 tutorial/Micro-C/Cooler_MicroC_bwa/
 tutorial/Micro-C/Cooler_MicroC_chromap/
 tutorial/Micro-C/bwa-indexes/
