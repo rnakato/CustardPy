@@ -1,6 +1,6 @@
 # CustardPy: Docker image for 3D genome analysis
 
-## Major Release! (v1.0.0)
+## Major Release! (version 1)
 
 This repository contains
 - Source code of **CustardPy** (PyPI),
