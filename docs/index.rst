@@ -19,10 +19,9 @@ Contents:
    content/QuickStart
    content/Hi-C
    content/Visualization
+   content/DEGanalysis
    content/3dmodel
    content/Utils
-
-
 
 Citation:
 --------------

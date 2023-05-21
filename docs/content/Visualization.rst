@@ -268,6 +268,7 @@ By default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distan
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --type $norm -d 5000000 \
           -o IS.$chr.$start-$end
@@ -286,7 +287,7 @@ The third and fourth rows are the heatmap and line plot for the feature value sp
 Multi-insulation score
 +++++++++++++++++++++++++++
 
-``plotHiCfeature`` can also calculate a "multi-scale insulation score `[Crane et al., Nature, 2015] <https://www.nature.com/articles/nature14450>`_"
+``plotHiCfeature`` can also calculate a "multi-scale insulation score" `[Crane et al., Nature, 2015] <https://www.nature.com/articles/nature14450>`_
 ranging 100 kbp to 1 Mbp by supplying ``--multi`` option.
 
 .. code-block:: bash
@@ -298,6 +299,7 @@ ranging 100 kbp to 1 Mbp by supplying ``--multi`` option.
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --multi --type $norm -d 5000000 \
           -o MultiIS.$chr.$start-$end
@@ -327,6 +329,7 @@ To directory investigate the difference of multi-insulation score, we provide **
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --multidiff --type $norm -d 5000000 \
           -o MultiISdiff.$chr.$start-$end
@@ -347,7 +350,6 @@ Compartment PC1
 While the blue line in the second row shows the PC1 value of the first sample,
 ``plotHiCfeature --compartment`` visualizes the PC1 values for multiple samples. This plot can be used to identify compartment switching.
 
-
 .. code-block:: bash
 
      chr=chr20
@@ -357,6 +359,7 @@ While the blue line in the second row shows the PC1 value of the first sample,
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --compartment --type $norm -d 5000000 \
           -o Compartment.$chr.$start-$end
@@ -384,6 +387,7 @@ The "left side" and "right side" of a TAD are likely to have positve and negativ
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --di --type $norm -d 5000000 \
           -o DI.$chr.$start-$end
@@ -399,7 +403,7 @@ The "left side" and "right side" of a TAD are likely to have positve and negativ
 Directional relative frequency
 ++++++++++++++++++++++++++++++++++++++
 
-Directional relative frequency is a score our group previously proposed `[Wang and Nakato, Brief Bioinform, 2021] <https://academic.oup.com/bib/article/23/1/bbab509/6446983>`_.
+Directional relative frequency is a score that our group previously proposed `[Wang and Nakato, Brief Bioinform, 2021] <https://academic.oup.com/bib/article/23/1/bbab509/6446983>`_.
 This score estimates the inconsistency of relative contact frequence (log scale) between the left side (3′) and right side (5′).
 
 .. code-block:: bash
@@ -411,6 +415,7 @@ This score estimates the inconsistency of relative contact frequence (log scale)
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           -c $chr --start $start --end $end \
           --drf --type $norm -d 5000000 \
           -o DRF.$chr.$start-$end
@@ -436,6 +441,14 @@ Visualize a relative contact frequency (log scale) of 2nd to the last samples ag
           -c $chr --start $start --end $end --type $norm -d 5000000 \
           -o TriangleRatioMulti.$chr
 
+.. figure:: img/plotHiCfeature_TriangleRatioMulti.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     TriangleRatioMulti
+
+
 Virtual 4C
 ++++++++++++++++++++++++++++++++++++++
 
@@ -447,9 +460,18 @@ Use ``--anchor`` option to specify the anchor site.
      plotHiCfeature \
           JuicerResults_hg38/Hap1-A:Control \
           JuicerResults_hg38/WaplKO_3.3-A:WaplKO \
+          JuicerResults_hg38/SCC4KO-A:SCC4KO \
           --v4c --anchor 10400000 --vmax 100
           -c $chr --start $start --end $end --type $norm \
           -o Virtual4C.$chr
+
+.. figure:: img/plotHiCfeature_v4c.jpg
+     :width: 400px
+     :align: center
+     :alt: Alternate Text
+
+     Virtual 4C
+
 
 plotCompartmentGenome
 ------------------------------------------------------
@@ -508,3 +530,11 @@ Plot multi-scale insulation scores from Juicer matrix
                                    matrix output resolution
      Example:
         plotInsulationScore WT/intrachromosomal/25000/observed.KR.chr7.matrix.gz MultiInsulationScore_WT.chr7.png 25000
+
+.. figure:: img/MultiInsulationScore.chr7.jpg
+   :width: 700px
+   :align: center
+   :alt: Alternate
+
+   Multi-Insulation Score (chr7)
+

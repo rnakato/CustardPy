@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
+#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.1.0.sif"
 sing="singularity exec --nv custardpy.sif"
 
 chr=chr20
@@ -31,14 +31,6 @@ $sing plotHiCfeature \
       $Resdir/WaplKO_3.3-A:WaplKO \
       $Resdir/SCC4KO-A:SCC4KO \
       -c $chr --start $start --end $end -r $resolution \
-      --compartment --type $norm -d 5000000 \
-      -o $Resdir/Compartment.$chr.$start-$end
-
-$sing plotHiCfeature \
-      $Resdir/Hap1-A:Control \
-      $Resdir/WaplKO_3.3-A:WaplKO \
-      $Resdir/SCC4KO-A:SCC4KO \
-      -c $chr --start $start --end $end -r $resolution \
       --multi --type $norm -d 5000000 \
       -o $Resdir/MultiIS.$chr.$start-$end
 
@@ -55,8 +47,8 @@ $sing plotHiCfeature \
       $Resdir/WaplKO_3.3-A:WaplKO \
       $Resdir/SCC4KO-A:SCC4KO \
       -c $chr --start $start --end $end -r $resolution \
-      --drf --type $norm -d 5000000 \
-      -o $Resdir/DRF.$chr.$start-$end
+      --compartment --type $norm -d 5000000 \
+      -o $Resdir/Compartment.$chr.$start-$end
 
 $sing plotHiCfeature \
       $Resdir/Hap1-A:Control \
@@ -65,6 +57,14 @@ $sing plotHiCfeature \
       -c $chr --start $start --end $end -r $resolution \
       --di --type $norm -d 5000000 \
       -o $Resdir/DI.$chr.$start-$end
+
+$sing plotHiCfeature \
+      $Resdir/Hap1-A:Control \
+      $Resdir/WaplKO_3.3-A:WaplKO \
+      $Resdir/SCC4KO-A:SCC4KO \
+      -c $chr --start $start --end $end -r $resolution \
+      --drf --type $norm -d 5000000 \
+      -o $Resdir/DRF.$chr.$start-$end
 
 $sing plotHiCfeature \
       $Resdir/Hap1-A:Control \

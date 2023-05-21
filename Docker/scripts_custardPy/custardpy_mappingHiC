@@ -97,38 +97,40 @@ if [ -z $postproc ]; then
         | samtools view -Shb - > $odir/bam/mapped.bwa.bam
 
     echo "start parsing by pairtools..."
-#    bwa mem -t $ncore -SP5M $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping \
+    #samtools view -h $odir/bam/mapped.bwa.bam \
+	#| pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
+	#| pairtools sort --nproc 4 --tmpdir=$tempdir --output $odir/pairs/bwa.sam.pairs.gz
+    #pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
+    #          --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz
+    #pairix -f $odir/pairs/bwa.marked.sam.pairs.gz # sanity check
+
     samtools view -h $odir/bam/mapped.bwa.bam \
-        | pairtools parse -c $gt --min-mapq $qthre --nproc-in 4 --nproc-out 4 --add-columns mapq \
-		    --drop-sam --drop-seq --output-stats $odir/pairs/mapped.bwa.stats.txt --walks-policy mask \
-        | pairtools sort --nproc 5 --tmpdir=$tempdir \
-        | pairtools dedup --nproc-in 4 --nproc-out 4 --max-mismatch 3 --mark-dups \
-		    --output \
-		    >( pairtools split \
-				 --output-pairs $odir/pairs/bwa.nodups.pairs.gz \
-				 --output-sam $odir/pairs/bwa.nodups.bam) \
-		    --output-unmapped \
-		    >( pairtools split \
-				 --output-pairs $odir/pairs/bwa.unmapped.pairs.gz \
-				 --output-sam $odir/pairs/bwa.unmapped.bam) \
-		    --output-dups \
-		    >( pairtools split \
-				 --output-pairs $odir/pairs/bwa.dups.pairs.gz \
-				 --output-sam $odir/pairs/bwa.dups.bam) \
-		    --output-stats $odir/pairs/mapped.bwa.dedup.stats \
+	| pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
+	| pairtools sort --nproc 4 --tmpdir=$tempdir --output $odir/pairs/bwa.sam.pairs.gz
+    pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
+              --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz
+    pairix -f $odir/pairs/bwa.marked.sam.pairs.gz # sanity check
 
-#		    --output-dups - --output-unmapped - \
-#    --output $odir/pairs/bwa.marked.sam.pairs.gz \
-#	     $odir/pairs/bwa.sam.pairs.gz #--backend cython
+#    samtools view -h $odir/bam/mapped.bwa.bam \
+#        | pairtools parse -c $gt --min-mapq $qthre --nproc-in 4 --nproc-out 4 --add-columns mapq \
+#		    --drop-sam --drop-seq --output-stats $odir/pairs/mapped.bwa.stats.txt --walks-policy mask \
+#        | pairtools sort --nproc 5 --tmpdir=$tempdir \
+#        | pairtools dedup --nproc-in 4 --nproc-out 4 --max-mismatch 3 --mark-dups \
+#		    --output \
+#		    >( pairtools split \
+#				 --output-pairs $odir/pairs/bwa.nodups.pairs.gz \
+#				 --output-sam $odir/pairs/bwa.nodups.bam) \
+#		    --output-unmapped \
+#		    >( pairtools split \
+#				 --output-pairs $odir/pairs/bwa.unmapped.pairs.gz \
+#				 --output-sam $odir/pairs/bwa.unmapped.bam) \
+#		    --output-dups \
+#		    >( pairtools split \
+#				 --output-pairs $odir/pairs/bwa.dups.pairs.gz \
+#				 --output-sam $odir/pairs/bwa.dups.bam) \
+#		    --output-stats $odir/pairs/mapped.bwa.dedup.stats
 
-#	| pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
-#	| pairtools sort --nproc 4 --tmpdir=$tempdir --output $odir/pairs/bwa.sam.pairs.gz
- ##         pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
-#              --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz
-#    pairix -f $odir/pairs/bwa.marked.sam.pairs.gz # sanity check
-
- #   echo "start splitting pairsam by pairtools..."
-
+    echo "start splitting pairsam by pairtools..."
     TEMPFILE=$tempdir/temp.gz
     TEMPFILE1=$tempdir/temp1.gz
     ## Generate lossless bam
@@ -141,7 +143,7 @@ if [ -z $postproc ]; then
     pairtools split --output-pairs ${TEMPFILE1} ${TEMPFILE}
     pairtools select 'True' --chrom-subset $gt -o $odir/pairs/bwa.dedup.pairs.gz ${TEMPFILE1}
     pairix $odir/pairs/bwa.dedup.pairs.gz  # sanity check & indexing
-    rm ${TEMPFILE} ${TEMPFILE1}
+    rm ${TEMPFILE} ${TEMPFILE1} $odir/pairs/bwa.sam.pairs.gz
 
     echo "add juicer-style fragment information..."
     # use fragment_4dnpairs.pl in pairix/util instead of juicer/CPU/common

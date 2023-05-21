@@ -2,6 +2,9 @@
 
 ## Docker_CustardPy
 
+### 1.1.0 (2023-05-21)
+- Add `DEG_boundary_analysis` for TAD-proximity analysis
+
 ### 1.0.0 (2023-05-17)
 - Major Release!
 - Merged the GitHub repositories for CustardPy (this site) and [Docker_CustardPy](https://github.com/rnakato/Docker_CustardPy) into a single repository.

@@ -1,5 +1,5 @@
-Commands in CustardPy
-===========================
+Commands for Hi-C and Micro-C processing
+================================================
 
 **CustardPy** internally executes `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
 See the original website for the full description of each command.
@@ -271,6 +271,7 @@ juicer_callTAD.sh
 
     Because Juicer ArrowHead allows "nested TADs" and "non-TAD regions", not all genomic regions are included in TADs, and some amount of TAD boundaries may be included in a larger TADs. Make sure that the files you are using meet the criteria of your assumption.
 
+
 makeInslationScore.sh
 +++++++++++++++++++++++++++++++++++
 
@@ -280,14 +281,11 @@ The ``<odir>`` directory should be the same with that is specified in ``makeMatr
 
 .. code-block:: bash
 
-    makeMatrix_intra.sh <norm> <odir> <hic> <resolution> <gt>
-      <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
-      <odir>: output directory (e.g., "JuicerResults/sample1")
-      <hic>: .hic file
-      <resolution>: resolution of the matrix
-      <gt>: genome table
-      Options:
-        -l: output contact matrix as a list (default: dense matrix)
+  makeInslationScore.sh <norm> <odir> <resolution> <gt>
+    <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)
+    <odir>: output directory (e.g., "JuicerResults/sample1")
+    <resolution>: resolution of the matrix
+    <gt>: genome table
 
 The results are output in ``<odir>/InsulationScore/<norm>/<resolution>/``.
 
