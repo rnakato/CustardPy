@@ -5,7 +5,7 @@ with open("../README.md", "r") as fh:
 
 setuptools.setup(
     name="custardpy",
-    version="0.4.2",   # for PyPI
+    version="0.5.2",   # for PyPI
 #    version="0.3.35",    # for test
     license="GPL3.0",
     install_requires=[
@@ -27,6 +27,8 @@ setuptools.setup(
     keywords="Hi-C analysis, 3D genome, NGS",
     scripts=['custardpy/checkHiCfile.py',
              'custardpy/convert_JuicerDump_to_dense.py',
+             'custardpy/custardpy_clustering_boundary',
+             'custardpy/custardpy_differential_DRF',
              'custardpy/DEG_boundary_analysis',
              'custardpy/drawSquareMulti',
              'custardpy/drawSquarePair',

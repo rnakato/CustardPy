@@ -2,8 +2,10 @@
 
 ## Docker_CustardPy
 
-### 1.1.0 (2023-05-21)
-- Add `DEG_boundary_analysis` for TAD-proximity analysis
+### 1.1.0 (2023-05-24)
+- Add `DEG_boundary_analysis` command for TAD-proximity analysis
+- Add `custardpy_clustering_boundary` command for clustering TAD boundaries
+- Add `custardpy_differential_DRF` command for differential DRF analysis
 
 ### 1.0.0 (2023-05-17)
 - Major Release!

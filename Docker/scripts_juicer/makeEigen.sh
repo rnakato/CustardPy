@@ -40,7 +40,7 @@ gene=$6
 pwd=$(cd $(dirname $0) && pwd)
 chrlist=$(getchr_from_genometable.sh $gt)
 
-ENV XDG_RUNTIME_DIR $HOME/.xdg
+XDG_RUNTIME_DIR=$HOME/.xdg
 
 dir=$matrixdir/Eigen/$binsize
 mkdir -p $dir

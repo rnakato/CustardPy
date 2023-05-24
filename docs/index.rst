@@ -20,6 +20,7 @@ Contents:
    content/Hi-C
    content/Visualization
    content/DEGanalysis
+   content/Multisample
    content/3dmodel
    content/Utils
 
