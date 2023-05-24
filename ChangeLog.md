@@ -6,6 +6,7 @@
 - Add `DEG_boundary_analysis` command for TAD-proximity analysis
 - Add `custardpy_clustering_boundary` command for clustering TAD boundaries
 - Add `custardpy_differential_DRF` command for differential DRF analysis
+- Bug fix in `makeEigen.sh`
 
 ### 1.0.0 (2023-05-17)
 - Major Release!
