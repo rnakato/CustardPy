@@ -10,7 +10,7 @@ This repository contains
 
 ## 0. Changelog
 
-See [Changelog](https://github.com/rnakato/CustardPy/blob/master/ChangeLog.md)
+See [Changelog](https://github.com/rnakato/CustardPy/blob/main/ChangeLog.md)
 
 ## 1. Installation
 
