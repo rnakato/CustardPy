@@ -1,6 +1,8 @@
 Utility tools
 =====================
 
+This page describes the utility scripts included in **CustardPy**.
+
 distance_vs_count.Juicer
 ---------------------------
 
@@ -17,7 +19,7 @@ Count genomic distance of read pairs in the input file (supposing ``align/merged
 convert_JuicerDump_to_dense.py
 ------------------------------------------------------
 
-Convert interaction frequency file dumped by Juicer to dense matrix
+Convert interaction frequency file dumped by Juicertools to dense (two-dimensional) matrix.
 
 .. code-block:: bash
 
@@ -30,20 +32,3 @@ Convert interaction frequency file dumped by Juicer to dense matrix
         genome_table.txt \
         chrX \
         25000
-
-DirectionalFreqRatio.py
-------------------------------------------------------
-
-Output  DirectionalFreqRatio as bedGraph
-
-.. code-block:: bash
-
-    DirectionalFreqRatio.py [-h] [--dfr_right] [--dfr_left] input control output chr resolution
-
-    Example:
-        DirectionalFreqRatio.py \
-            Ctrl/matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matri x.gz \
-            siCTCF/matrix/intrachromosomal/25000/observed.VC_SQRT.chr21.matrix.gz \
-            CTCF.DFR.chr21 \
-            chr21 \
-            25000
