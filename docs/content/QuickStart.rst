@@ -1,9 +1,9 @@
 Quickstart
 =====================
 
-A common problem in Hi-C analysis is the strict requirement of specific input formats. Many tools require input data to be in a specific format, and consequently, their use is hindered if the data under investigation does not conform to these specifications.
+.. A common problem in Hi-C analysis is the strict requirement of specific input formats. Many tools require input data to be in a specific format, and consequently, their use is hindered if the data under investigation does not conform to these specifications.
 
-Since CustardPy covers the processing of Hi-C data from FASTQ and uses the generated data for the subsequent analysis, users can avoid the potential format incompatibility.
+.. Since CustardPy covers the processing of Hi-C data from FASTQ and uses the generated data for the subsequent analysis, users can avoid the potential format incompatibility.
 
 
 Hi-C analysis using Juicer
