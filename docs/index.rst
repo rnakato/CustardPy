@@ -2,10 +2,12 @@
 CustardPy
 ================================================================
 
-**CustardPy** is a 3D genome analysis tool written in Python3 and available using the `Docker system <https://www.docker.com/>`_.
+- **Multi-sample Hi-C analysis**
+   - **CustardPy** is a 3D genome analysis tool written in Python3 and available using the `Docker system <https://www.docker.com/>`_.
 It is mainly designed for multi-sample Hi-C analysis (e.g., comparison of depletion effects across multiple proteins) and provides various functions for analysis and visualization.
 
-Since the docker image includes various existing tools in addition to the core **CustardPy** component (see :doc:`./content/Install`),
+- **Docker system**
+   - Since the docker image includes various existing tools in addition to the core **CustardPy** component (see :doc:`./content/Install`),
 users can perform a variety of 3D genome analyses without having to install them individually.
 
 
