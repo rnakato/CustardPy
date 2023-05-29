@@ -118,13 +118,54 @@ The result is outputted in ``distance/`` directory.
    :alt: Alternate
 
 
+custardpy_cooler_HiC
++++++++++++++++++++++++++++++++++++
+
+``custardpy_cooler_HiC`` uses Cooler and generates ``.cool`` and ``.hic`` files from FASTQ files.
+The input FASTQ files can be gzipped (.fastq.gz).
+
+BWA and chromap can be used for mapping reads (use ``-t`` option).
+The results are stored in ``CoolerResults_$build/$prefix/``.
+
+The index file of BWA or chromap (``-i <index>``) and the fasta file of the reference genome (``-f <genome>``) are required.
+
+.. code-block:: bash
+
+  custardpy_cooler_HiC [options] -i <index> -g <gt> <fastq1> <fastq2> <prefix>
+  fastq1, fastq2: paired-end fastq file
+  prefix: prefix of output files
+
+  Options:
+    -S state : steps to be executed [all|pairs|postproc] (default: all)
+    -i index : bwa index
+    -g genometable : genome table file (describing the chromosome length)
+    -e enzyme : enzyme (HindIII|MboI|DpnII default: HindIII)
+    -b build : genome build (default: hg38)
+    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)
+    -p ncore : number of CPUs (default: 4)
+    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)
+    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)
+    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')
+
+- Output
+
+    - 4-minus.cool
+    - 4-minus.multires.cool
+    - bam/
+    - hic/
+    - log/
+    - loops/
+    - pairs/
+    - pairs.stats.txt
+    - qc_report/
+
 Micro-C analysis
 ------------------------------------------------
 
-custardpy_mappingMicroC
+custardpy_cooler_MicroC
 +++++++++++++++++++++++++++++++++++
 
-``custardpy_mappingMicroC`` generates ``.cool`` and ``.hic`` files from FASTQ files using cooltools and JuicerTools.
+``custardpy_cooler_MicroC`` generates ``.cool`` and ``.hic`` files from FASTQ files using cooltools and JuicerTools.
 The input FASTQ files can be gzipped (.fastq.gz).
 
 BWA and chromap can be used for mapping reads (use ``-t`` option).
@@ -134,7 +175,7 @@ The index file of BWA or chromap (``-i <index>``) and the fasta file of the refe
 
 .. code-block:: bash
 
-  custardpy_mappingMicroC [options] -g <gt> -i <index> -f <genome> <fastq1> <fastq2> <prefix>
+  custardpy_cooler_MicroC [options] -g <gt> -i <index> -f <genome> <fastq1> <fastq2> <prefix>
   fastq1, fastq2: paired-end fastq file
   prefix: prefix of output files
 

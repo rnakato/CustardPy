@@ -13,7 +13,7 @@ sing="singularity exec custardpy.sif"
 fq1=fastq/SRR8954797_1.fastq.gz
 fq2=fastq/SRR8954797_2.fastq.gz
 prefix=ESC_WT01
-#$sing custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
+$sing custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
 
 odir=Cooler_MicroC_bwa/$prefix
 hic=$odir/hic/contact_map.q30.hic

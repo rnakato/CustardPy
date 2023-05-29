@@ -132,7 +132,7 @@ This command maps reads by BWA, make ``.cool`` and ``.hic`` files and call loops
 
     # Generate .hic file from FASTQ
     singularity exec --bind /work custardpy.sif \
-        custardpy_mappingMicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
+        custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
     # Juicer analysis with the .hic file
     odir=Cooler_MicroC_bwa/$prefix
@@ -162,7 +162,7 @@ Micro-C using chromap
 
     # Generate .hic file from FASTQ
     singularity exec custardpy.sif \
-        custardpy_mappingMicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
+        custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
 
     # Juicer analysis with the .hic file
     odir=Cooler_MicroC_chromap/$prefix

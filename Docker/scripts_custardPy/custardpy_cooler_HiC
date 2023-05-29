@@ -168,6 +168,10 @@ if [ -z $pairs ]; then
     Rscript /opt/scripts/pairsqc/plot.r $enzymelen $odir/qc_report
     cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $odir/cool/$prefix.cool
     cooler balance -p $ncore $odir/cool/$prefix.cool
+    for binsize in 25000 50000 100000; do
+        cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $odir/cool/$prefix.$binsize.cool
+        cooler balance -p $ncore $cool
+    done
     run-cool2multirescool.sh -i $odir/cool/$prefix.cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
 
     echo "generate .hic..."

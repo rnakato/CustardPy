@@ -1,0 +1,24 @@
+#!/bin/bash
+
+printHelpAndExit() {
+    echo "Usage: ${0##*/} <coolfile> <sample name>"
+    echo "  coolfile: input data of .cool format"
+    echo "  sample name: sample name used in the output"
+#    echo "  resolution: resolution of contact matrix"
+#    echo "  peak: BED format peak file to estimate compartment (e.g. H3K27ac)"
+   exit 0
+}
+
+if [ $# -ne 2 ]; then
+  printHelpAndExit
+  exit 1
+fi
+
+coolfile=$1
+sample_name=$2
+#resolution=$3
+#peak=$3
+
+Rdir=$(cd $(dirname $0) && pwd)
+
+R --vanilla < $Rdir/compartment_strength_GENOVA.R $coolfile $sample_name

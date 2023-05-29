@@ -6,19 +6,19 @@ index_bwa=bwa-indexes/hg38
 gene=refFlat.$build.txt
 ncore=64
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.1.0.sif"
-sing="singularity exec custardpy.sif"
+sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.1.0.sif"
+#sing="singularity exec custardpy.sif"
 
-#fq1=fastq/Hap1-A/SRR5266584_1.fastq.gz
-#fq2=fastq/Hap1-A/SRR5266584_2.fastq.gz
-#prefix=Hap1-A
-fq1=fastq/WaplKO_3.3-A/SRR5266585_1.fastq.gz
-fq2=fastq/WaplKO_3.3-A/SRR5266585_2.fastq.gz
-prefix=WaplKO_3.3-A
+fq1=fastq/Hap1-A/SRR5266584_1.fastq.gz
+fq2=fastq/Hap1-A/SRR5266584_2.fastq.gz
+prefix=Hap1-A
+#fq1=fastq/WaplKO_3.3-A/SRR5266585_1.fastq.gz
+#fq2=fastq/WaplKO_3.3-A/SRR5266585_2.fastq.gz
+#prefix=WaplKO_3.3-A
 enzyme=MboI
 
 # generate .hic and .cool files from fastq
-$sing custardpy_mappingHiC -g $gt -i $index_bwa \
+$sing custardpy_cooler_HiC -g $gt -i $index_bwa \
       -b $build -e $enzyme -p $ncore \
       $fq1 $fq2 $prefix
 
