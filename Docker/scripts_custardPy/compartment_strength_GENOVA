@@ -16,9 +16,9 @@ fi
 
 coolfile=$1
 sample_name=$2
-#resolution=$3
 #peak=$3
+#resolution=$3
 
 Rdir=$(cd $(dirname $0) && pwd)
 
-R --vanilla < $Rdir/compartment_strength_GENOVA.R $coolfile $sample_name
+Rscript $Rdir/compartment_strength_GENOVA.R $coolfile $sample_name #$peak

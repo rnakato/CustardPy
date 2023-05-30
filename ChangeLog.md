@@ -7,6 +7,8 @@
 - Add `custardpy_clustering_boundary` command for clustering TAD boundaries
 - Add `custardpy_differential_DRF` command for differential DRF analysis
 - Bug fix in `makeEigen.sh`
+- Change name of `custardpy_mappingHiC` to `custardpy_cooler_HiC`
+- Change name of `custardpy_mappingMicroC` to `custardpy_cooler_MicroC`
 
 ### 1.0.0 (2023-05-17)
 - Major Release!
