@@ -2,8 +2,8 @@
 
 printHelpAndExit() {
     echo "Usage: ${0##*/} <coolfile> <sample name>"
-    echo "  coolfile: input data of .cool format"
-    echo "  sample name: sample name used in the output"
+    echo "  coolfile: Input Hi-C data (.cool format)"
+    echo "  sample name: Name of the sample (also used for the output file name)"
 #    echo "  resolution: resolution of contact matrix"
 #    echo "  peak: BED format peak file to estimate compartment (e.g. H3K27ac)"
    exit 0

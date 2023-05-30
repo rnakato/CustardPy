@@ -245,6 +245,7 @@ makeMatrix_intra.sh
 
 The resulting observed/oe matrices are output in ``<odir>/Matrix/intrachromosomal/<resolution>/``.
 
+
 makeMatrix_inter.sh
 +++++++++++++++++++++++++++++++++++
 
@@ -378,3 +379,16 @@ See `MotifFinder manual <https://github.com/aidenlab/juicer/wiki/MotifFinder>`_ 
 .. note::
 
     Because an error occurs in the latest version of juicertools, ``CustardPy`` uses juicertools version 1.9.9 for MotifFinder.
+
+calculate_compartment_strength
+++++++++++++++++++++++++++++++++++++++++++
+
+``calculate_compartment_strength`` calculates the compartment strength from Hi-C data using `GENOVA <https://github.com/robinweide/GENOVA>`_.
+
+.. code-block:: bash
+
+    calculate_compartment_strength <coolfile> <sample name>
+      coolfile: Input Hi-C data (.cool format)
+      sample name: Name of the sample (also used for the output file name)
+
+The output file is "[sample_name].GENOVA_compartment_score.txt" containing the compartment strength, which is an average score for the chromosomes.
