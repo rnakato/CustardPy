@@ -6,6 +6,7 @@
 - Add `DEG_boundary_analysis` command for TAD-proximity analysis
 - Add `custardpy_clustering_boundary` command for clustering TAD boundaries
 - Add `custardpy_differential_DRF` command for differential DRF analysis
+- Add `calculate_compartment_strength` command for calculating compartment strength
 - Bug fix in `makeEigen.sh`
 - Change name of `custardpy_mappingHiC` to `custardpy_cooler_HiC`
 - Change name of `custardpy_mappingMicroC` to `custardpy_cooler_MicroC`

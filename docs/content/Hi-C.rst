@@ -391,4 +391,4 @@ calculate_compartment_strength
       coolfile: Input Hi-C data (.cool format)
       sample name: Name of the sample (also used for the output file name)
 
-The output file is "[sample_name].GENOVA_compartment_score.txt" containing the compartment strength, which is an average score for the chromosomes.
+The output file is `[sample_name].GENOVA_compartment_score.txt` containing the compartment strength, which is an average score for the chromosomes.
