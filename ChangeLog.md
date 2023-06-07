@@ -3,7 +3,7 @@
 ## Docker_CustardPy
 
 ### 1.1.1 (2023-06-07)
-- Add [GENOVA](https://github.com/robinweide/GENOVA>)
+- Add [GENOVA](https://github.com/robinweide/GENOVA)
 - Add `calculate_compartment_strength` command to calculate compartment strength
 - Add [HiCUP](https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/)
 - Bug fix of pairtools and numpy version conflict
