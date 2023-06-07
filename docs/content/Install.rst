@@ -30,6 +30,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `HOMER <http://homer.ucsd.edu/homer/interactions/index.html>`_
     - `FAN-C <https://fan-c.readthedocs.io/en/latest/index.html>`_ v0.9.25
     - `HiC-Pro <https://github.com/nservant/HiC-Pro>`_ v3.1.0
+    - `HiCUP <https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/>`_ v0.9.2
     - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ v0.2.5
 
 - Loop calling

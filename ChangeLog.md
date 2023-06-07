@@ -2,6 +2,12 @@
 
 ## Docker_CustardPy
 
+### 1.1.1 (2023-06-07)
+- Add [GENOVA](https://github.com/robinweide/GENOVA>)
+- Add `calculate_compartment_strength` command to calculate compartment strength
+- Add [HiCUP](https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/)
+- Bug fix of pairtools and numpy version conflict
+
 ### 1.1.0 (2023-05-24)
 - Add `DEG_boundary_analysis` command for TAD-proximity analysis
 - Add `custardpy_clustering_boundary` command for clustering TAD boundaries
