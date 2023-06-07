@@ -16,6 +16,11 @@ list="no"
 while getopts l option; do
     case ${option} in
         l) list="yes" ;;
+        \?) 
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            exit 1
+            ;;
         *)
             usage
             exit 1

@@ -40,17 +40,22 @@ while getopts i:e:b:g:o:m:p:z:n:r:a: option; do
 	e) enzyme=${OPTARG} ;;
 	b) build=${OPTARG} ;;
 	g) gt=${OPTARG} ;;
-        o) outputdir=${OPTARG} ;;
-        m) tmpdir=${OPTARG} ;;
-        p) ncore=${OPTARG} ;;
+    o) outputdir=${OPTARG} ;;
+    m) tmpdir=${OPTARG} ;;
+    p) ncore=${OPTARG} ;;
 	z) fastq_post=${OPTARG} ;;
 	n) norm=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
 	a) gene=${OPTARG} ;;
-        *)
-	    usage
-            exit 1
-            ;;
+    \?) 
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        exit 1
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
     esac
 done
 shift $((OPTIND - 1))

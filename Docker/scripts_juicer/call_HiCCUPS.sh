@@ -14,6 +14,11 @@ resolutions="5000,10000,25000"
 while getopts r: option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
+        \?) 
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            exit 1
+            ;;
         *)
             usage
             exit 1

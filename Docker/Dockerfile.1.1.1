@@ -142,13 +142,14 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Li
 
 ### Python (FitHiC, cooltools, cooler, pairtools)
 RUN set -e \
+    && conda update conda \
     && conda install -y numpy scipy matplotlib pandas seaborn scikit-learn scikit-learn-intelex cython \
        dash plotly black bokeh h5py click jupyter jupyterlab pytables \
 #    && conda uninstall sphinx \
     && conda install -c conda-forge -c bioconda pairtools=0.3.0 fithic \
     && conda install -y -c bioconda hic2cool cooltools cooler \
 # CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py
-    && pip install --no-cache-dir h1d custardpy==0.5.2 hic-straw phic coolpuppy chess-hic stripenn tabulate session_info \
+    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn tabulate session_info \
 # JuiceBox
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 

@@ -23,6 +23,11 @@ while getopts p:m: option; do
     case ${option} in
         p) ncore=${OPTARG} ;;
         m) tmpdir=${OPTARG} ;;
+        \?) 
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            exit 1
+            ;;
         *)
             usage
             exit 1

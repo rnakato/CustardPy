@@ -28,11 +28,16 @@ while getopts g:n:r:a:p: option; do
 	n) norm=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
 	a) gene=${OPTARG} ;;
-        p) ncore=${OPTARG} ;;
-        *)
-	    usage
-            exit 1
-            ;;
+    p) ncore=${OPTARG} ;;
+    \?) 
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        exit 1
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
     esac
 done
 shift $((OPTIND - 1))

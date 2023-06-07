@@ -18,6 +18,11 @@ while getopts r:p: option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
         p) ncore=${OPTARG} ;;
+        \?) 
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            exit 1
+            ;;
         *)
             usage
             exit 1
