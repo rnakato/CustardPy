@@ -19,8 +19,7 @@ run-pastis.sh
     resolution=100000
     norm=SCALE  # normalization type
     
-    singularity exec custardpy.sif \
-        run-pastis.sh $odir $chr $s $e $resolution $norm
+    run-pastis.sh $odir $chr $s $e $resolution $norm
 
 phic_processing
 ------------------------------------------------------
@@ -39,5 +38,5 @@ phic_processing
     resolution=100000
     norm=SCALE # normalization type
 
-    singularity exec custardpy.sif \
-        phic_processing $odir $hic $chr $start $end $resolution $norm
+    phic_processing $odir $hic $chr $start $end $resolution $norm
+    
