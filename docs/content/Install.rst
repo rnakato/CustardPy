@@ -52,6 +52,10 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `PASTIS <https://github.com/hiclib/pastis>`_ v0.4.0
     - `PHi-C2 <https://github.com/soyashinkai/PHi-C2>`_ v2.0.10
 
+- Quality check
+
+    - `3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ v1.0.1
+
 - Hi-ChIP
 
     - `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ v11.0

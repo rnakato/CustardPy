@@ -395,3 +395,39 @@ calculate_compartment_strength
       calculate_compartment_strength Cooler_results/Control/coolfile/Control.25000.cool Control
 
 The output file is ``[sample_name].GENOVA_compartment_score.txt`` containing the compartment strength, which is an average score for the chromosomes.
+
+
+run_3DChromatin_ReplicateQC.sh
++++++++++++++++++++++++++++++++++++++++++++++++
+
+`3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>` runs 
+`QuASAR <http://github.com/bxlab/hifive>`_, 
+`HiCRep <http://github.com/qunhualilab/hicrep>`_,
+`GenomeDISCO <http://github.com/kundajelab/genomedisco>`_,
+`HiC-Spector <http://github.com/gersteinlab/HiC-spector>`_
+for quality check and similarity calculation.
+See the original website for the detailed usage.
+
+Since it is written in Python2.7, we use a virtual environment in the CustardPy docker image. 
+run_3DChromatin_ReplicateQC.sh`` is a script to run it from the default command line.
+Replace ``3DChromatin_ReplicateQC`` with ``run_3DChromatin_ReplicateQC.sh`` in the command line:
+
+.. code-block:: bash
+
+    $ run_3DChromatin_ReplicateQC.sh -h
+    usage: 3DChromatin_ReplicateQC [-h]
+                                  {run_all,preprocess,qc,concordance,summary,cleanup}
+                                  ...
+
+    positional arguments:
+      {run_all,preprocess,qc,concordance,summary,cleanup}
+        run_all             Run all steps in the reproducibility/QC analysis with
+                            this single command
+        preprocess          (step 1) split files by chromosome
+        qc                  (step 2.a) compute QC per sample
+        concordance         (step 2.b) compute reproducibility of replicate pairs
+        summary             (step 3) create html report of the results
+        cleanup             (step 4) clean up files
+
+    optional arguments:
+      -h, --help            show this help message and exit

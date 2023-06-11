@@ -2,6 +2,11 @@
 
 ## Docker_CustardPy
 
+### 1.2.0 (2023-6-11)
+- Add [3DChromatin_ReplicateQC](https://github.com/kundajelab/3DChromatin_ReplicateQC)
+- add `run_3DChromatin_ReplicateQC.sh` for executing 3DChromatin_ReplicateQC
+- Update custardpy_cooler_HiC and custardpy_cooler_MicroC
+
 ### 1.1.1 (2023-06-07)
 - Add [GENOVA](https://github.com/robinweide/GENOVA)
 - Add `calculate_compartment_strength` command to calculate compartment strength

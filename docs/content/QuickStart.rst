@@ -5,6 +5,21 @@ Quickstart
 
 .. Since CustardPy covers the processing of Hi-C data from FASTQ and uses the generated data for the subsequent analysis, users can avoid the potential format incompatibility.
 
+.. note::
+
+    The commands below are required to execute the CustardPy docker image.
+    You need to add docker or singularity commands as shown below.
+
+.. code-block:: bash
+
+    # This example command will mount the /work directory of the host machine
+    # For docker
+    singularity exec [--nv] --bind /work custardpy.sif <command>
+    # For singularity
+    docker run --rm -it [--gpus all] -v /work:/work rnakato/custardpy <command>
+
+See also the sample scripts in the `tutorial/ <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ directory.
+
 
 Hi-C analysis using Juicer
 ---------------------------------------------
