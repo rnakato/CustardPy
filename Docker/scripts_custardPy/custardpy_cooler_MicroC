@@ -121,7 +121,7 @@ if [ -z $postproc ]; then
        pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $pairdir/mapped.bwa.final.pairs \
                  --output-sam - $pairdir/mapped.bwa.rmdup.pairs \
            | samtools view -C - -T $genome \
-           | samtools sort -O cram \
+           | samtools sort -m 8G -O cram \
            >  $bamdir/mapped.final.sort.cram
 
        samtools index $bamdir/mapped.final.sort.cram
