@@ -17,6 +17,17 @@ Quickstart
     # For singularity
     docker run --rm -it [--gpus all] -v /work:/work rnakato/custardpy <command>
 
+    # Example of custardpy_juicer
+    # For docker
+    docker run --rm -it --gpus all -v /work:/work rnakato/custardpy \
+        custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
+        -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
+
+    # For singularity
+    singularity exec --nv --bind /work custardpy.sif \
+        custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
+        -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
+
 See also the sample scripts in the `tutorial/ <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ directory.
 
 
