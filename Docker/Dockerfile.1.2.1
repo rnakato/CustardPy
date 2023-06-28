@@ -126,6 +126,7 @@ RUN R -e "install.packages(c('BiocManager'))" \
                                     'GenomeInfoDb', \
                                     'GenomicAlignments', \
                                     'GenomicRanges', \
+                                    'hicrep', \
                                     'IRanges', \
                                     'matrixStats', \
                                     'S4Vectors', \
@@ -149,8 +150,8 @@ RUN set -e \
        dash plotly black bokeh h5py click jupyter jupyterlab pytables \
     && conda install -c conda-forge -c bioconda pairtools fithic \
     && conda install -y -c bioconda hic2cool cooltools cooler \
-# CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py
-    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn tabulate session_info \
+# CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py FIREcaller
+    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn FIREcaller tabulate session_info \
 # JuiceBox
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 
@@ -175,7 +176,12 @@ RUN set -e \
     && conda create -y -n hicexplorer python=3.7 \
     && source activate hicexplorer \
     && pip install --no-cache-dir hicexplorer \
-    && conda deactivate
+    && conda deactivate 
+# FIREcaller (Python)
+#    && conda create -y -n firecaller python=3.7 \
+#    && source activate firecaller \
+#    && pip install --no-cache-dir FIREcaller \
+#    && conda deactivate
 # CustardPy, HiC1Dmetrics
 #    && conda create -y -n custardpy python=3.8 jupyter notebook ipykernel seaborn \
 #    && source activate custardpy \
