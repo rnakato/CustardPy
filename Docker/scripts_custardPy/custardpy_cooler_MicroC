@@ -1,17 +1,25 @@
 #!/bin/bash
 
 printHelpAndExit() {
-    echo "Usage: ${0##*/} [options] -g <gt> -i <index> -f <genome> <fastq1> <fastq2> <prefix>"
-    echo "  fastq1, fastq2: paired-end fastq file"
-    echo "  prefix: prefix of output files"
+    echo "Usage: ${0##*/} [options] -i <index> -g <gt> -f <genome> <fastqdir> <odir>"
+    echo '  fastqdir: Directory that contains input fastq files (e.g., "fastq/")'
+    echo "  odir: Name of output directory"
     echo -e "\n  Options:"
-    echo "    -S state : steps to be executed [all|pairs|postproc] (default: all)"
+    echo "    -S stage : steps to be executed [all|pairs|postproc] (default: all)"
+    echo "       all: execute all process (default)"
+    echo "       map: map reads and exit"
+    echo "       pairs: generate .pair file from map file"
+    echo "       postproc: generate .cool and .hic from .pair file"
     echo "    -t [bwa|chromap] : tool for mapping (default: bwa)"
     echo "    -i index : index of bwa or chromap"
     echo "    -f genome file : fasta file of the reference genome (original data of the index files)"
     echo "    -g genometable : genome table file (describing the chromosome length)"
+    echo "    -o outputdir : output directory (default: 'CustardPyResults_MicroC')"
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)"
     echo "    -p ncore : number of CPUs (default: 4)"
+    echo "    -x postfix"
+    echo "       1: '*_1.fastq.gz' and '*_2.fastq.gz' (default)"
+    echo "       2: '*_R1.fastq.gz' and '*_R2.fastq.gz'"
     echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)"
     echo "    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)"
     echo "    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')"
@@ -23,26 +31,45 @@ tool="bwa"
 index=""
 gt=""
 genome=""
-build="hg38"
+outputdir=""
 qthre=30
 stage="all"
 max_split=2
 max_distance=8.4
 binsize_min=5000
 binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
+postfix1=_1.fastq.gz
+postfix2=_2.fastq.gz
 
-while getopts "i:t:g:f:q:p:S:m:n:r:h" opt; do
+while getopts "i:t:g:f:o:q:p:S:m:n:r:hx:" opt; do
     case $opt in
         i) index=$OPTARG;;
         t) tool=$OPTARG;;
         g) gt=$OPTARG;;
         f) genome=$OPTARG;;
+        o) outputdir=${OPTARG};;
         q) qthre=$OPTARG;;
         p) ncore=$OPTARG;;
-        S) state=$OPTARG;;
+        S) stage=$OPTARG;;
         m) max_distance=$OPTARG;;
         n) binsize_min=$OPTARG;;
         r) binsize_multi=$OPTARG;;
+        x) case ${OPTARG} in
+            1)
+                postfix1=_1.fastq.gz
+                postfix2=_2.fastq.gz
+                ;;
+            2)
+                postfix1=_R1.fastq.gz
+                postfix2=_R2.fastq.gz
+                ;;
+            *)
+                echo "Error: Specify 1 or 2 to the option '-p'."
+                usage
+                exit 1
+                ;;
+           esac
+           ;;
         h) printHelpAndExit;;
         [?]) printHelpAndExit;;
         esac
@@ -50,7 +77,7 @@ done
 
 shift $((OPTIND - 1))
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
     printHelpAndExit
 fi
 
@@ -58,9 +85,10 @@ if [ ! -z "$stage" ]
 then
     case $stage in
        all) stage_all=1 ;;
+       map) stage_map=1 ;;
        pairs) stage_pairs=1 ;;
        postproc) stage_postproc=1 ;;
-       *) echo "Error: specify [all|pairs|postproc] for stage (-S)."
+       *) echo "Error: specify [all|map|pairs|postproc] for stage (-S)."
           printHelpAndExit
     esac
 fi
@@ -69,107 +97,59 @@ if test "$gt" = ""; then
     echo "Error: specify genome table (-g)."
     exit 0
 fi
-
 if test "$tool" != "bwa" -a "$tool" != "chromap"; then
     echo "Error: specify bwa or chromap for -t."
     exit 0
 fi
-
 if test "$genome" = ""; then
     echo "Error: specify genome fasta (-f)."
     exit 0
 fi
 
-fq1=$1
-fq2=$2
-prefix=$3
+ex(){ echo $1; eval $1; }
 
-idir=Cooler_MicroC_$tool/$prefix
-mkdir -p $idir
+pwd=$(cd $(dirname $0) && pwd)
+. $pwd/custardpy_mappingFASTQ_bwa.sh
+. $pwd/custardpy_cooler_subfunc.sh
 
-if [ -z $postproc ]; then
-    if test "$index" = ""; then
-       echo "Error: specify index file (-i)."
-       exit 0
-    fi
+fqdir=$1
+prefix=$2
 
-    tempdir=$idir/temp
-    bamdir=$idir/mapfile
-    pairdir=$idir/pairs
-    logdir=$idir/log
+if test "$outputdir" = ""; then
+    outputdir=CustardPyResults_MicroC
+fi
+odir=$outputdir/$prefix/$tool
 
+echo "Processing $prefix..."
+if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then
     if test "$tool" = "bwa"; then
-       mkdir -p $bamdir $pairdir $tempdir $logdir $idir/stats
-
-       echo "start mapping by bwa..."
-       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $logdir/bwa.log \
-           | pairtools parse --nproc-in 4 --nproc-out 4 --min-mapq 30 \
-                       --walks-policy 5unique --max-inter-align-gap 30 --chroms-path $gt\
-                       > $pairdir/mapped.bwa.pairs.raw
-
-       echo "pairtools sort..."
-       pairtools sort --nproc 8 --tmpdir=$tempdir $pairdir/mapped.bwa.pairs.raw > $pairdir/mapped.bwa.sorted.pairs
-       rm $pairdir/mapped.bwa.pairs.raw
-
-       echo "pairtools dedup..."
-       pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups \
-                 --output-stats $idir/stats/mapped.bwa.stats.txt $pairdir/mapped.bwa.sorted.pairs \
-                 > $pairdir/mapped.bwa.rmdup.pairs
-       get_qc.py -p $idir/stats/mapped.bwa.stats.txt > $idir/stats/mappingstats.txt
-
-       echo "pairtools split..."
-       pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $pairdir/mapped.bwa.final.pairs \
-                 --output-sam - $pairdir/mapped.bwa.rmdup.pairs \
-           | samtools view -C - -T $genome \
-           | samtools sort -m 8G -O cram \
-           >  $bamdir/mapped.final.sort.cram
-
-       samtools index $bamdir/mapped.final.sort.cram
-       rm -rf $tempdir
-#       bgzip -f $pairdir/mapped.bwa.sorted.pairs
-       rm $pairdir/mapped.bwa.sorted.pairs
-       bgzip -f $pairdir/mapped.bwa.rmdup.pairs
-       bgzip -f $pairdir/mapped.bwa.final.pairs
-
-       pair=$pairdir/mapped.bwa.final.pairs.gz
+        mapping_reads_bwa $fqdir $odir $prefix $index $ncore $postfix1 $postfix2
     else
-       # chromap
-       if test "$genome" = ""; then
-	   echo "Error: specify genome file (-f)."
-	   exit 0
-       fi
-
-       mkdir -p $pairdir $logdir
-       echo "start mapping by chromap..."
-       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome \
-               -1 $fq1 -2 $fq2 -o $pairdir/mapped.rmdup.pairs \
-               2> $logdir/chromap.rmdup.log
-       echo "parse by pairtools..."
-       bgzip -f $pairdir/mapped.rmdup.pairs
-
-       pair=$pairdir/mapped.rmdup.pairs.gz
+        mapping_reads_chromap $fqdir $odir $prefix $index $genome $ncore $postfix1 $postfix2
     fi
-
-    echo "mapping finished!"
-    echo "Output pairs file: $pair"
 fi
 
-if [ -z $pairs ]; then
-    logdir=$idir/log
-    mkdir -p $idir/cool $logdir
+if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
+    if test "$tool" = "bwa"; then
+        parse_pairtools $odir $gt $qthre "" 0
+    else
+        if test "$stage_pairs" = 1; then
+            echo "chromap does not need to use 'pairs' step. Go 'postproc'!"
+        fi
+    fi
+fi
 
-    echo "generate .cool file..."
-    pairix $pair
-    #python /opt/scripts/pairsqc/pairsqc.py -p $pair -c $gt -tP -s $prefix -O $idir/qc -M $max_distance
-    #Rscript /opt/scripts/pairsqc/plot.r $enzymelen $idir/qc_report
-    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.cool >& $logdir/cooler.cload
-    cooler zoomify --balance -p $ncore $idir/cool/$prefix.cool >& $logdir/cooler.zoomify
-    #cooler balance -p $ncore $idir/cool/$prefix.cool
-    #run-cool2multirescool.sh -i $idir/cool/$prefix.cool -p $ncore -o $idir/cool/$prefix -u $binsize_multi
-
-    echo "generate .hic file..."
-    mkdir -p $idir/hic
-    juicertools.sh pre -q 30 $pair $idir/hic/contact_map.q30.hic $gt
+if [ -z "$stage_map" ] && [ -z "$stage_pairs" ]; then
+    if test "$tool" = "bwa"; then
+        pair=$odir/pairs/dedup.bwa.q$qthre.pairs.gz
+    else
+        pair=$odir/pairs/mapped.chromap.rmdup.pairs.gz
+    fi
+    if [ ! -e $pair ]; then
+        echo "Error: $pair does not exist. Stop"
+        exit 1
+    fi
+    gen_cool_hic $odir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair
 fi
 
 echo "${0##*/} finished!"

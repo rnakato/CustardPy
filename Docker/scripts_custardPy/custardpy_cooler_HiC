@@ -1,18 +1,20 @@
 #!/bin/bash
 
 printHelpAndExit() {
-    echo "Usage: ${0##*/} [options] -i <index> -g <gt> -f <genome> <fastqdir>"
-    echo '  fastqdir: directory that contains input fastq files (e.g., "fastq/")'
+    echo "Usage: ${0##*/} [options] -i <index> -g <gt> -f <genome> <fastqdir> <odir>"
+    echo '  fastqdir: Directory that contains input fastq files (e.g., "fastq/")'
+    echo "  odir: Name of output directory"
     echo -e "\n  Options:"
     echo "    -S stage : steps to be executed [all|pairs|postproc] (default: all)"
     echo "       all: execute all process (default)"
     echo "       map: map reads and exit"
     echo "       pairs: generate .pair file from map file"
-    echo "       postproc: execute all process (default)"
+    echo "       postproc: generate .cool and .hic from .pair file"
     echo "    -i index : bwa index"
     echo "    -g genometable : genome table file (describing the chromosome length)"
-    echo "    -e enzyme : enzyme (HindIII|MboI|DpnII default: HindIII)"
-    echo "    -b build : genome build (default: hg38)"
+    echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)"
+    echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)"
+    echo "    -o outputdir : output directory (default: 'CustardPyResults_cooler')"
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)"
     echo "    -p ncore : number of CPUs (default: 4)"
     echo "    -x postfix"
@@ -29,7 +31,8 @@ index_bwa=""
 gt=""
 genome=""
 enzyme="HindIII"
-build="hg38"
+build=""
+outputdir=""
 qthre=30
 stage="all"
 max_split=2
@@ -39,13 +42,14 @@ binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,1000
 postfix1=_1.fastq.gz
 postfix2=_2.fastq.gz
 
-while getopts "i:g:f:e:b:q:p:S:m:n:r:x:h" opt; do
+while getopts "i:g:f:e:b:o:q:p:S:m:n:r:x:h" opt; do
     case $opt in
         i) index_bwa=$OPTARG;;
         g) gt=$OPTARG;;
         f) genome=$OPTARG;;
         e) enzyme=$OPTARG;;
         b) build=$OPTARG;;
+        o) outputdir=${OPTARG};;
         q) qthre=$OPTARG;;
         p) ncore=$OPTARG;;
         S) stage=$OPTARG;;
@@ -74,7 +78,7 @@ while getopts "i:g:f:e:b:q:p:S:m:n:r:x:h" opt; do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 1 ]; then
+if [ $# -ne 2 ]; then
     printHelpAndExit
 fi
 
@@ -90,12 +94,10 @@ then
     esac
 fi
 
-if test $enzyme = "HindIII"; then
-    enzymelen=6
-else
-    enzymelen=4
+if test "$build" = ""; then
+    echo "Error: specify genome build (-b)."
+    exit 0
 fi
-
 if test "$gt" = ""; then
     echo "Error: specify genome table (-g)."
     exit 0
@@ -105,153 +107,41 @@ if test "$genome" = ""; then
     exit 0
 fi
 
-ex(){ echo $1; eval $1; }
+if test $enzyme = "HindIII"; then
+    enzymelen=6
+else
+    enzymelen=4
+fi
 
-mapping_reads(){
-    dir=$1
-    odir=$2
-    prefix=$3
-    index_bwa=$4
-    ncore=$5
-
-    if [ ! -d "$dir" ]; then
-        echo "Error: $dir does not exist."
-        return
-    fi
-    if test "$index_bwa" = ""; then
-        echo "Error: specify bwa index (-i)."
-        exit 1
-    fi
-
-    echo "start mapping by BWA..."
-
-    fq1_list=()
-    fq2_list=()
-
-    for fq1 in "$dir"/*"$postfix1"; do
-        if [ ! -f "$fq1" ]; then
-            echo "$dir: *$postfix1 does not exist. Skipping"
-            continue
-        fi
-
-        fq2="${fq1%$postfix1}$postfix2"
-        if [ ! -f "$fq2" ]; then
-            echo "$dir: $fq2 does not exist. Skipping"
-            continue
-        fi
-
-        fq1_list+=("$fq1")
-        fq2_list+=("$fq2")
-    done
-
-    bamdir=$odir/mapfile
-    logdir=$odir/log
-    tempdir=$odir/temp
-    mkdir -p $bamdir $logdir $tempdir
-
-    bams=""
-    for ((i=0; i<${#fq1_list[@]}; i++)); do
-        fq1=${fq1_list[$i]}
-        fq2=${fq2_list[$i]}
-        name=`basename $fq1 $postfix1`
-
-        ex "bwa mem -t $ncore -SP $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping_sam_$name > $tempdir/$name.bwa.sam"
-
-        bams+=" $tempdir/$name.bwa.sam"
-    done
-    if test "$bams" != ""; then
-        echo "Merge SAM files to BAM..."
-        ex "samtools merge -f -@ $ncore - $bams | samtools view -C - -T $genome > $bamdir/mapped.bwa.cram"
-#        ex "samtools merge -f -@ $ncore $bamdir/mapped.bwa.bam $bams"
-        ex "rm $bams"
-    else
-        echo "Error: no FASTQ files are available."
-        echo "Check the FASTQ directory ($fqdir/*) and the postfix of FASTQ files (*$postfix1 and *$postfix2)."
-        return
-    fi
-    echo "mapping finished!"
-    echo "Output file: $bamdir/mapped.bwa.cram"
-}
-
-fqdir=$1
 restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 
-for dir in $fqdir/*; do
-    prefix=`basename $dir`
-    odir=CoolerResults_$build/$prefix
-    echo "Analyzing $dir..."
+ex(){ echo $1; eval $1; }
 
-    if [ -z $stage_pairs ] && [ -z $stage_postproc ]; then
-        mapping_reads $dir $odir $prefix $index_bwa $ncore
-    fi
+pwd=$(cd $(dirname $0) && pwd)
+. $pwd/custardpy_mappingFASTQ_bwa.sh
+. $pwd/custardpy_cooler_subfunc.sh
 
-    if [ -z $stage_map ] && [ -z $stage_postproc ]; then
-        bamdir=$odir/mapfile
-        pairdir=$odir/pairs
-        logdir=$odir/log
-        tempdir=$odir/temp
-        mkdir -p $bamdir $pairdir $logdir $tempdir
+fqdir=$1
+prefix=$2
 
-        echo "start parsing by pairtools..."
-        samtools view -h $bamdir/mapped.bwa.cram \
-        | pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
-        | pairtools sort --nproc 4 --tmpdir=$tempdir --output $pairdir/bwa.sam.pairs.gz
-        pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
-                --output $pairdir/bwa.marked.sam.pairs.gz $pairdir/bwa.sam.pairs.gz
-        pairix -f $pairdir/bwa.marked.sam.pairs.gz # sanity check
+if test "$outputdir" = ""; then
+    outputdir=CustardPyResults_cooler
+fi
+outputdir=$outputdir/$build/$prefix
 
-        echo "start splitting pairsam by pairtools..."
-        TEMPFILE=$tempdir/temp.gz
-        TEMPFILE1=$tempdir/temp1.gz
-        ## Generate lossless bam
-        # pairtools split --output-sam $odir/bam/bwa.lossless.bam $pairdir/bwa.sam.pairs.gz
-        ## Select UU, UR, RU reads
-        pairtools select '(pair_type == "UU") or (pair_type == "UR") or (pair_type == "RU")' \
-                --output-rest $pairdir/bwa.unmapped.sam.pairs.gz \
-                --output ${TEMPFILE} \
-                $pairdir/bwa.sam.pairs.gz
-        pairtools split --output-pairs ${TEMPFILE1} ${TEMPFILE}
-        pairtools select 'True' --chrom-subset $gt -o $pairdir/bwa.dedup.pairs.gz ${TEMPFILE1}
-        pairix $pairdir/bwa.dedup.pairs.gz  # sanity check & indexing
-        rm ${TEMPFILE} ${TEMPFILE1} $pairdir/bwa.sam.pairs.gz
+echo "Analyzing $fqdir..."
 
-        echo "add juicer-style fragment information..."
-        # use fragment_4dnpairs.pl in pairix/util instead of juicer/CPU/common
-        ffpairs=$pairdir/bwa.ff.pairs
-        gunzip -c $pairdir/bwa.marked.sam.pairs.gz | fragment_4dnpairs.pl -a - $ffpairs $restrictionsite
-        bgzip  -f $ffpairs
-        pairix -f $ffpairs.gz
+if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then
+    mapping_reads_bwa $fqdir $outputdir $prefix $index_bwa $ncore $postfix1 $postfix2
+fi
 
-        rm -rf $tempdir
+if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
+    parse_pairtools $outputdir $gt $qthre $restrictionsite $enzymelen
+fi
 
-        echo "pairtools finished!"
-        echo "Output pairs file: $ffpairs.gz"
-    fi
-
-    if [ -z $stage_map ] && [ -z $stage_pairs ]; then
-        pairdir=$odir/pairs
-        pair=$pairdir/bwa.ff.pairs.gz
-
-        echo "generate .cool file..."
-        mkdir -p $odir/cool
-        python /opt/pairsqc/pairsqc.py -p $pair -c $gt -tP -s $prefix -O $odir/qc -M $max_distance
-        Rscript /opt/pairsqc/plot.r $enzymelen $odir/qc_report
-        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $odir/cool/$prefix.cool
-        cooler balance -p $ncore $odir/cool/$prefix.cool
-        for binsize in 25000 50000 100000; do
-            cfile=$odir/cool/$prefix.$binsize.cool
-            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $cfile
-            cooler balance -p $ncore $cfile
-        done
-        run-cool2multirescool.sh -i $odir/cool/$prefix.cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
-
-        echo "generate .hic..."
-        mkdir -p $odir/hic
-        juicertools.sh pre -q 30 $pair $odir/hic/contact_map.q30.hic $gt
-
-        echo "postprocess finished!"
-        echo "Output pairs file: $odir/cool/$prefix.cool and $odir/hic/contact_map.q30.hic"
-    fi
-done
+if [ -z "$stage_map" ] && [ -z "$stage_pairs" ]; then
+    pair=$outputdir/pairs/dedup.restricted.q$qthre.pairs.gz
+    gen_cool_hic $outputdir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair
+fi
 
 echo "${0##*/} finished!"

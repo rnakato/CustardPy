@@ -2,10 +2,18 @@
 
 ## Docker_CustardPy
 
+### 1.3.0 (2023-7-03)
+- Modify `custardpy_cooler_HiC` and `custardpy_cooler_MicroC` to allow multiple FASTQ files
+- Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
+- Modify options of Pairtools according to the [tutorial](https://github.com/open2c/pairtools/blob/master/doc/examples/pairtools_walkthrough.ipynb)
+- Add [python-FIREcaller](https://github.com/jakublipinski/python-FIREcaller)
+- Add the restriction files of Cooler for various genome builds and enzymes (see the help of `custardpy_cooler_HiC`)
+- Bug fix: Wrong PATH of pairsqc.py
+
 ### 1.2.0 (2023-6-11)
 - Add [3DChromatin_ReplicateQC](https://github.com/kundajelab/3DChromatin_ReplicateQC)
 - add `run_3DChromatin_ReplicateQC.sh` for executing 3DChromatin_ReplicateQC
-- Update custardpy_cooler_HiC and custardpy_cooler_MicroC
+- Updated `custardpy_cooler_HiC` and `custardpy_cooler_MicroC`
 
 ### 1.1.1 (2023-06-07)
 - Add [GENOVA](https://github.com/robinweide/GENOVA)
