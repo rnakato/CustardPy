@@ -31,7 +31,7 @@ tool="bwa"
 index=""
 gt=""
 genome=""
-outputdir=""
+outputdir="CustardPyResults_MicroC"
 qthre=30
 stage="all"
 max_split=2
@@ -115,10 +115,7 @@ pwd=$(cd $(dirname $0) && pwd)
 fqdir=$1
 prefix=$2
 
-if test "$outputdir" = ""; then
-    outputdir=CustardPyResults_MicroC
-fi
-odir=$outputdir/$prefix/$tool
+odir=$outputdir/Cooler_$tool/$prefix
 
 echo "Processing $prefix..."
 if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then

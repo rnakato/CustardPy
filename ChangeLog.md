@@ -2,6 +2,9 @@
 
 ## Docker_CustardPy
 
+### 1.3.1 (2023-7-08)
+- Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
+
 ### 1.3.0 (2023-7-06)
 - Modify `custardpy_cooler_HiC` and `custardpy_cooler_MicroC` to allow multiple FASTQ files
 - Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`

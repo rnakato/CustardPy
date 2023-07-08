@@ -134,13 +134,13 @@ gen_cool_hic(){
 
     echo "generate .cool file..."
     mkdir -p $odir/cool $odir/log
-    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $odir/cool/$prefix.cool
+    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $odir/cool/$prefix.cool >$odir/log/cooler_cload_pairix.log
     cooler balance -p $ncore $odir/cool/$prefix.cool >$odir/log/cooler_balance.log
 
     for binsize in 25000 50000 100000; do
         cfile=$odir/cool/$prefix.$binsize.cool
-        cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $cfile
-        cooler balance -p $ncore $cfile
+        cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $cfile >$odir/log/cooler_cload_pairix.$binsize.log
+        cooler balance -p $ncore $cfile >$odir/log/cooler_balance.$binsize.log
     done
     run-cool2multirescool.sh -i $odir/cool/$prefix.cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
 

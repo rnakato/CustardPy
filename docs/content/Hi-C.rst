@@ -13,26 +13,28 @@ custardpy_juicer
 ``custardpy_juicer`` is an end-to-end pipeline for Juicer analysis.
 It executes ``juicer_map.sh``, ``juicer_pigz.sh``, ``plot_distance_count.sh``, 
 ``juicer_callTAD.sh``, ``call_HiCCUPS.sh``, ``makeMatrix_intra.sh``,  ``makeEigen.sh``, and  ``makeInslationScore.sh``.
+The results are stored in ``CustardPyResults_Hi-C/Juicer_$build/$prefix/``.
 
 .. code-block:: bash
 
   custardpy_juicer [Options] <fastqdir> <label>
-      <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
-      <label>: label of the input (e.g., "sample1")
-      Options:
+    <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
+    <label>: label of the input (e.g., "sample1")
+    Options:
         -i index : bwa index
         -g genometable : genome table file (describing the chromosome length)
         -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)
-        -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3, default: hg38)
+        -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3)
         -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")
-        -o outputdir : output directory (default: 'JuicerResults')
+        -o outputdir : output directory (default: 'CustardPyResults_Hi-C')
         -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)
         -a <refFlat>: gene annotation file
         -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
         -p ncore: number of CPUs (default: 32)
         -m tmpdir: tempdir
-      Example:
+    Example:
         custardpy_juicer -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A
+
 
 juicer_map.sh
 +++++++++++++++++++++++++++++++++++
@@ -125,7 +127,7 @@ custardpy_cooler_HiC
 The input FASTQ files can be gzipped (.fastq.gz).
 
 BWA and chromap can be used for mapping reads (use ``-t`` option).
-The results are stored in ``CoolerResults_$build/$prefix/``.
+The results are stored in ``CustardPyResults_Hi-C/Cooler_$build/$prefix/``.
 
 The index file of BWA or chromap (``-i <index>``) and the fasta file of the reference genome (``-f <genome>``) are required.
 
@@ -140,11 +142,12 @@ The index file of BWA or chromap (``-i <index>``) and the fasta file of the refe
         all: execute all process (default)
         map: map reads and exit
         pairs: generate .pair file from map file
-        postproc: execute all process (default)
+        postproc: generate .cool and .hic from .pair file
       -i index : bwa index
       -g genometable : genome table file (describing the chromosome length)
-      -e enzyme : enzyme (HindIII|MboI|DpnII default: HindIII)
-      -b build : genome build (default: hg38)
+      -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)
+      -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)
+      -o outputdir : output directory (default: 'CustardPyResults_Hi-C')
       -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)
       -p ncore : number of CPUs (default: 4)
       -x postfix
@@ -173,7 +176,7 @@ custardpy_cooler_MicroC
 The input FASTQ files can be gzipped (.fastq.gz).
 
 BWA and chromap can be used for mapping reads (use ``-t`` option).
-The results are stored in ``Cooler_MicroC_bwa/`` or ``Cooler_MicroC_chromap/``.
+The results are stored in ``CustardPyResults_MicroC/Cooler_<bwa|chromap>/$prefix``.
 
 The index file of BWA or chromap (``-i <index>``) and the fasta file of the reference genome (``-f <genome>``) are required.
 
@@ -188,11 +191,12 @@ The index file of BWA or chromap (``-i <index>``) and the fasta file of the refe
         all: execute all process (default)
         map: map reads and exit
         pairs: generate .pair file from map file
-        postproc: execute all process (default)
+        postproc: generate .cool and .hic from .pair file
       -t [bwa|chromap] : tool for mapping (default: bwa)
       -i index : index of bwa or chromap
       -f genome file : fasta file of the reference genome (original data of the index files)
       -g genometable : genome table file (describing the chromosome length)
+      -o outputdir : output directory (default: 'CustardPyResults_MicroC')
       -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)
       -p ncore : number of CPUs (default: 4)
       -x postfix
@@ -408,7 +412,7 @@ The output file is ``[sample_name].GENOVA_compartment_score.txt`` containing the
 run_3DChromatin_ReplicateQC.sh
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-`3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>` runs 
+`3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ runs
 `QuASAR <http://github.com/bxlab/hifive>`_, 
 `HiCRep <http://github.com/qunhualilab/hicrep>`_,
 `GenomeDISCO <http://github.com/kundajelab/genomedisco>`_,

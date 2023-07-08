@@ -55,7 +55,7 @@ You can implement whole commands for Juicer analysis from FASTQ files using ``cu
     custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
         -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
 
-- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Hap1-A``). The outputs are stored in ``JuicerResults_$build/$cell``.
+- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Hap1-A``). The outputs are stored in ``CustardPyResults_Hi-C/Juicer_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Avaible genome build: hg19, hg38, mm10, mm39, rn7, galGal5, galGal6, ce10, ce11, danRer11, dm6, xenLae2, sacCer3
 - Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima
@@ -99,7 +99,7 @@ You can also execute commands separately.
 
     cell=Hap1-A
     fqdir=fastq/$cell/
-    odir=JuicerResults/$cell
+    odir=CustardPyResults_Hi-C/Juicer_$build/$cell
 
     # generate .hic file from fastq by Juicer
     rm -rf $odir
@@ -157,7 +157,8 @@ This command maps reads by BWA, make ``.cool`` and ``.hic`` files and call loops
     custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
 
     # Juicer analysis with the .hic file
-    odir=Cooler_MicroC_bwa/$prefix
+    odir=CustardPyResults_MicroC/Cooler_bwa/$prefix
+
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
 
@@ -185,7 +186,7 @@ Micro-C using chromap
     custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
 
     # Juicer analysis with the .hic file
-    odir=Cooler_MicroC_chromap/$prefix
+    odir=CustardPyResults_MicroC/Cooler_chromap/$prefix
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir

@@ -14,7 +14,7 @@ printHelpAndExit() {
     echo "    -g genometable : genome table file (describing the chromosome length)"
     echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)"
     echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)"
-    echo "    -o outputdir : output directory (default: 'CustardPyResults_cooler')"
+    echo "    -o outputdir : output directory (default: 'CustardPyResults_Hi-C')"
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)"
     echo "    -p ncore : number of CPUs (default: 4)"
     echo "    -x postfix"
@@ -32,7 +32,7 @@ gt=""
 genome=""
 enzyme="HindIII"
 build=""
-outputdir=""
+outputdir="CustardPyResults_Hi-C"
 qthre=30
 stage="all"
 max_split=2
@@ -124,24 +124,21 @@ pwd=$(cd $(dirname $0) && pwd)
 fqdir=$1
 prefix=$2
 
-if test "$outputdir" = ""; then
-    outputdir=CustardPyResults_cooler
-fi
-outputdir=$outputdir/$build/$prefix
+odir=$outputdir/Cooler_$build/$prefix
 
 echo "Analyzing $fqdir..."
 
 if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then
-    mapping_reads_bwa $fqdir $outputdir $prefix $index_bwa $ncore $postfix1 $postfix2
+    mapping_reads_bwa $fqdir $odir $prefix $index_bwa $ncore $postfix1 $postfix2
 fi
 
 if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
-    parse_pairtools $outputdir $gt $qthre $restrictionsite $enzymelen
+    parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen
 fi
 
 if [ -z "$stage_map" ] && [ -z "$stage_pairs" ]; then
-    pair=$outputdir/pairs/dedup.restricted.q$qthre.pairs.gz
-    gen_cool_hic $outputdir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair
+    pair=$odir/pairs/dedup.restricted.q$qthre.pairs.gz
+    gen_cool_hic $odir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair
 fi
 
 echo "${0##*/} finished!"
