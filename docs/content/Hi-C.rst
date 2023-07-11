@@ -145,6 +145,7 @@ The index file of BWA or chromap (``-i <index>``) and the fasta file of the refe
         postproc: generate .cool and .hic from .pair file
       -i index : bwa index
       -g genometable : genome table file (describing the chromosome length)
+      -f genome file : fasta file of the reference genome (original data of the index files)
       -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)
       -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)
       -o outputdir : output directory (default: 'CustardPyResults_Hi-C')

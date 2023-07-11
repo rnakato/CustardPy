@@ -12,6 +12,7 @@ printHelpAndExit() {
     echo "       postproc: generate .cool and .hic from .pair file"
     echo "    -i index : bwa index"
     echo "    -g genometable : genome table file (describing the chromosome length)"
+    echo "    -f genome file : fasta file of the reference genome (original data of the index files)"
     echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)"
     echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)"
     echo "    -o outputdir : output directory (default: 'CustardPyResults_Hi-C')"
