@@ -74,54 +74,6 @@ parse_pairtools(){
     echo "Output pairs file: $pairs"
 }
 
-parse_pairtools_MicroC_old(){
-    odir=$1
-    gt=$2
-    qthre=$3
-
-    bamdir=$odir/mapfile
-    pairdir=$odir/pairs
-    logdir=$odir/log
-    tempdir=$odir/temp
-    qcdir=$odir/qc_report/
-    mkdir -p $bamdir $pairdir $logdir $tempdir $qcdir
-
-    echo "start parsing by pairtools..."
-    samtools view -h $bamdir/mapped.bwa.cram \
-    | pairtools parse --chroms-path $gt --output-stats $qcdir/pairtools_parse.stats.txt \
-                      --walks-policy mask --add-columns mapq --min-mapq $qthre --max-inter-align-gap 30 \
-    | pairtools sort --nproc 4 --tmpdir=$tempdir --output $pairdir/bwa.sam.pairs.gz
-
-    echo "pairtools dedup..."
-    pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
-                --output-stats $qcdir/mapped.bwa.stats.txt \
-                --output $pairdir/mapped.bwa.dedup.pairs.gz $pairdir/bwa.sam.pairs.gz
-    get_qc.py -p $qcdir/mapped.bwa.stats.txt > $qcdir/mappingstats.txt
-    pairix -f $pairdir/mapped.bwa.dedup.pairs.gz # sanity check
-
-    echo "start splitting pairsam by pairtools..."
-    ## Select UU, UR, RU reads
-    TEMPFILE=$tempdir/temp.gz
-    TEMPFILE1=$tempdir/temp1.gz
-    pairtools select '(pair_type == "UU") or (pair_type == "UR") or (pair_type == "RU")' \
-            --output-rest $pairdir/bwa.unmapped.sam.pairs.gz \
-            --output ${TEMPFILE} \
-            $pairdir/mapped.bwa.dedup.pairs.gz
-    pairtools split --nproc-in 4 --nproc-out 4 --output-pairs ${TEMPFILE1} --output-sam - ${TEMPFILE} \
-           | samtools view -C - -T $genome \
-           | samtools sort -m 8G -O cram \
-           >  $bamdir/mapped.final.sort.cram
-    samtools index $bamdir/mapped.final.sort.cram
-
-    pairtools select 'True' --chrom-subset $gt -o $pairdir/bwa.marked.sam.pairs.gz ${TEMPFILE1}
-    pairix $pairdir/bwa.marked.sam.pairs.gz # sanity check & indexing
-    rm ${TEMPFILE} ${TEMPFILE1} $pairdir/bwa.sam.pairs.gz $pairdir/mapped.bwa.dedup.pairs.gz
-    rm -rf $tempdir
-
-    echo "pairtools finished!"
-    echo "Output pairs file: $pairdir/bwa.marked.sam.pairs.gz"
-}
-
 gen_cool_hic(){
     odir=$1
     gt=$2
