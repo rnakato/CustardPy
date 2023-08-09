@@ -61,7 +61,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 
+#
 
 # BWA version 0.7.17
 COPY bwa-0.7.17.tar.bz2 bwa-0.7.17.tar.bz2
@@ -87,16 +87,22 @@ RUN wget --progress=dot:giga https://github.com/4dn-dcic/pairsqc/archive/0.2.3.t
     && rm 0.2.3.tar.gz \
     && ln -s /opt/pairsqc-*/ /opt/pairsqc
 
-# HOMER
+# HOMER v4.11
 RUN mkdir HOMER && cd HOMER \
     && mkdir bin cpp update \
     && wget http://homer.ucsd.edu/homer/configureHomer.pl \
+    && perl configureHomer.pl -install \
     && perl configureHomer.pl -install human-o \
     && perl configureHomer.pl -install human-p \
     && perl configureHomer.pl -install mouse-o \
     && perl configureHomer.pl -install mouse-p \
-    && perl configureHomer.pl -install zebrafish-o \
-    && perl configureHomer.pl -install yeast-o
+    && perl configureHomer.pl -install yeast-o \
+    && perl configureHomer.pl -install hg19 \
+    && perl configureHomer.pl -install hg38 \
+    && perl configureHomer.pl -install mm10 \
+    && perl configureHomer.pl -install sacCer3 \
+    && perl configureHomer.pl -install dm6 \
+    && perl configureHomer.pl -install galGal6
 
 # R packages
 RUN R -e "install.packages(c('BiocManager'))" \
@@ -139,7 +145,8 @@ RUN R -e "install.packages(c('BiocManager'))" \
     && R -e 'devtools::install_bitbucket("chicagoTeam/Chicago", subdir="PCHiCdata")'
 
 # Python
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Linux-x86_64.sh -O ~/miniconda.sh \
+#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Linux-x86_64.sh -O ~/miniconda.sh \
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_23.5.2-0-Linux-x86_64.sh -O ~/miniconda.sh \
     && bash ~/miniconda.sh -b -p /opt/conda \
     && rm ~/miniconda.sh \
     && ln -s -f /opt/conda/bin/python /usr/bin/python
@@ -148,21 +155,15 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Li
 # numpy<1.24.0 (avoid the error "AttributeError: module 'numpy' has no attribute 'int'.")
 RUN set -e \
     && conda update conda \
-    && conda install -y 'numpy<1.24.0' scipy matplotlib pandas seaborn scikit-learn scikit-learn-intelex cython \
-       dash plotly black bokeh h5py click jupyter jupyterlab pytables \
+    && pip install --no-cache-dir nose MACS2==2.2.9.1 tabulate session_info \
+    && conda install 'numpy<1.24.0' scipy matplotlib pandas seaborn scikit-learn scikit-learn-intelex \
+       dash plotly black bokeh h5py click jupyter jupyterlab pytables Cython \
     && conda install -c conda-forge -c bioconda pairtools fithic \
-    && conda install -y -c bioconda hic2cool cooltools cooler \
-# CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py FIREcaller
-    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn FIREcaller tabulate session_info \
+    && conda install -c bioconda hic2cool cooltools cooler \
+# CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py FIREcaller, MACS2
+    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn FIREcaller \
 # JuiceBox
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
-
-# MACS2-2.2.6
-RUN wget https://mirrors.huaweicloud.com/repository/pypi/packages/21/0f/972b44c84d85e37d816beae88aa5ddad606bd757630d77dc2f558900a6ce/MACS2-2.2.6.tar.gz \
-    && tar zxvf MACS2-2.2.6.tar.gz \
-    && cd MACS2-2.2.6 \
-    && /opt/conda/bin/python setup.py install \
-    && rm -rf /opt/MACS2-2.2.6 /opt/MACS2-2.2.6.tar.gz
 
 # BEDtools
 ENV v 2.30.0
@@ -178,7 +179,7 @@ RUN set -e \
     && conda create -y -n hicexplorer python=3.7 \
     && source activate hicexplorer \
     && pip install --no-cache-dir hicexplorer \
-    && conda deactivate 
+    && conda deactivate
 # FIREcaller (Python)
 #    && conda create -y -n firecaller python=3.7 \
 #    && source activate firecaller \
@@ -266,6 +267,11 @@ ENV PATH $PATH:/opt/bowtie2-2.4.5-linux-x86_64:/opt/bedtools2/bin:/opt/scripts_c
 ENV QT_XKB_CONFIG_ROOT /usr/share/X11/xkb
 #RUN qtcreator
 ENV XDG_RUNTIME_DIR /tmp/.xdg
+
+# Hi-C Simulation (FreeHiC)
+#RUN git clone https://github.com/yezhengSTAT/FreeHiC \
+#    && cd FreeHiC \
+#    && pip install -r python-requirements.txt
 
 RUN conda clean --all -y
 

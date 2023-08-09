@@ -51,7 +51,7 @@ mapping_reads_bwa(){
         fq2=${fq2_list[$i]}
         name=`basename $fq1 $postfix1`
 
-        ex "bwa mem -t $ncore -T0 -SP $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping_sam_$name > $tempdir/$name.bwa.sam"
+        ex "bwa mem -5SP -T0 -t $ncore $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping_sam_$name > $tempdir/$name.bwa.sam"
 
         bams+=" $tempdir/$name.bwa.sam"
     done
@@ -70,7 +70,6 @@ mapping_reads_bwa(){
     echo "mapping finished!"
     echo "Output file: $bamdir/mapped.bwa.cram"
 }
-
 
 mapping_reads_chromap(){
     dir=$1

@@ -18,11 +18,12 @@ parse_pairtools(){
 
     echo "start parsing by pairtools..."
     # '--walks-policy mask' rescues single ligations: https://github.com/open2c/pairtools/blob/master/doc/parsing.rst
+    # `--walks-policy 5unique` reports the 5’-most unique alignment on each side
     # '--no-flip' option of pairtools parse causes an error "RuntimeError: Pairs are not triangular: found blocks 'chr2|chr11'' and 'chr11|chr2'"
     samtools view -h $bamdir/mapped.bwa.cram \
     | pairtools parse --chroms-path $gt --drop-sam --drop-seq \
       --output-stats $qcdir/pairtools_parse.stats.txt  \
-      --walks-policy mask --add-columns mapq --min-mapq $qthre --max-inter-align-gap 30 \
+      --walks-policy 5unique --add-columns mapq --min-mapq $qthre --max-inter-align-gap 30 \
     | pairtools sort --nproc 5 --tmpdir=$tempdir --output $pairdir/mapped.bwa.q$qthre.pairs.gz
 
     echo "pairtools dedup..."

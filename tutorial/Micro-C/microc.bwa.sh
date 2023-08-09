@@ -7,7 +7,7 @@ gene=refFlat.$build.txt
 genome=genome.$build.fa
 bwa_index=bwa-indexes/$build
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.3.1.sif"
+#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.4.0.sif"
 sing="singularity exec custardpy.sif"
 
 for cell in ESC_WT01 ESC_WT09

@@ -2,6 +2,10 @@
 
 ## Docker_CustardPy
 
+### 1.4.0 (2023-8-01)
+- Bug fix for HOMER installation in Dockerfile
+- Change the parameter of BWA MEM from `-SP` to `-5SP`
+
 ### 1.3.1 (2023-7-08)
 - Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
 
