@@ -131,6 +131,33 @@ You can also execute commands separately.
     done
     
 
+Hi-C analysis using Cooler
+---------------------------------------------
+
+Hi-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
+The downstream analysis using the .hic file is the same as in the previous tutorial using Juicer.
+
+.. code-block:: bash
+
+    build=hg38
+    gt=genometable.hg38.txt
+    index_bwa=bwa-indexes/hg38
+    gene=refFlat.$build.txt
+    genome=genome.$build.fa
+    ncore=64
+
+    cell=Hap1-A
+    enzyme=MboI
+
+    # Generate .cool and .hic files from FASTQ
+    custardpy_cooler_HiC -g $gt -b $build -f $genome -i $index_bwa -p $ncore fastq/$cell $cell
+
+    # Downstream analysis using .hic
+    odir=CustardPyResults_cooler/$build/$cell
+    hic=$odir/hic/contact_map.q30.hic
+    norm=SCALE
+    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
+
 
 Micro-C analysis by Cooler
 --------------------------------------------------
@@ -149,16 +176,13 @@ This command maps reads by BWA, make ``.cool`` and ``.hic`` files and call loops
     gt=genome_table.$build.txt  # genome_table file
     bwa_index=bwa-indexes/UCSC-$build
 
-    prefix=ESC_WT01   # modify this for your FASTQ data
-    fq1=fastq/${prefix}_1.fastq.gz
-    fq2=fastq/${prefix}_2.fastq.gz
+    cell=ESC_WT01   # modify this for your FASTQ data
 
     # Generate .hic file from FASTQ
-    custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -p $ncore $fq1 $fq2 $prefix
+    custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -f $genome -p $ncore fastq/$cell $cell
 
     # Juicer analysis with the .hic file
-    odir=CustardPyResults_MicroC/Cooler_bwa/$prefix
-
+    odir=CustardPyResults_MicroC/$cell/bwa
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
 
@@ -178,15 +202,13 @@ Micro-C using chromap
     genome=genome.$build.fa     # genome fasta file
     chromap_index=chromap-indexes/UCSC-$build
 
-    prefix=ESC_WT01   # modify this for your FASTQ data
-    fq1=fastq/${prefix}_1.fastq.gz
-    fq2=fastq/${prefix}_2.fastq.gz
+    cell=ESC_WT01   # modify this for your FASTQ data
 
     # Generate .hic file from FASTQ
-    custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore $fq1 $fq2 $prefix
+    custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore fastq/$cell $cell
 
     # Juicer analysis with the .hic file
-    odir=CustardPyResults_MicroC/Cooler_chromap/$prefix
+    odir=CustardPyResults_MicroC/$cell/chromap
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir

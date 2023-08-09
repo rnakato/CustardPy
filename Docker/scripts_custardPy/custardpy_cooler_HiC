@@ -7,7 +7,7 @@ printHelpAndExit() {
     echo -e "\n  Options:"
     echo "    -S stage : steps to be executed [all|pairs|postproc] (default: all)"
     echo "       all: execute all process (default)"
-    echo "       all-fastqc: omit fastqc from all"
+#    echo "       all-fastqc: omit fastqc from all"
     echo "       map: map reads and exit"
     echo "       pairs: generate .pair file from map file"
     echo "       postproc: generate .cool and .hic from .pair file"
