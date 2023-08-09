@@ -159,7 +159,7 @@ The downstream analysis using the .hic file is the same as in the previous tutor
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
 
-Micro-C analysis by Cooler
+Micro-C analysis using Cooler
 --------------------------------------------------
 
 Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
