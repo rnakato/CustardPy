@@ -14,7 +14,7 @@ for cell in ESC_WT01 ESC_WT09
 do
     $sing custardpy_cooler_MicroC -g $gt -f $genome -i $bwa_index -p $ncore fastq/$cell $cell
 
-    odir=CustardPyResults_MicroC/$cell/bwa
+    odir=CustardPyResults_MicroC/Cooler_bwa/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
     $sing custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
