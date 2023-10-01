@@ -1,0 +1,279 @@
+FROM rnakato/ubuntu_gpu_20.04:cuda11.0.3-cudnn8
+LABEL maintainer "Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+
+# For sorting, LC_ALL is C
+ENV LC_ALL C
+ENV PATH=/opt/conda/bin/:$PATH
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES all
+
+WORKDIR /opt/
+USER root
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    apt-utils \
+    automake \
+    build-essential \
+    bzip2 \
+    default-jdk \
+    cmake \
+    curl \
+    fastqc \
+    ffmpeg \
+    gawk \
+    gcc \
+    git \
+    gpg-agent \
+    imagemagick \
+    less \
+    libbz2-dev \
+    libclang-dev \
+    libcurl4-gnutls-dev \
+    libfontconfig1-dev \
+    libfribidi-dev \
+    libharfbuzz-dev \
+    liblz4-tool \
+    libncurses-dev \
+    libncurses5 \
+    libssl-dev \
+    libxkbcommon-x11-0 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-render-util0 \
+    libxkbcommon-x11-0 \
+    libxml2-dev \
+    libz-dev \
+    locales \
+    make \
+    msttcorefonts \
+    pigz \
+    qtcreator \
+    unzip \
+    zlib1g-dev \
+    && echo "deb https://cran.rstudio.com/bin/linux/ubuntu focal-cran40/" | tee -a /etc/apt/sources.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 51716619E084DAB9\
+    && apt-get update \
+    && apt-get install -y --no-install-recommends r-base r-base-core r-recommended r-base-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+#
+
+# BWA version 0.7.17
+COPY bwa-0.7.17.tar.bz2 bwa-0.7.17.tar.bz2
+RUN tar xvfj bwa-0.7.17.tar.bz2 \
+    && cd bwa-0.7.17 \
+    && make \
+    && cd .. \
+    && rm bwa-0.7.17.tar.bz2
+
+# Chromap 0.2.4
+COPY chromap-0.2.4_x64-linux.tar.bz2 chromap-0.2.4_x64-linux.tar.bz2
+RUN tar xvfj chromap-0.2.4_x64-linux.tar.bz2 \
+    && rm chromap-0.2.4_x64-linux.tar.bz2
+
+# Bowtie2.4.5
+COPY bowtie2-2.4.5-linux-x86_64.zip bowtie2-2.4.5-linux-x86_64.zip
+RUN unzip bowtie2-2.4.5-linux-x86_64.zip \
+    && rm bowtie2-2.4.5-linux-x86_64.zip
+
+# pairsqc
+RUN wget --progress=dot:giga https://github.com/4dn-dcic/pairsqc/archive/0.2.3.tar.gz \
+    && tar -xzf 0.2.3.tar.gz \
+    && rm 0.2.3.tar.gz \
+    && ln -s /opt/pairsqc-*/ /opt/pairsqc
+
+# HOMER v4.11
+RUN mkdir HOMER && cd HOMER \
+    && mkdir bin cpp update \
+    && wget http://homer.ucsd.edu/homer/configureHomer.pl \
+    && perl configureHomer.pl -install \
+    && perl configureHomer.pl -install human-o \
+    && perl configureHomer.pl -install human-p \
+    && perl configureHomer.pl -install mouse-o \
+    && perl configureHomer.pl -install mouse-p \
+    && perl configureHomer.pl -install yeast-o \
+    && perl configureHomer.pl -install hg19 \
+    && perl configureHomer.pl -install hg38 \
+    && perl configureHomer.pl -install mm10 \
+    && perl configureHomer.pl -install sacCer3 \
+    && perl configureHomer.pl -install dm6 \
+    && perl configureHomer.pl -install galGal6
+
+# R packages
+RUN R -e "install.packages(c('BiocManager'))" \
+    && R -e "BiocManager::install(ask = FALSE)" \
+    && R CMD javareconf \
+    && R -e "install.packages(c('data.table', \
+                                'devtools', \
+                                'dplyr', \
+                                'fdrtool', \
+                                'ggplot2', \
+                                'hash', \
+                                'Nozzle.R1', \
+                                'optparse', \
+                                'parallel', \
+                                'plyr', \
+                                'Rcpp', \
+#                                'readr', \
+                                'reshape2', \
+                                'sm', \
+                                'splines', \
+                                'strawr', \
+                                'stringr', \
+                                'tools', \
+                                'tidyr', \
+                                'tidyverse'))" \
+    && R -e "BiocManager::install(c('BiocGenerics', \
+                                    'Biostrings', \
+                                    'edgeR', \
+                                    'GenomeInfoDb', \
+                                    'GenomicAlignments', \
+                                    'GenomicRanges', \
+                                    'hicrep', \
+                                    'IRanges', \
+                                    'matrixStats', \
+                                    'S4Vectors', \
+                                    'ShortRead'))" \
+    && R -e 'devtools::install_url("https://github.com/SooLee/plotosaurus/archive/0.9.2.zip")' \
+    && R -e 'remotes::install_github(c("robinweide/GENOVA", "yycunc/FIREcaller"))' \
+    && R -e 'devtools::install_bitbucket("chicagoTeam/Chicago", subdir="Chicago")' \
+    && R -e 'devtools::install_bitbucket("chicagoTeam/Chicago", subdir="PCHiCdata")'
+
+# Python
+#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Linux-x86_64.sh -O ~/miniconda.sh \
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_23.5.2-0-Linux-x86_64.sh -O ~/miniconda.sh \
+    && bash ~/miniconda.sh -b -p /opt/conda \
+    && rm ~/miniconda.sh \
+    && ln -s -f /opt/conda/bin/python /usr/bin/python
+
+### Python (FitHiC, cooltools, cooler, pairtools)
+# numpy<1.24.0 (avoid the error "AttributeError: module 'numpy' has no attribute 'int'.")
+RUN set -e \
+    && conda update conda \
+    && pip install --no-cache-dir nose MACS2==2.2.9.1 tabulate session_info \
+    && conda install 'numpy<1.24.0' scipy matplotlib pandas seaborn scikit-learn scikit-learn-intelex \
+       dash plotly black bokeh h5py click jupyter jupyterlab pytables Cython \
+    && conda install -c conda-forge -c bioconda pairtools fithic \
+    && conda install -c bioconda hic2cool cooltools cooler \
+# CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, coolpup.py FIREcaller, MACS2
+    && pip install --no-cache-dir h1d custardpy==0.5.4 hic-straw phic coolpuppy chess-hic stripenn FIREcaller \
+# JuiceBox
+    && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
+
+# BEDtools
+ENV v 2.30.0
+COPY bedtools-$v.tar.gz bedtools-$v.tar.gz
+RUN tar zxvf bedtools-$v.tar.gz \
+    && cd bedtools2 && make \
+    && rm /opt/bedtools-$v.tar.gz
+
+# HiCExplorer
+RUN set -e \
+    && conda init bash \
+    && . ~/.bashrc \
+    && conda create -y -n hicexplorer python=3.7 \
+    && source activate hicexplorer \
+    && pip install --no-cache-dir hicexplorer \
+    && conda deactivate
+# FIREcaller (Python)
+#    && conda create -y -n firecaller python=3.7 \
+#    && source activate firecaller \
+#    && pip install --no-cache-dir FIREcaller \
+#    && conda deactivate
+# CustardPy, HiC1Dmetrics
+#    && conda create -y -n custardpy python=3.8 jupyter notebook ipykernel seaborn \
+#    && source activate custardpy \
+#    && pip install --no-cache-dir h1d custardpy==0.4.1 \
+#   && pip install -U --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.3.0
+#    && python -m ipykernel install --name=custardpy \
+#    && jupyter kernelspec list \
+#    && conda deactivate
+
+# Mango (modified version by Wang)
+RUN git clone https://github.com/wangjk321/mango_multithreads_wang.git \
+    && mv mango_multithreads_wang mango \
+    && R CMD INSTALL --no-multiarch --with-keep.source mango
+# ChIAPoP
+COPY ChIAPoP_0.99.9.7.tar.gz ChIAPoP_0.99.9.7.tar.gz
+RUN R CMD INSTALL ChIAPoP_0.99.9.7.tar.gz \
+    && rm ChIAPoP_0.99.9.7.tar.gz
+
+# HiC-Pro
+RUN git clone https://github.com/nservant/HiC-Pro.git \
+    && conda env create -f HiC-Pro/environment.yml -n hic-pro \
+    && rm -rf HiC-Pro
+
+# FitHiChIP
+RUN git clone https://github.com/ay-lab/FitHiChIP.git
+
+# pastis
+# iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
+# about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
+RUN pip install iced --no-build-isolation --no-cache-dir \
+    && pip install pastis --no-cache-dir
+
+# wrapper
+COPY Cooler-restriction_sites /Cooler-restriction_sites
+RUN gunzip /Cooler-restriction_sites/*gz
+
+# GAWK has the 'and' function, needed for chimeric_blacklist
+RUN echo 'alias awk=gawk' >> ~/.bashrc
+# Need to be sure we have this for stats
+RUN locale-gen en_US.UTF-8
+
+# Juicer v1.6 and Juicer tools v1.22.01
+COPY juicer-1.6 /opt/juicer
+COPY juicer_tools.1.22.01.jar /opt/juicer/scripts/common/juicer_tools.jar
+COPY juicer_tools.1.9.9_jcuda.0.8.jar /opt/juicer/juicer_tools.1.9.9_jcuda.0.8.jar
+RUN unpigz /opt/juicer/restriction_sites/*txt.gz
+COPY motiffiles motiffiles
+RUN unpigz /opt/motiffiles/*gz
+COPY Juicebox.jar /opt/Juicebox.jar
+
+# 3DChromatin_ReplicateQC v1.0.1
+COPY 3DChromatin_ReplicateQC.v1.0.1.tar.gz 3DChromatin_ReplicateQC.v1.0.1.tar.gz
+RUN set -e \
+    && conda create -y -n ReplicateQC python=2.7 \
+    && source activate ReplicateQC \
+    && tar zxvf 3DChromatin_ReplicateQC.v1.0.1.tar.gz \
+    && mv 3DChromatin_ReplicateQC-1.0.1 3DChromatin_ReplicateQC \
+    && 3DChromatin_ReplicateQC/install_scripts/install_3DChromatin_ReplicateQC.sh \
+    && rm -rf Chromatin_ReplicateQC.v1.0.1.tar.gz \
+    && conda deactivate
+
+# HiCUP
+COPY HiCUP-0.9.2.tar.gz HiCUP-0.9.2.tar.gz
+RUN tar zxvf HiCUP-0.9.2.tar.gz \
+    && rm HiCUP-0.9.2.tar.gz
+
+# Final settings
+COPY scripts_juicer /opt/scripts_juicer
+COPY scripts_custardPy /opt/scripts_custardPy
+RUN chmod +x scripts*/* /opt/juicer/scripts/common/* /opt/juicer/scripts/* /opt/scripts_custardPy/pastis/*
+RUN ln -s /opt/conda/pkgs/pairix-0.3.7-py39*/bin /opt/pairix
+
+ENV PATH $PATH:/opt:/opt/scripts:/opt/scripts_custardPy:/opt/scripts_juicer
+ENV PATH $PATH:/opt/bwa-0.7.17:/opt/juicer/scripts:/opt/juicer/scripts/common
+ENV PATH $PATH:/opt/bowtie2-2.4.5-linux-x86_64:/opt/bedtools2/bin:/opt/scripts_custardPy/pastis:/opt/pairix:/opt/pairsqc:/opt/HOMER/bin/:/opt/conda/envs/hicexplorer/bin/:/opt/HiCUP-0.9.2
+#ENV PATH $PATH:/opt/conda/envs/custardpy/bin/
+
+# Error "Qt: Failed to create XKB context!"
+# https://stackoverflow.com/questions/26974644/no-keyboard-input-in-qt-creator-after-update-to-qt5
+ENV QT_XKB_CONFIG_ROOT /usr/share/X11/xkb
+#RUN qtcreator
+ENV XDG_RUNTIME_DIR /tmp/.xdg
+
+# Hi-C Simulation (FreeHiC)
+#RUN git clone https://github.com/yezhengSTAT/FreeHiC \
+#    && cd FreeHiC \
+#    && pip install -r python-requirements.txt
+
+RUN conda clean --all -y
+
+USER ubuntu
+CMD ["/bin/bash"]

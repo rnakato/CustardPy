@@ -1,6 +1,10 @@
 # Changelog
 
-## Docker_CustardPy
+## CustardPy
+
+### 1.4.1 (2023-9-23)
+- Bug fix in installaion of 3DChromatin_ReplicateQC and HiCrep
+- Bug fix in QuASAR (https://github.com/kundajelab/3DChromatin_ReplicateQC/issues/13)
 
 ### 1.4.0 (2023-8-01)
 - Bug fix for HOMER installation in Dockerfile
