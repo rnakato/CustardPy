@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 1.4.2 (2023-10-24)
+- Add LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
+
 ### 1.4.1 (2023-9-23)
 - Bug fix in installaion of 3DChromatin_ReplicateQC and HiCrep
 - Bug fix in QuASAR (https://github.com/kundajelab/3DChromatin_ReplicateQC/issues/13)
