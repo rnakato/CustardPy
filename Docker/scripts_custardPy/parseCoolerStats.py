@@ -4,10 +4,9 @@ import re
 import argparse
 
 def parse_line(line):
-    # 正規表現でヘッダー、数値、パーセンテージをマッチング
     match = re.match(r'(.+?)\s{2,}(\S+)\s+(\S+)%', line)
     if match:
-        return match.groups()  # タプルとして返す
+        return match.groups()
     else:
         return None
 
@@ -24,12 +23,12 @@ def parse_file(file_path):
                 numbers.append(number)
                 percentages.append(f"{percentage}%")
 
-    # 列ごとに出力
     return headers, numbers, percentages
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="stats file (*/qc_report/mapping_stats.txt", type=str)
+    parser.add_argument("input", help="stats file (*/qc_report/mapping_stats.txt)", type=str)
     parser.add_argument("--header", help="output header", action='store_true')
 
     args = parser.parse_args()

@@ -19,18 +19,18 @@ outputstats(){
     odir=$1
     for cell in `ls -l $odir/ | grep ^d | awk '{print $9}'`
     do
-       echo -en "Sample\t"
-       echo -en "`python parseCoolerStats.py --header $odir/$cell/qc_report/mapping_stats.txt`\t%\t"
-      echo -e "Number of TADs\tNumber of loops"
-        break
+	echo -en "Sample\t"
+	echo -en "`parseCoolerStats.py --header $odir/$cell/qc_report/mapping_stats.txt`\t%\t"
+	echo -e "Number of TADs\tNumber of loops"
+	break
     done
 
     for cell in `ls -l $odir/ | grep ^d | awk '{print $9}'`
     do
-       echo -en "$cell\t"
-       echo -en "`python parseCoolerStats.py $odir/$cell/qc_report/mapping_stats.txt `\t"
-        echo -en "`cat $odir/$cell/TAD/$norm/25000_blocks.bed | wc -l`\t"
-        grep -v \# $odir/$cell/loops/$norm/merged_loops.bedpe | wc -l
+	echo -en "$cell\t"
+	echo -en "`parseCoolerStats.py $odir/$cell/qc_report/mapping_stats.txt `\t"
+	echo -en "`cat $odir/$cell/TAD/$norm/25000_blocks.bed | wc -l`\t"
+	grep -v \# $odir/$cell/loops/$norm/merged_loops.bedpe | wc -l
     done
 }
 
