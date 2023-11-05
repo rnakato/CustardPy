@@ -6,7 +6,7 @@ function usage()
     echo "$cmdname <CustardPy dir> <normalization type>" 1>&2
 }
 
-if [ $# -ne 1 ]; then
+if [ $# -ne 2 ]; then
   usage
   exit 1
 fi
