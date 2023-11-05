@@ -1,5 +1,17 @@
 #!/bin/bash
 
+cmdname=`basename $0`
+function usage()
+{
+    echo "$cmdname <CustardPy dir> <normalization type>" 1>&2
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+
 odir=$1
 norm=$2
 statsfile=inter_30.txt

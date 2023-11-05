@@ -3,7 +3,8 @@
 ## CustardPy
 
 ### 1.4.3 (2023-11-05)
-- Added Juicerstats.sh to summize the mapping stats in Juicer
+- Added Juicerstats.sh to summarize the mapping stats of Juicer
+- Added Coolerstats.sh to summarize the mapping stats of Cooler
 
 ### 1.4.2 (2023-10-24)
 - Added LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
