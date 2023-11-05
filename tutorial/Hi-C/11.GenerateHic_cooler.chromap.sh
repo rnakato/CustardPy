@@ -5,7 +5,7 @@ chromap_index=chromap-indexes/$build
 genome=genome.$build.fa
 gt=genometable.$build.txt
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
 sing="singularity exec custardpy.sif"
 
 fq1=fastq/Hap1-A/SRR5266584_1.fastq.gz

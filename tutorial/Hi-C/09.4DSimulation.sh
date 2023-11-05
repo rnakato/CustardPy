@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
 sing="singularity exec custardpy.sif"
 
-odir=JuicerResults_hg38/Hap1-A
+build=hg38
+odir=CustardPyResults_Hi-C/Juicer_$build/Hap1-A
 hic=$odir/aligned/inter_30.hic
 chr=chr21
 start=24000000

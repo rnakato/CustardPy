@@ -2,8 +2,11 @@
 
 ## CustardPy
 
+### 1.4.3 (2023-11-05)
+- Added Juicerstats.sh to summize the mapping stats in Juicer
+
 ### 1.4.2 (2023-10-24)
-- Add LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
+- Added LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
 
 ### 1.4.1 (2023-9-23)
 - Bug fix in installaion of 3DChromatin_ReplicateQC and HiCrep
@@ -11,38 +14,38 @@
 
 ### 1.4.0 (2023-8-01)
 - Bug fix for HOMER installation in Dockerfile
-- Change the parameter of BWA MEM from `-SP` to `-5SP`
+- Changed the parameter of BWA MEM from `-SP` to `-5SP`
 
 ### 1.3.1 (2023-7-08)
-- Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
+- Changed the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
 
 ### 1.3.0 (2023-7-06)
-- Modify `custardpy_cooler_HiC` and `custardpy_cooler_MicroC` to allow multiple FASTQ files
-- Change the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
-- Modify options of Pairtools according to the [tutorial](https://github.com/open2c/pairtools/blob/master/doc/examples/pairtools_walkthrough.ipynb)
-- Add [python-FIREcaller](https://github.com/jakublipinski/python-FIREcaller)
-- Add the restriction files of Cooler for various genome builds and enzymes (see the help of `custardpy_cooler_HiC`)
+- Modified `custardpy_cooler_HiC` and `custardpy_cooler_MicroC` to allow multiple FASTQ files
+- Changed the name of output directory for `custardpy_juicer`, `custardpy_cooler_HiC`, and `custardpy_cooler_MicroC`
+- Modified options of Pairtools according to the [tutorial](https://github.com/open2c/pairtools/blob/master/doc/examples/pairtools_walkthrough.ipynb)
+- Added [python-FIREcaller](https://github.com/jakublipinski/python-FIREcaller)
+- Added the restriction files of Cooler for various genome builds and enzymes (see the help of `custardpy_cooler_HiC`)
 - Bug fix: Wrong PATH of pairsqc.py
 
 ### 1.2.0 (2023-6-11)
-- Add [3DChromatin_ReplicateQC](https://github.com/kundajelab/3DChromatin_ReplicateQC)
-- add `run_3DChromatin_ReplicateQC.sh` for executing 3DChromatin_ReplicateQC
+- Added [3DChromatin_ReplicateQC](https://github.com/kundajelab/3DChromatin_ReplicateQC)
+- Added `run_3DChromatin_ReplicateQC.sh` for executing 3DChromatin_ReplicateQC
 - Updated `custardpy_cooler_HiC` and `custardpy_cooler_MicroC`
 
 ### 1.1.1 (2023-06-07)
-- Add [GENOVA](https://github.com/robinweide/GENOVA)
-- Add `calculate_compartment_strength` command to calculate compartment strength
-- Add [HiCUP](https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/)
+- Added [GENOVA](https://github.com/robinweide/GENOVA)
+- Added `calculate_compartment_strength` command to calculate compartment strength
+- Added [HiCUP](https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/)
 - Bug fix of pairtools and numpy version conflict
 
 ### 1.1.0 (2023-05-24)
-- Add `DEG_boundary_analysis` command for TAD-proximity analysis
-- Add `custardpy_clustering_boundary` command for clustering TAD boundaries
-- Add `custardpy_differential_DRF` command for differential DRF analysis
-- Add `calculate_compartment_strength` command for calculating compartment strength
+- Added `DEG_boundary_analysis` command for TAD-proximity analysis
+- Added `custardpy_clustering_boundary` command for clustering TAD boundaries
+- Added `custardpy_differential_DRF` command for differential DRF analysis
+- Added `calculate_compartment_strength` command for calculating compartment strength
 - Bug fix in `makeEigen.sh`
-- Change name of `custardpy_mappingHiC` to `custardpy_cooler_HiC`
-- Change name of `custardpy_mappingMicroC` to `custardpy_cooler_MicroC`
+- Changed name of `custardpy_mappingHiC` to `custardpy_cooler_HiC`
+- Changed name of `custardpy_mappingMicroC` to `custardpy_cooler_MicroC`
 
 ### 1.0.0 (2023-05-17)
 - Major Release!
@@ -61,7 +64,7 @@
 
 Note: CustardPy does not support Juicer Tools v2 due to incompatibility with the ``.cool`` file format.
 
-- Add tools
+- Added tools
     - [GENOVA](https://github.com/robinweide/GENOVA)
     - [CHESS](https://chess-hic.readthedocs.io/en/latest/index.html)
     - [FIREcaller](https://github.com/yycunc/FIREcaller)
@@ -72,54 +75,56 @@ Note: CustardPy does not support Juicer Tools v2 due to incompatibility with the
     - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
 
 - Merged `drawTriangleRatioMulti` to `plotHiCfeature`
-- Fix the error "QStandardPaths: XDG_RUNTIME_DIR points to non-existing path '/run/user/1000', please create it with 0700 permissions." when calculating PC1.
-- Remove /root/.cpanm/work directory
+- Fixed the error "QStandardPaths: XDG_RUNTIME_DIR points to non-existing path '/run/user/1000', please create it with 0700 permissions." when calculating PC1.
+- Removed /root/.cpanm/work directory
 
 ### 0.4.1 (2023-02-24)
-	- Add `libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0` libraries to avoid an error 'qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.'
+- Added `libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0` libraries to avoid an error 'qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.'
 
 ### 0.4.0 (2023-01-26)
-	- Update R from 3.6 to 4.2
-	- Add [FitHiC](https://github.com/ay-lab/fithic)
-	- Add [ChIAPop](https://github.com/wh90999/ChIAPoP) for ChIA-PET analysis
+- Updated R from 3.6 to 4.2
+- Added [FitHiC](https://github.com/ay-lab/fithic)
+- Added [ChIAPop](https://github.com/wh90999/ChIAPoP) for ChIA-PET analysis
 
 ### 0.3.0 (2022-10-28)
-- downgrade pairtools from v1.0.1 to v0.3.0
+- Downgraded pairtools from v1.0.1 to v0.3.0
 
 <!--
-	- change custardpy_mappingMicroC not to output BAM file that takes long time
-- add `--backend cython` option to *pairtools dedup* for the consistensy to pairtools v0.3.0
+- change custardpy_mappingMicroC not to output BAM file that takes long time
+- Added `--backend cython` option to *pairtools dedup* for the consistensy to pairtools v0.3.0
 -->
 
 ### 0.2.0 (2022-08-31)
 - Public release
 - Bug Fix for visualization
-- Update Manual
+- Updated Manual
 
 
 ### 0.1.0
 - First commit
 
+
+
 ## Docker_CustardPy_Juicer (deprecated)
 
 ### 0.4.0 (2023-04-25)
-- Change OS from Ubuntu16.06 to Ubuntu20.04
-- Change CUDA driver from v8 to 11.0.3
+- Changed OS from Ubuntu16.06 to Ubuntu20.04
+- Changed CUDA driver from v8 to 11.0.3
 
 ### 0.3.2 (2023-02-07)
 - Change the upper limit of memory in Java from `-Xmx32768m` to `-Xmx128768m`
 
 ### 0.3.1 (2022-12-12)
 - Modify mega.sh to adjust CustardPy_juicer
-- Add juicer_genhic.sh that generates a .hic file from the mapped data
-- Deprecate `juicer_postprocessing.sh`
+- Added juicer_genhic.sh that generates a .hic file from the mapped data
+- Deprecated `juicer_postprocessing.sh`
 
 ### 0.3.0 (2022-10-27)
 - Downgrade `juicer_tools` from juicer_tools.2.13.07.jar to juicer_tools.1.22.01.jar to keep the consistency between .hic and .cool (see https://github.com/deeptools/HiCExplorer/issues/798)
 
 ### 0.2.0 (2022-08-31)
-- Add restriction sites for Arima and Sau3AI
-- Add restriction sites for various species
+- Added restriction sites for Arima and Sau3AI
+- Added restriction sites for various species
 - change R installation from conda to apt
 
 ### 0.1.0

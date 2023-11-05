@@ -45,10 +45,13 @@ while(<$fh>){
     }elsif($_ =~ /WARNING/){
 	# skip
     }elsif($_ =~ /(.+): (.+)/) {
+	my $head = $1;
+	my $value = $2;
+	$value =~ s/^\s+//;
         if ($header) {
-            print "\t$1";
+            print "\t$head";
         }else{
-            print "\t$2";
+            print "\t$value";
         }
     }
 

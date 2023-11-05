@@ -8,7 +8,7 @@ genome=genome.$build.fa
 ncore=64
 enzyme=MboI
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.4.0.sif"
+#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
 sing="singularity exec --nv custardpy.sif"
 
 for cell in Hap1-A SCC4KO-A WaplKO_3.3-A

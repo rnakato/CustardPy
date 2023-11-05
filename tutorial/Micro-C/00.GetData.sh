@@ -5,7 +5,7 @@ fastq-dump --split-files --gzip SRR8954797 -O fastq/
 # wget -nv --timestamping hhttps://onl.la/6wy4EKa -O fastq/SRR8954797_1.fastq.gz
 # wget -nv --timestamping https://onl.la/QbvvNLB -O fastq/SRR8954797_2.fastq.gz
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.0.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
 sing="singularity exec custardpy.sif"
 
 $sing getmm39genome.sh

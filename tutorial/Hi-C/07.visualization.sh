@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.1.0.sif"
-sing="singularity exec --nv custardpy.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
+sing="singularity exec custardpy.sif"
 
 chr=chr20
 start=8000000
@@ -9,7 +9,7 @@ end=16000000
 norm=SCALE
 cell=Hap1-A
 resolution=25000
-Resdir=JuicerResults_hg38
+Resdir=ustardPyResults_Hi-C/Juicer_hg38
 matrix=$Resdir/$cell/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz
 
 
