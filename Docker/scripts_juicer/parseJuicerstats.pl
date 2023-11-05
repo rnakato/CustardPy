@@ -42,6 +42,8 @@ while(<$fh>){
             my @clm = split(/;/, $_);
             print "$clm[1],$clm[2]";
         }
+    }elsif($_ =~ /WARNING/){
+	# skip
     }elsif($_ =~ /(.+): (.+)/) {
         if ($header) {
             print "\t$1";
