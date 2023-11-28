@@ -236,8 +236,13 @@ custardpy_process_hic
         -a <refFlat>: gene annotation file
         -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
         -p ncore: number of CPUs (default: 32)
+        -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)
     Example:
         custardpy_process_hic -g genometable.hg38.txt -a refFlat.hg38.txt Hap1-A/inter_30.hic Hap1-A
+
+.. note::
+
+    `custardpy_process_hic` fails when .hic files created by the old version of juice_tools.jar are applied because they do not contain the string "chr" in the chromosome name. In such a case, supply `-o` option in `custardpy_process_hic`, which uses the old version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar).
 
 
 makeMatrix_intra.sh
@@ -255,6 +260,7 @@ makeMatrix_intra.sh
        <gt>: genome table
        Options:
          -l: output contact matrix as a list (default: dense matrix)
+         -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)
 
 The resulting observed/oe matrices are output in ``<odir>/Matrix/intrachromosomal/<resolution>/``.
 
@@ -274,6 +280,7 @@ makeMatrix_inter.sh
        <chr1, chr2>: two input chromosomes
        Options:
          -l: output contact matrix as a list (default: dense matrix)
+         -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)
 
 The resulting observed/oe matrices are output in ``<odir>/Matrix/interchromosomal/<resolution>/<chr1>-<chr2>``.
 
@@ -312,6 +319,7 @@ juicer_callTAD.sh
        Options:
          -r resolutions: the resolutions for ArrowHead (default: "10000 25000 50000", should be quoted and separated by spaces)
          -p ncore: number of CPUs (default: 24)
+         -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)
 
 - Output:
     - ``\*_blocks.bedpe`` ... TAD regions (BEDPE format, default output of Juicer ArrowHead)
@@ -364,7 +372,8 @@ Supply ``--gpus all`` for Docker and ``--nv`` option for Singularity to activate
       <hic>: .hic file
       Options:
          -r resolutions: the resolutions (default: "5000,10000,25000", should be quoted and separated by comma)
-
+         -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)
+         
 - Output
 
     - merged_loops.simple.bedpe ... loop file
