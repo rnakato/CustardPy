@@ -15,12 +15,12 @@ function usage()
 
 resolutions="10000 25000 50000"
 ncore=24
-useoldversion=""
+useoldversion="no"
 while getopts r:p:o option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
         p) ncore=${OPTARG} ;;
-        o) useoldversion="-o" ;;
+        o) useoldversion="yes" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -49,7 +49,12 @@ mkdir -p $dir
 
 for res in $resolutions; do
     if test ! -e $dir/${res}_blocks.bedpe; then
-        juicertools.sh $useoldversion arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir --ignore-sparsity
+        if test $useoldversion = "no"; then
+            # juicer_tools.1.22.01.jar
+            juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm --ignore-sparsity $hic $dir 
+        else 
+            juicertools.sh -o arrowhead -m 2000 -r $res --threads $ncore -k $norm --ignore_sparsity $hic $dir 
+        fi
     fi
 
     # make TAD bed
