@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 1.4.4 (2023-11-28)
+- Added `-o` option to `custardpy_process_hic`, `custardpy_cooler_subfunc.sh`, `makeMatrix_intra.sh`, `call_HiCCUPS.sh` and `juicer_callTAD.sh`
+
 ### 1.4.3 (2023-11-05)
 - Added Juicerstats.sh to summarize the mapping stats of Juicer
 - Added Coolerstats.sh to summarize the mapping stats of Cooler

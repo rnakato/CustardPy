@@ -10,12 +10,15 @@ function usage()
     echo '   <gt>: genome table' 1>&2
     echo '   Options:' 1>&2
     echo '     -l: output contact matrix as a list (default: dense matrix)' 1>&2
+    echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
 }
 
 list="no"
-while getopts l option; do
+useoldversion=""
+while getopts lo option; do
     case ${option} in
         l) list="yes" ;;
+        o) useoldversion="-o" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -53,14 +56,10 @@ do
     for type in observed oe
     do
 	tempfile=$dir/$type.$norm.$chr.txt
-        juicertools.sh dump $type $norm $hic $chr $chr BP $binsize $tempfile
+        juicertools.sh $useoldversion dump $type $norm $hic $chr $chr BP $binsize $tempfile
 	if test $list = "no" -o -s $tempfile; then
-            convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.$chr.matrix.gz $gt $chr $chr -r $binsize
+        convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.$chr.matrix.gz $gt $chr $chr -r $binsize
 	    rm $tempfile
 	fi
     done
-    #    for type in expected norm
-    #    do
-    #        juicertools.sh dump $type $norm $hic.hic $chr BP $binsize $dir/$type.$norm.$chr.matrix -d
-    #    done
 done

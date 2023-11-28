@@ -20,7 +20,6 @@ binsize=$3
 gt=$4
 
 pwd=$(cd $(dirname $0) && pwd)
-juicertool="juicertools.sh"
 chrlist=$(getchr_from_genometable.sh $gt)
 
 dir=$matrixdir/InsulationScore/$norm/$binsize

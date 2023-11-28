@@ -8,12 +8,15 @@ function usage()
     echo '   <hic>: .hic file' 1>&2
     echo '   Options:' 1>&2
     echo '     -r resolutions: the resolutions (default: "5000,10000,25000", should be quoted and separated by comma)' 1>&2
+    echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
 }
 
 resolutions="5000,10000,25000"
-while getopts r: option; do
+useoldversion=""
+while getopts r:o option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
+        o) useoldversion="-o" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -39,9 +42,8 @@ hic=$3
 ex(){ echo $1; eval $1; }
 
 pwd=$(cd $(dirname $0) && pwd)
-juicertool="juicertools.sh"
 
 hicdir=$odir/loops/$norm
 mkdir -p $hicdir
-ex "$juicertool hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
+ex "juicertools.sh $useoldversion hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
 grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "%s\t%d\t%d\t%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe

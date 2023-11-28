@@ -10,12 +10,15 @@ function usage()
     echo '   <chr1, chr2>: two input chromosomes' 1>&2
     echo '   Options:' 1>&2
     echo '     -l: output contact matrix as a list (default: dense matrix)' 1>&2
+    echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
 }
 
 list="no"
-while getopts l option; do
+useoldversion=""
+while getopts lo option; do
     case ${option} in
         l) list="yes" ;;
+        o) useoldversion="-o" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -50,19 +53,9 @@ mkdir -p $dir
 for type in observed oe
 do
     tempfile=$dir/$type.$norm.txt
-    juicertools.sh dump $type $norm $hic $chr1 $chr2 BP $binsize $tempfile
+    juicertools.sh $useoldversion dump $type $norm $hic $chr1 $chr2 BP $binsize $tempfile
     if test $list = "no" -o -s $tempfile; then
         convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.matrix.gz $gt $chr1 $chr2 -r $binsize
         rm $tempfile
     fi
 done
-
-#for str in observed #oe
-#do
-#    merge_JuicerMatrix_to_Genome.py $dir/interchromosomal \
-#				    $dir/interchromosomal/$binsize/genome.$str.full.$lim_pzero.pickle \
-#				    $binsize $str $lim_pzero $chrnum
- #   merge_JuicerMatrix_to_Genome.py $dir/interchromosomal \
-#				    $dir/interchromosomal/$binsize/genome.$str.evenodd.$lim_pzero.pickle \
-#				    $binsize $str $lim_pzero $chrnum --evenodd
-#done

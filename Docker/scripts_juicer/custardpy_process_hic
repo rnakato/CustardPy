@@ -11,6 +11,7 @@ function usage()
     echo '      -a <refFlat>: gene annotation file' 1>&2
     echo '      -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
     echo '      -p ncore: number of CPUs (default: 32)' 1>&2
+    echo '      -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
     echo '   Example:' 1>&2
     echo "      $cmdname -g genometable.hg38.txt -a refFlat.hg38.txt Hap1-A/inter_30.hic Hap1-A" 1>&2
 }
@@ -21,14 +22,15 @@ ncore=32
 norm="SCALE"
 resolutions="25000 50000 100000"
 gene=""
-
-while getopts g:n:r:a:p: option; do
+useoldversion=""
+while getopts g:n:r:a:p:o option; do
     case ${option} in
 	g) gt=${OPTARG} ;;
 	n) norm=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
 	a) gene=${OPTARG} ;;
     p) ncore=${OPTARG} ;;
+    o) useoldversion="-o" ;;
     \?) 
         echo "Invalid option: -$OPTARG" >&2
         usage
@@ -67,7 +69,7 @@ for resolution in $resolutions
 do
     # Contact matrix
     echo "generate Matrix..."
-    ex "makeMatrix_intra.sh $norm $odir $hic $resolution $gt"
+    ex "makeMatrix_intra.sh $useoldversion $norm $odir $hic $resolution $gt"
     # InsulationScore
     echo "calculate Insulation score.."
     ex "makeInslationScore.sh $norm $odir $resolution $gt"
@@ -83,8 +85,8 @@ done
 
 # TAD
 echo "call TAD..."
-ex "juicer_callTAD.sh $norm $odir $hic $gt"
+ex "juicer_callTAD.sh $useoldversion $norm $odir $hic $gt"
 
 # Loop
 echo "call loops..."
-ex "call_HiCCUPS.sh $norm $odir $hic"
+ex "call_HiCCUPS.sh $useoldversion $norm $odir $hic"

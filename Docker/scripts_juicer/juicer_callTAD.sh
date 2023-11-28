@@ -10,14 +10,17 @@ function usage()
     echo '   Options:' 1>&2
     echo '     -r resolutions: the resolutions for ArrowHead (default: "10000 25000 50000", should be quoted and separated by spaces)' 1>&2
     echo '     -p ncore: number of CPUs (default: 24)' 1>&2
+    echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
 }
 
 resolutions="10000 25000 50000"
 ncore=24
-while getopts r:p: option; do
+useoldversion=""
+while getopts r:p:o option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
         p) ncore=${OPTARG} ;;
+        o) useoldversion="-o" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -46,7 +49,7 @@ mkdir -p $dir
 
 for res in $resolutions; do
     if test ! -e $dir/${res}_blocks.bedpe; then
-        juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir --ignore-sparsity
+        juicertools.sh $useoldversion arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir --ignore-sparsity
     fi
 
     # make TAD bed
