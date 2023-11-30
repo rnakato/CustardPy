@@ -54,6 +54,9 @@ for res in $resolutions; do
             juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm --ignore-sparsity $hic $dir 
         else 
             juicertools.sh -o arrowhead -m 2000 -r $res --threads $ncore -k $norm --ignore_sparsity $hic $dir 
+            # add "chr" to the 1st and 4th columns
+            mv $dir/${res}_blocks.bedpe $dir/${res}_blocks.bedpe.original
+            cat $dir/${res}_blocks.bedpe.original | awk -F'\t' 'BEGIN {OFS="\t"} {if ($0 ~ /^#/) print; else {$1="chr"$1; $4="chr"$4; print}}'  > $dir/${res}_blocks.bedpe
         fi
     fi
 

@@ -12,11 +12,11 @@ function usage()
 }
 
 resolutions="5000,10000,25000"
-useoldversion=""
+useoldversion="no"
 while getopts r:o option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
-        o) useoldversion="-o" ;;
+        o) useoldversion="yes" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -45,5 +45,15 @@ pwd=$(cd $(dirname $0) && pwd)
 
 hicdir=$odir/loops/$norm
 mkdir -p $hicdir
-ex "juicertools.sh $useoldversion hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
+
+if test $useoldversion = "no"; then
+    # juicer_tools.1.22.01.jar
+    ex "juicertools.sh hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
+else 
+    ex "juicertools.sh -o hiccups -r $resolutions -k $norm $hic $hicdir --ignore_sparsity"
+    # add "chr" to the 1st and 4th columns
+#    mv $dir/${res}_blocks.bedpe $dir/${res}_blocks.bedpe.original
+#    cat $dir/${res}_blocks.bedpe.original | awk -F'\t' 'BEGIN {OFS="\t"} {if ($0 ~ /^#/) print; else {$1="chr"$1; $4="chr"$4; print}}'  > $dir/${res}_blocks.bedpe
+fi
+
 grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "%s\t%d\t%d\t%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe
