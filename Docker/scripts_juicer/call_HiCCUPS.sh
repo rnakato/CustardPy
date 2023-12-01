@@ -52,8 +52,8 @@ if test $useoldversion = "no"; then
 else 
     ex "juicertools.sh -o hiccups -r $resolutions -k $norm $hic $hicdir --ignore_sparsity"
     # add "chr" to the 1st and 4th columns
-#    mv $dir/${res}_blocks.bedpe $dir/${res}_blocks.bedpe.original
-#    cat $dir/${res}_blocks.bedpe.original | awk -F'\t' 'BEGIN {OFS="\t"} {if ($0 ~ /^#/) print; else {$1="chr"$1; $4="chr"$4; print}}'  > $dir/${res}_blocks.bedpe
+    mv $hicdir/merged_loops.bedpe $hicdir/merged_loops.bedpe.original
+    cat $hicdir/merged_loops.bedpe.original | awk -F'\t' 'BEGIN {OFS="\t"} {if ($0 ~ /^#/) print; else {$1="chr"$1; $4="chr"$4; print}}'  > $hicdir/merged_loops.bedpe
 fi
 
 grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "%s\t%d\t%d\t%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe

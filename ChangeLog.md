@@ -2,6 +2,10 @@
 
 ## CustardPy
 
+### 1.4.5 (2023-12-01)
+- Removed LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
+- Bug fix for HICCUPS error (CUDA not detected)
+
 ### 1.4.4 (2023-11-28)
 - Added `-o` option to `custardpy_process_hic`, `custardpy_cooler_subfunc.sh`, `makeMatrix_intra.sh`, `call_HiCCUPS.sh` and `juicer_callTAD.sh`
 
