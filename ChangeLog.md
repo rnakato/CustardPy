@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 1.5.0 (2023-12-18)
+- AluI restriction enzyme added to Juicer and Cooler
+
 ### 1.4.5 (2023-12-01)
 - Removed LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64
 - Bug fix for HICCUPS error (CUDA not detected)
