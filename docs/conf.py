@@ -80,7 +80,7 @@ pygments_style = 'sphinx'
 todo_include_todos = False
 
 ogp_site_url = "https://custardpy.readthedocs.io/en/latest/"
-html_logo = "_static/img/CustardPy_logo.svg"
+html_logo = "_static/img/CustardPy_logo.tif"
 
 
 # -- Options for HTML output ----------------------------------------------
