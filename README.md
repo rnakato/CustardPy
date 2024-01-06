@@ -67,7 +67,6 @@ When calling loops using Juicer HICCUPS, suppy ``--nv`` option to allow GPU comp
 
 See https://custardpy.readthedocs.io for the detailed Manual.
 
-
 ## 4. Build Docker image from Dockerfile
 
 First clone and move to the repository
@@ -81,7 +80,7 @@ Then type:
 
 ## 6. Reference
 
-- Nakato R, Sakata T, Wang J, Nagai LAE, Oba GM, Bando M, Shirahige K, Context-dependent 3D genome regulation by cohesin and related factors, bioRxiv, 2022. doi: [10.1101/2022.05.24.493188](https://www.biorxiv.org/content/10.1101/2022.05.24.493188v1)
+- Nakato R, Sakata T, Wang J, Nagai LAE, Nagaoka Y, Oba GM, Bando M, Shirahige K, Context-dependent perturbations in chromatin folding and the transcriptome by cohesin and related factors, *Nature Communications*, 2023. doi: [10.1038/s41467-023-41316-4](https://www.nature.com/articles/s41467-023-41316-4)
 
 ## 7. Contact
 
