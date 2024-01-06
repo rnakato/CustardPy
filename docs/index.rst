@@ -31,7 +31,7 @@ Contents:
 Citation:
 --------------
 
-* Nakato R, Sakata T, Wang J, Nagai LAE, Oba GM, Bando M, Shirahige K, Context-dependent 3D genome regulation by cohesin and related factors, *bioRxiv*, 2022. doi: 10.1101/2022.05.24.493188
+* Nakato R, Sakata T, Wang J, Nagai LAE, Nagaoka Y, Oba GM, Bando M, Shirahige K, Context-dependent perturbations in chromatin folding and the transcriptome by cohesin and related factors, *Nature Communications*, 2023. doi: 10.1038/s41467-023-41316-4
 
 Contact:
 --------------

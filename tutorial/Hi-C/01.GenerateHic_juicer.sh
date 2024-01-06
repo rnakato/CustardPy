@@ -8,10 +8,10 @@ fastq_post="_"  # "_" or "_R"
 enzyme=MboI
 ncore=64
 
-#sing="singularity exec --nv --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
+#sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.5.0.sif"
 sing="singularity exec custardpy.sif"
 
-cell=Hap1-A
+cell=Control # siCTCF siRad21 siNIPBL
 fqdir=fastq/$cell
 odir=CustardPyResults_Hi-C/Juicer_$build/$cell
 

@@ -55,9 +55,9 @@ author = 'Ryuichiro Nakato'
 # built documents.
 #
 # The short X.Y version.
-version = '1.4'
+version = '1.6'
 # The full version, including alpha/beta/rc tags.
-release = '1.4.4'
+release = '1.6.0'
 
 numfig = True
 
@@ -78,6 +78,9 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
+
+ogp_site_url = "https://custardpy.readthedocs.io/en/latest/"
+html_logo = "_static/img/CustasrdPy_logo.png"
 
 
 # -- Options for HTML output ----------------------------------------------

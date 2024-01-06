@@ -1,11 +1,14 @@
-mkdir -p fastq
-fastq-dump --split-files --gzip SRR8954797 -O fastq/
+mkdir -p fastq/C36_rep1
 
-# Instead, download the paired fastq files from our Google Drive:
-# wget -nv --timestamping hhttps://onl.la/6wy4EKa -O fastq/SRR8954797_1.fastq.gz
-# wget -nv --timestamping https://onl.la/QbvvNLB -O fastq/SRR8954797_2.fastq.gz
+### In case of downloading FASTQ files using fastq-dump
+fastq-dump --split-files --gzip SRR16763198 -O fastq/C36_rep1
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
+### In case of downloading FASTQ files from ENA (https://www.ebi.ac.uk/ena/)
+wget -nv --timestamping ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR167/098/SRR16763198/SRR16763198_1.fastq.gz -P fastq/C36_rep1
+wget -nv --timestamping ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR167/098/SRR16763198/SRR16763198_2.fastq.gz -P fastq/C36_rep1
+
+### Download the reference genome and build genome index
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.6.0.sif"
 sing="singularity exec custardpy.sif"
 
 $sing getmm39genome.sh

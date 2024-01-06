@@ -2,8 +2,13 @@
 
 ## CustardPy
 
+### 1.6.0 (2024-01-06)
+- Added [Mustache](https://github.com/ay-lab/mustache)
+- Added [Chromosight](https://github.com/koszullab/chromosight)
+- Update Hi-C Tutorial that uses [Nakato et al.,s RPE cells](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE196034) for the example data
+
 ### 1.5.0 (2023-12-18)
-- AluI restriction enzyme added to Juicer and Cooler
+- AluI restriction enzyme for BAT Hi-C added to Juicer and Cooler
 
 ### 1.4.5 (2023-12-01)
 - Removed LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/compat/:/usr/local/cuda/lib64

@@ -1,6 +1,6 @@
 build=hg38
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/custardpy.1.4.3.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.5.0.sif"
 sing="singularity exec custardpy.sif"
 
 odir=CustardPyResults_Hi-C/Juicer_$build/
