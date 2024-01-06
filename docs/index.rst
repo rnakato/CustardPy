@@ -32,8 +32,3 @@ Citation:
 --------------
 
 * Nakato R, Sakata T, Wang J, Nagai LAE, Nagaoka Y, Oba GM, Bando M, Shirahige K, Context-dependent perturbations in chromatin folding and the transcriptome by cohesin and related factors, *Nature Communications*, 2023. doi: 10.1038/s41467-023-41316-4
-
-Contact:
---------------
-
-rnakato AT iqb.u-tokyo.ac.jp
