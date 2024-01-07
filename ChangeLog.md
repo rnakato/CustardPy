@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 1.6.0 (2024-01-07)
+- Removed the restriction sites directories of Juicer and Cooler from this repository to reduce the size.
+
 ### 1.6.0 (2024-01-06)
 - Added [Mustache](https://github.com/ay-lab/mustache)
 - Added [Chromosight](https://github.com/koszullab/chromosight)
