@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 1.6.0 (2024-01-07)
+### 1.6.1 (2024-01-07)
 - Removed the restriction sites directories of Juicer and Cooler from this repository to reduce the size.
 
 ### 1.6.0 (2024-01-06)
