@@ -89,7 +89,6 @@ html_logo = "_static/img/CustardPy_logo.jpg"
 # a list of builtin themes.
 #
 #html_theme = 'sphinx_rtd_theme'
-#html_theme = "sphinx_book_theme"
 html_theme = "nature"
 
 # Theme options are theme-specific and customize the look and feel of a theme
