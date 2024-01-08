@@ -6,7 +6,7 @@ gt=genometable.$build.txt
 #sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.7.0.sif"
 sing="singularity exec custardpy.sif"
 
-outputdir=3DChromatin_ReplicateQC
+outputdir=3DChromatin_ReplicateQC  # output directory
 mkdir -p $outputdir
 
 samples="Control siCTCF siRad21" # Samples to be compared
@@ -18,7 +18,11 @@ norm=SCALE
 # Generate metadatapairs
 pairlist=$outputdir/metadata.pairs
 rm -rf $pairlist
-for sample1 in $samples; do for sample2 in $samples; do echo -e $sample1"\t"$sample2 >> $pairlist; done; done
+for sample1 in $samples; do
+    for sample2 in $samples; do
+        echo -e $sample1"\t"$sample2 >> $pairlist
+    done
+done
 
 # Generate contact data for all samples
 rm -rf $outputdir/data
@@ -45,10 +49,10 @@ done
 samplelist=$outputdir/metadata.samples
 rm -rf $samplelist
 for cell in $samples; do
-    echo -e "$cell\t$(pwd)/$outputdir/data/$cell.res$resolution" >> $samplelist 
+    echo -e "$cell\t$(pwd)/$outputdir/data/$cell.res$resolution" >> $samplelist
 done
 
-# Gnerate Binlist
+# Generate Binlist
 binlist=$outputdir/data/Bins.$resolution.bed
 rm -rf $binlist
 for chr in $chrs; do
@@ -70,4 +74,3 @@ $sing visualize_QC.py 3DChromatin_ReplicateQC/
 #$sing run_3DChromatin_ReplicateQC.sh summary \
 #      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output \
 #      --methods GenomeDISCO,HiCRep,HiC-Spector,QuASAR-Rep,QuASAR-QC
-

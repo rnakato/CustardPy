@@ -1,5 +1,3 @@
-build=hg38
-
 #sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.5.0.sif"
 sing="singularity exec custardpy.sif"
 

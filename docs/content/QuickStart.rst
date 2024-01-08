@@ -28,7 +28,7 @@ Quickstart
         custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
         -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
 
-See also the sample scripts in the `tutorial/ <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ directory.
+See also the sample scripts in the `tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ on GitHub.
 
 
 Hi-C analysis using Juicer
@@ -47,7 +47,7 @@ You can implement whole commands for Juicer analysis from FASTQ files using ``cu
     bwaindex=bwa-indexes/$build  # BWA index file
     ncore=64  # number of CPUs
 
-    cell=Hap1-A
+    cell=Control
     fastq_post="_"  # "_" or "_R"
     enzyme=MboI
 
@@ -55,16 +55,16 @@ You can implement whole commands for Juicer analysis from FASTQ files using ``cu
     custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
         -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
 
-- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Hap1-A``). The outputs are stored in ``CustardPyResults_Hi-C/Juicer_$build/$cell``.
+- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults_Hi-C/Juicer_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Avaible genome build: hg19, hg38, mm10, mm39, rn7, galGal5, galGal6, ce10, ce11, danRer11, dm6, xenLae2, sacCer3
-- Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima
+- Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima, AluI
 
 
 Hi-C analysis from a .hic file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Use ``custardpy_process_hic`` command to start Hi-C analysis from a ``.hic`` file.
+If you start the Hi-C analysis from a ``.hic`` file, use ``custardpy_process_hic`` command.
 
 .. code-block:: bash
 
@@ -72,70 +72,24 @@ Use ``custardpy_process_hic`` command to start Hi-C analysis from a ``.hic`` fil
     gt=genometable.$build.txt # genome_table file
     gene=refFlat.$build.txt   # gene annotation (refFlat format)
     ncore=64  # number of CPUs
-    cell=Hap1-A
+    cell=Control
     hic=sample.hic
 
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $cell
 
 - The outputs are stored in ``$cell``.
 
+.. note::
 
-Running commands separately
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    Due to the backward incompatibility of Juicertools, ``custardpy_process_hic`` fails with an error when processing .hic files created by older Juicertools. In this case, use the ``-o`` option which uses older versions of Juicertools in CustardPy.
 
-You can also execute commands separately. 
-
-.. code-block:: bash
-
-    build=hg38
-    fastq_post="_R"  # "_" or "_R"  before .fastq.gz
-    enzyme=MboI      # enzyme type
-    norm=SCALE       # normalization type
-
-    gt=genome_table.$build.txt  # genome_table file
-    bwaindex=bwa-indexes/UCSC-$build  # BWA index file
-    gene=refFlat.$build.txt # gene annotation (refFlat format)
-    ncore=64 # number of CPUs
-
-    cell=Hap1-A
-    fqdir=fastq/$cell/
-    odir=CustardPyResults_Hi-C/Juicer_$build/$cell
-
-    # generate .hic file from fastq by Juicer
-    rm -rf $odir
-    juicer_map.sh -p $ncore $fqdir $odir $build $gt $bwaindex $enzyme $fastq_post
-
-    # Compress intermediate files
-    juicer_pigz.sh $odir
-
-    # plot contact frequency
-    if test ! -e $odir/distance; then plot_distance_count.sh $cell $odir; fi
-
-    hic=$odir/aligned/inter_30.hic
-    # call TADs (arrowHead)
-    juicer_callTAD.sh $norm $odir $hic $gt
-
-    # call loops (HICCUPS, add '--nv' option to use GPU)
-    call_HiCCUPS.sh $norm $odir $hic
-    # motif analysis
-    call_MotifFinder.sh $build $motifdir $odir/loops/$norm/merged_loops.bedpe
-
-    for resolution in 25000 50000 100000
-    do
-        # make contact matrix for all chromosomes
-        makeMatrix_intra.sh $norm $odir $hic $resolution $gt
-        # calculate Eigenvector
-        makeEigen.sh -p 32 $norm $odir $hic $resolution $gt $gene
-        # calculate insulation score
-        makeInslationScore.sh $norm $odir $resolution $gt
-    done
-    
 
 Hi-C analysis using Cooler
 ---------------------------------------------
 
-Hi-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
-The downstream analysis using the .hic file is the same as in the previous tutorial using Juicer.
+CustardPy allows the Hi-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_. 
+``custardpy_cooler_HiC`` generates a ``.cool`` file and converts it to a ``.hic`` file. You can apply ``custardpy_process_hic`` command to it.
+The outputs are stored in ``CustardPyResults_MicroC/Cooler_$build//$cell``.
 
 .. code-block:: bash
 
@@ -146,7 +100,7 @@ The downstream analysis using the .hic file is the same as in the previous tutor
     genome=genome.$build.fa
     ncore=64
 
-    cell=Hap1-A
+    cell=Control
     enzyme=MboI
 
     # Generate .cool and .hic files from FASTQ
@@ -159,6 +113,7 @@ The downstream analysis using the .hic file is the same as in the previous tutor
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
 
+    
 Micro-C analysis using Cooler
 --------------------------------------------------
 
@@ -167,48 +122,49 @@ Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>
 Micro-C using BWA
 +++++++++++++++++++++++++++++++++
 
-This command maps reads by BWA, make ``.cool`` and ``.hic`` files and call loops using Juicer.
+The command ``custardpy_cooler_MicroC`` maps Micro-C reads by BWA and makes ``.cool`` and ``.hic`` files. The ``.hic`` file is processed using ``custardpy_process_hic``.
 
 .. code-block:: bash
 
-    build=mm10
+    build=mm39
     ncore=64
     gt=genome_table.$build.txt  # genome_table file
     bwa_index=bwa-indexes/UCSC-$build
-
-    cell=ESC_WT01   # modify this for your FASTQ data
+    genome=genome.$build.fa
+    cell=C36_rep1   # modify this for your FASTQ data
 
     # Generate .hic file from FASTQ
-    custardpy_cooler_MicroC -t bwa -i $bwa_index -g $gt -f $genome -p $ncore fastq/$cell $cell
+    custardpy_cooler_MicroC -t bwa -g $gt -f $genome -i $bwa_index -p $ncore fastq/$cell $cell
 
     # Juicer analysis with the .hic file
-    odir=CustardPyResults_MicroC/$cell/bwa
+    odir=CustardPyResults_MicroC/Cooler_bwa/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
 
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
+- ``custardpy_cooler_MicroC`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/C36_rep1``). The outputs are stored in ``CustardPyResults_MicroC/Cooler_bwa/$cell``.
     
-Micro-C using chromap
-+++++++++++++++++++++++++++++++
+.. Micro-C using chromap
+.. +++++++++++++++++++++++++++++++
 
-**CustardPy** also supports chromap for read mapping.
+.. **CustardPy** also supports chromap for read mapping.
 
-.. code-block:: bash
+.. .. code-block:: bash
+.. 
+..     build=mm10
+..     ncore=64
+..     gt=genome_table.$build.txt  # genome_table file
+..     genome=genome.$build.fa     # genome fasta file
+..     chromap_index=chromap-indexes/UCSC-$build
 
-    build=mm10
-    ncore=64
-    gt=genome_table.$build.txt  # genome_table file
-    genome=genome.$build.fa     # genome fasta file
-    chromap_index=chromap-indexes/UCSC-$build
+..     cell=ESC_WT01   # modify this for your FASTQ data
 
-    cell=ESC_WT01   # modify this for your FASTQ data
+..     # Generate .hic file from FASTQ
+..     custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore fastq/$cell $cell
 
-    # Generate .hic file from FASTQ
-    custardpy_cooler_MicroC -t chromap -i $chromap_index -g $gt -f $genome -p $ncore fastq/$cell $cell
-
-    # Juicer analysis with the .hic file
-    odir=CustardPyResults_MicroC/$cell/chromap
-    hic=$odir/hic/contact_map.q30.hic
-    norm=SCALE
-    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
+..     # Juicer analysis with the .hic file
+..     odir=CustardPyResults_MicroC/$cell/chromap
+..     hic=$odir/hic/contact_map.q30.hic
+..     norm=SCALE
+..     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir

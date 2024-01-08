@@ -21,12 +21,13 @@ Contents:
 
    content/Install
    content/QuickStart
-   content/Hi-C
+   content/StepbyStep
    content/Visualization
    content/DEGanalysis
    content/Multisample
+   content/3DChromatin_ReplicateQC
    content/3dmodel
-   content/Utils
+   content/Command
 
 Citation:
 --------------

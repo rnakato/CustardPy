@@ -94,7 +94,7 @@ $sing drawSquareRatioPair \
       $Resdir/siRad21/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz:siRad21 \
       $Resdir/Control/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz:Control \
       $Resdir/siCTCF/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz:siCTCF \
-      -o $outputdir/drawSquareRatioPair.$chr --start $start --end $end -r $resolution
+      -o $outputdir/SquareRatioPair.$chr --start $start --end $end -r $resolution
 
 $sing drawSquareMulti \
       $Resdir/Control:Control \
@@ -102,6 +102,13 @@ $sing drawSquareMulti \
       $Resdir/siRad21:siRad21 \
       -o $outputdir/SquareMulti.$chr \
       -c $chr --start $start --end $end --type $norm -r $resolution
+
+$sing drawSquareMulti \
+      $Resdir/Control:Control \
+      $Resdir/siCTCF:siCTCF \
+      $Resdir/siRad21:siRad21 \
+      -o $outputdir/SquareMulti_logscale.$chr \
+      -c $chr --start $start --end $end --type $norm -r $resolution --log
 
 $sing drawSquareRatioMulti \
       $Resdir/Control:Control \

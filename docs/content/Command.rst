@@ -4,6 +4,9 @@ Commands for Hi-C and Micro-C processing
 **CustardPy** internally executes `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
 See the original website for the full description of each command.
 
+.. contents:: 
+   :depth: 3
+
 Hi-C analysis
 ------------------------------------------------
 
@@ -76,7 +79,7 @@ The BWA index of the reference genome is necessary.
 
 We recommend using ``inter_30.hic`` for the downstream analysis.
 
-(Optional) juicer_pigz.sh
+juicer_pigz.sh
 +++++++++++++++++++++++++++++++++++
 
 Since the output files of Juicer are quite large, **CustardPy** provide a script ``juicer_pigz.sh`` that compresses the intermediate files.
@@ -422,14 +425,6 @@ The output file is ``[sample_name].GENOVA_compartment_score.txt`` containing the
 run_3DChromatin_ReplicateQC.sh
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-`3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ runs
-`QuASAR <http://github.com/bxlab/hifive>`_, 
-`HiCRep <http://github.com/qunhualilab/hicrep>`_,
-`GenomeDISCO <http://github.com/kundajelab/genomedisco>`_,
-`HiC-Spector <http://github.com/gersteinlab/HiC-spector>`_
-for quality check and similarity calculation.
-See the original website for the detailed usage.
-
 Since it is written in Python2.7, we use a virtual environment in the CustardPy docker image. 
 run_3DChromatin_ReplicateQC.sh`` is a script to run it from the default command line.
 Replace ``3DChromatin_ReplicateQC`` with ``run_3DChromatin_ReplicateQC.sh`` in the command line:
@@ -453,3 +448,38 @@ Replace ``3DChromatin_ReplicateQC`` with ``run_3DChromatin_ReplicateQC.sh`` in t
 
     optional arguments:
       -h, --help            show this help message and exit
+
+
+
+Utility tools
+--------------------------
+
+distance_vs_count.Juicer
++++++++++++++++++++++++++++++++++++
+
+Count genomic distance of read pairs in the input file (supposing ``align/merged_nodups.txt.gz`` in Juicer outputs.)
+
+.. code-block:: bash
+
+    distance_vs_count.Juicer <file> <winsize> <MAPQ>
+        <file>:    Input file  (merged_nodups.txt.gz)
+        <winsize>: window size (default: 10000)
+        <MAPQ>:    MAPQ threshold (default: 30)
+
+
+convert_JuicerDump_to_dense.py
++++++++++++++++++++++++++++++++++++
+
+Convert interaction frequency file dumped by Juicertools to dense (two-dimensional) matrix.
+
+.. code-block:: bash
+
+    convert_JuicerDump_to_dense.py <inputfile> <outputfile> <genometable> <chr> <resolution> [--help]
+
+    Example:
+    convert_JuicerDump_to_dense.py \
+        Matrix.observed.VC_SQRT.chrX.txt \
+        Matrix.observed.VC_SQRT.chrX.matrix.gz \
+        genome_table.txt \
+        chrX \
+        25000
