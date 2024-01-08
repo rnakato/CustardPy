@@ -3,13 +3,14 @@
 build=hg38
 gt=genometable.$build.txt
 
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.6.1.sif"
-#sing="singularity exec custardpy.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.7.0.sif"
+sing="singularity exec custardpy.sif"
 
 outputdir=3DChromatin_ReplicateQC
 mkdir -p $outputdir
 
 samples="Control siCTCF siRad21" # Samples to be compared
+
 chrs="chr21 chr22" # chromosomes to be considered
 resolution=50000
 norm=SCALE
@@ -55,21 +56,14 @@ for chr in $chrs; do
 done
 gzip -f $binlist
 
-exit
-  
-sing="singularity exec --bind /work --bind /work2,/work3 /work3/SingularityImages/3dchromatin_replicateqc.sif"
+$sing run_3DChromatin_ReplicateQC.sh run_all \
+      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output
 
-$sing 3DChromatin_ReplicateQC run_all \
-      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/QC
+### Optional
+#$sing run_3DChromatin_ReplicateQC.sh concordance \
+#      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output \
+#      --methods HiCRep #GenomeDISCO
 
-#$sing 3DChromatin_ReplicateQC concordance \
-#    --metadata_pairs   metadata.pairs \
-#    --outdir output \
-#    --methods HiCRep #GenomeDISCO
-
-#$sing 3DChromatin_ReplicateQC summary \
-#      --metadata_samples metadata.samples \
-#      --metadata_pairs metadata.pairs \
-#      --bins /work2/Hi-C/Sakata_RPE/3DChromatin_ReplicateQC/data/Bins.w50000.bedGraph.gz \
-#      --outdir output #\
- #     --methods GenomeDISCO,HiCRep,HiC-Spector,QuASAR-Rep,QuASAR-QC
+#$sing run_3DChromatin_ReplicateQC.sh summary \
+#      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output \
+#      --methods GenomeDISCO,HiCRep,HiC-Spector,QuASAR-Rep,QuASAR-QC

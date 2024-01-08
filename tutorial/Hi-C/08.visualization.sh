@@ -1,7 +1,7 @@
 #!/bin/bash
 
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.6.1.sif"
-#sing="singularity exec custardpy.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.7.0.sif"
+sing="singularity exec custardpy.sif"
 
 outputdir=figure
 mkdir -p $outputdir
