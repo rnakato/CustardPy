@@ -59,6 +59,9 @@ gzip -f $binlist
 $sing run_3DChromatin_ReplicateQC.sh run_all \
       --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output
 
+# plot figure based on the results
+$sing visualize_QC.py 3DChromatin_ReplicateQC/
+
 ### Optional
 #$sing run_3DChromatin_ReplicateQC.sh concordance \
 #      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output \
@@ -67,3 +70,4 @@ $sing run_3DChromatin_ReplicateQC.sh run_all \
 #$sing run_3DChromatin_ReplicateQC.sh summary \
 #      --metadata_samples $samplelist --bins $binlist.gz --metadata_pairs $pairlist --outdir $outputdir/output \
 #      --methods GenomeDISCO,HiCRep,HiC-Spector,QuASAR-Rep,QuASAR-QC
+
