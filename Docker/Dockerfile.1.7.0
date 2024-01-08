@@ -161,7 +161,7 @@ RUN set -e \
     && conda install -c conda-forge -c bioconda pairtools fithic \
     && conda install -c bioconda hic2cool cooltools cooler  \
 # CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, FIREcaller, MACS2, Mustache, Chromosight
-    && pip install --no-cache-dir h1d custardpy hic-straw phic chess-hic stripenn FIREcaller \
+    && pip install --no-cache-dir h1d custardpy==0.6.0 hic-straw phic chess-hic stripenn FIREcaller \
        mustache-hic chromosight \
 # JuiceBox
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git

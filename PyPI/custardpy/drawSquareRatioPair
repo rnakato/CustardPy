@@ -61,7 +61,7 @@ def main():
     matrix = np.triu(mt1[0], k=1) + np.tril(mt2[0], k=-1)
 
     if (labels[1] != "" and labels[3] != ""):
-        label = labels[1] + "-" + labels[3]
+        label = labels[1] + "(upper) - " + labels[3] + "(lower)"
     else:
         label = ""
 

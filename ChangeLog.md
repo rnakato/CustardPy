@@ -2,8 +2,11 @@
 
 ## CustardPy
 
-### 1.6.1 (2024-01-07)
-- Removed the restriction sites directories of Juicer and Cooler from this repository to reduce the size.
+### 1.7.0 (2024-01-07)
+- Fixed the bug in `plotHiCfeature` where TADs and loops were not being rendered
+- Removed the restriction site directories of Juicer and Cooler from this repository to reduce the size
+- Added `generate_binlist_from_gtfile.py` for 3DChromatin_ReplicateQC analysis
+- Added `07.QualityCheck.sh` in `tutorial/Hi-C`
 
 ### 1.6.0 (2024-01-06)
 - Added [Mustache](https://github.com/ay-lab/mustache)

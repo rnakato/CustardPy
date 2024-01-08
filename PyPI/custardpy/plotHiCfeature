@@ -28,10 +28,9 @@ def set_figsize_x(xsize, figstart, figend):
         figsize_x = xsize
     return figsize_x
 
-def plot_HiC_Map(nrow, nrow_now, nrow_heatmap, sample, label, dirname, 
+def plot_HiC_Map(nrow, nrow_now, nrow_heatmap, sample, label, dirname, chr,
                  type, resolution, vmax, vmin, figstart, figend, distance_max,
                  colspan_plot, colspan_colorbar, colspan_full):
-                 
     # load TADs
     tadfile = dirname + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
     print(tadfile)
@@ -331,7 +330,6 @@ def plot_single_insulation_score(samples, labels, nrow, nrow_now, nrow_feature,
 
     plot_legend_in_subplot2grid(heatmap_ax, legend_ax)
 
-
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
@@ -433,7 +431,7 @@ def main():
     nrow_now = 0
 
     # Hi-C Map
-    plot_HiC_Map(nrow, nrow_now, nrow_heatmap, samples[0], labels[0], dirs[0],
+    plot_HiC_Map(nrow, nrow_now, nrow_heatmap, samples[0], labels[0], dirs[0], chr, 
                 type, resolution, vmax, vmin, figstart, figend, args.vizdistancemax,
                 colspan_plot, colspan_colorbar, colspan_full)
     nrow_now += nrow_heatmap

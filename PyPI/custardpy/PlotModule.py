@@ -179,13 +179,13 @@ def plot_loops_subplot2grid(loops, s, fig_length, resolution, ynum, *, ax=None):
     for loop in loops.itertuples(name=None):
         x1 = get_xbin_sqrt2((loop[2] + loop[3])/2, s, resolution) # ((loop[2] + loop[3])/2/resolution - s) * np.sqrt(2)
         x2 = get_xbin_sqrt2((loop[5] + loop[6])/2, s, resolution) # ((loop[5] + loop[6])/2/resolution - s) * np.sqrt(2)
-
         if (x1 >0 and x2 < fig_length):
             xmed = (x1 + min([x2, fig_length]))/2
             if ax is None:
                 plt.scatter(xmed, ynum-(xmed-x1), s=60, marker="o",  facecolor='None', edgecolors='blue')
             else:
                 ax.scatter(xmed, ynum-(xmed-x1), s=60, marker="o",  facecolor='None', edgecolors='blue')
+
 
 def drawHeatmapTriangle_subplot2grid(matrix, resolution, *, figstart=0, figend=0,
                                      distance_max=5000000, vmin=0, vmax=50, label="",

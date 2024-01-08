@@ -19,4 +19,7 @@ tutorial/Micro-C/genome.mm39.fa
 tutorial/Micro-C/genome.mm39.fa.fai
 tutorial/Micro-C/CustardPyResults_MicroC/
 Docker/scripts_old/
-Docker/Cooler-restriction_sites/old/
+Docker/log/
+Docker/ToBeConsidered/
+tutorial/Hi-C/3DChromatin_ReplicateQC/
+tutorial/Hi-C/figure/
