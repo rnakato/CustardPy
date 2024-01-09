@@ -17,6 +17,7 @@ users can perform a variety of 3D genome analyses without having to install them
    :align: center
    :alt: Alternate
 
+   The workflow of CustardPy for a single sample (A), two samples (B) and multiple sample comparison (C).
 
 Contents:
 ---------------
