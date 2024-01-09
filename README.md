@@ -1,5 +1,7 @@
 # CustardPy: Docker image for 3D genome analysis
 
+<img src = "image/CustardPy.jpg" width = 700ptx>
+
 ## Major Release! (version 1)
 
 This repository contains
