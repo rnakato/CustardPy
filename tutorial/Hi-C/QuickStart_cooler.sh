@@ -15,7 +15,7 @@ for cell in Control # siCTCF siRad21
 do
     $sing custardpy_cooler_HiC -g $gt -b $build -f $genome -i $index_bwa -p $ncore fastq/$cell $cell
 
-    odir=CustardPyResults_cooler/$build/$cell
+    odir=CustardPyResults_cooler/Cooler_$build/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
     $sing custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
