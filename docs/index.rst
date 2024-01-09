@@ -11,6 +11,13 @@ users can perform a variety of 3D genome analyses without having to install them
 - **Major Release! (version 1)**
    - Unified the Docker images for `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_. Version 1 of the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image now supports all analyses previously offered by CustardPy and CustardPy_Juicer, rendering the latter unnecessary.
 
+
+.. figure:: CustardPy.jpg
+   :width: 800px
+   :align: center
+   :alt: Alternate
+
+
 Contents:
 ---------------
 
