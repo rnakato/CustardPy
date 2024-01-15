@@ -4,11 +4,13 @@ Quality check, reproducibility, and comparative analysis
 **CustardPy** provides the script to run `3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_, which checks for quality and reproducibility. 
 This reproducibility analysis can also be used to compare the overall similarity among Hi-C samples.
 
-``3DChromatin_ReplicateQC`` runs
-`QuASAR <http://github.com/bxlab/hifive>`_, 
-`HiCRep <http://github.com/qunhualilab/hicrep>`_,
-`GenomeDISCO <http://github.com/kundajelab/genomedisco>`_,
-`HiC-Spector <http://github.com/gersteinlab/HiC-spector>`_
+``3DChromatin_ReplicateQC`` runs:
+
+- `QuASAR <http://github.com/bxlab/hifive>`_, 
+- `HiCRep <http://github.com/qunhualilab/hicrep>`_,
+- `GenomeDISCO <http://github.com/kundajelab/genomedisco>`_, and
+- `HiC-Spector <http://github.com/gersteinlab/HiC-spector>`_
+
 for quality check and similarity calculation.
 See the original website for the detailed usage.
 
