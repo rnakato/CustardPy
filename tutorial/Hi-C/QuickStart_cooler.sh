@@ -11,7 +11,7 @@ enzyme=MboI
 #sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.7.0.sif"
 sing="singularity exec --nv custardpy.sif"
 
-for cell in Control # siCTCF siRad21
+for cell in Control siCTCF siRad21
 do
     $sing custardpy_cooler_HiC -g $gt -b $build -f $genome -i $index_bwa -p $ncore fastq/$cell $cell
 

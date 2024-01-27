@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 1.7.1 (2024-01-23)
+- Modified `gethg38genome.sh` and `getmm39genome.sh` so that they also download the refFlat data.
+
 ### 1.7.0 (2024-01-07)
 - Fixed the bug in `plotHiCfeature` where TADs and loops were not being rendered
 - Removed the restriction site directories of Juicer and Cooler from this repository to reduce the size

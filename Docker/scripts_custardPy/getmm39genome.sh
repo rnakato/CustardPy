@@ -12,3 +12,6 @@ do
 done
 cat $s > genome.mm39.fa
 rm -rf tempdir mm39.fa
+
+wget https://nakatolab.iqb.u-tokyo.ac.jp/Datafolder_for_sharing/DockerDatabase/refFlat/refFlat.mm39.txt.gz
+unpigz refFlat.mm39.txt.
