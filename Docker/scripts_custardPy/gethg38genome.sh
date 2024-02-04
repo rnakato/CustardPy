@@ -12,6 +12,7 @@ do
 done
 cat $s > genome.hg38.fa
 rm -rf tempdir hg38.fa
+makegenometable.pl hg38.fa > genometable.hg38.txt
 
 wget https://nakatolab.iqb.u-tokyo.ac.jp/Datafolder_for_sharing/DockerDatabase/refFlat/refFlat.hg38.txt.gz
 unpigz refFlat.hg38.txt.gz

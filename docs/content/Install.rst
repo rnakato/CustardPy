@@ -48,27 +48,28 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `CHESS <https://chess-hic.readthedocs.io/en/latest/index.html>`_ v0.3.7
 
 - 3D/4D modeling
-
     - `PASTIS <https://github.com/hiclib/pastis>`_ v0.4.0
     - `PHi-C2 <https://github.com/soyashinkai/PHi-C2>`_ v2.0.10
 
 - Quality check
-
     - `3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ v1.0.1
 
 - Hi-ChIP
-
     - `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ v11.0
 
 - ChIA-PET
-
     - `Mango <https://github.com/dphansti/mango>`_
     - `ChIAPop <https://github.com/wh90999/ChIAPoP>`_
 
 - Genome analysis
+    - `MACS2 <https://github.com/macs3-project/MACS>`_ v2.2.9.1
 
-    - `MACS2 <https://github.com/macs3-project/MACS>`_ v2.2.6
-    - `bedtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.30.0
+- File processing
+   - `SAMtools <http://www.htslib.org/>`_ v1.19.2
+   - `BEDtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.30.0
+
+- Utility tools
+   - `SRAtoolkit <https://github.com/ncbi/sra-tools>`_ v3.0.10
 
 See the original website for the full description about each tool.
 

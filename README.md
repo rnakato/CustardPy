@@ -19,6 +19,7 @@ See [Changelog](https://github.com/rnakato/CustardPy/blob/main/ChangeLog.md)
 Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/custardpy).
 
 ### 1.1 Docker
+
 To use docker command, type:
 
     # pull docker image
@@ -32,6 +33,9 @@ To use docker command, type:
 When calling loops using Juicer HICCUPS, suppy ``--gpus all`` option to allow GPU computation (GPU card needed):
 
     docker run --gpus all -it --rm -it -v (your directory):/opt/work rnakato/custardpy call_HiCCUPS.sh
+
+- user:password
+    - ubuntu:ubuntu
 
 ### 1.2 Singularity
 

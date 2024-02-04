@@ -2,8 +2,16 @@
 
 ## CustardPy
 
+### 1.7.2 (2024-02-03)
+- Modified `gethg38genome.sh` and `getmm39genome.sh` to also create the genometable file.
+- Bug fix in samtools installation
+- Updated SAMtools from 1.17 to 1.19.2
+- Updated SRAtoolkit from 3.0.2 to 3.0.10
+- Change WORKDIR from /opt to /home/ubuntu
+- Installed `sudo`
+
 ### 1.7.1 (2024-01-23)
-- Modified `gethg38genome.sh` and `getmm39genome.sh` so that they also download the refFlat data.
+- Modified `gethg38genome.sh` and `getmm39genome.sh` to also download the refFlat data.
 
 ### 1.7.0 (2024-01-07)
 - Fixed the bug in `plotHiCfeature` where TADs and loops were not being rendered
