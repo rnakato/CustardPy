@@ -45,9 +45,9 @@ You can build the singularity file (.sif) of ShortCake with this command:
 
     singularity build custardpy.sif docker://rnakato/custardpy
     
-Instead, you can download the singularity image of ShortCake from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0).
+Instead, you can download the CustardPy singularity image from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0).
 
-Then you can run ShortCake with the command:
+Then you can run CustardPy with the command:
 
     singularity exec custardpy.sif <command>
 
