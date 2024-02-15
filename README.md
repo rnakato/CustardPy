@@ -39,7 +39,8 @@ When calling loops using Juicer HICCUPS, supply the ``--gpus all`` option to all
 
 ### 1.2 Singularity
 
-You can build the singularity file (.sif) of CustardPy to use Custardpy with this command:
+Singularity is the alternative way to use CustardPy.
+With this command you can build the singularity file (.sif) of CustardPy:
 
     singularity build custardpy.sif docker://rnakato/custardpy
     
