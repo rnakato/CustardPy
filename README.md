@@ -39,21 +39,25 @@ When calling loops using Juicer HICCUPS, suppy ``--gpus all`` option to allow GP
 
 ### 1.2 Singularity
 
-Singularity can also be used to execute the docker image:
+Singularity can also be used to execute the docker image.
 
-    # build image
+You can build the singularity file (.sif) of ShortCake with this command:
+
     singularity build custardpy.sif docker://rnakato/custardpy
     
-    # execute a command
+Instead, you can download the singularity image of ShortCake from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0).
+
+Then you can run ShortCake with the command:
+
     singularity exec custardpy.sif <command>
 
-Singularity mounts the current directory automatically. If you access the files in the other directory, please mount by `--bind` option, for instance:
+Singularity will automatically mount the current directory. If you want to access the files in the other directory, use the `--bind` option, for instance:
 
     singularity exec --bind /work custardpy.sif <command>
 
 This command mounts `/work` directory.
 
-When calling loops using Juicer HICCUPS, suppy ``--nv`` option to allow GPU computation (GPU card needed):
+When calling loops using Juicer HICCUPS, supply ``--nv`` option to allow GPU computation (GPU card needed):
 
     singularity exec --bind /work custardpy.sif call_HiCCUPS.sh
 
