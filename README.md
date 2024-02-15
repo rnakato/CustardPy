@@ -30,7 +30,7 @@ To use docker command, type:
     # execute a command
     docker run --rm -it -v (your directory):/opt/work rnakato/custardpy <command>
 
-When calling loops using Juicer HICCUPS, suppy ``--gpus all`` option to allow GPU computation (GPU card needed):
+When calling loops using Juicer HICCUPS, supply the ``--gpus all`` option to allow GPU computation (GPU card needed):
 
     docker run --gpus all -it --rm -it -v (your directory):/opt/work rnakato/custardpy call_HiCCUPS.sh
 
