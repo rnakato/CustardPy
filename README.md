@@ -20,14 +20,14 @@ Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/custar
 
 ### 1.1 Docker
 
-To use docker command, type:
+To use the docker command, type:
 
-    # pull docker image
+    # Pull docker image
     docker pull rnakato/custardpy
 
-    # container login
+    # Container login
     docker run --rm -it rnakato/custardpy /bin/bash
-    # execute a command
+    # Execute a command
     docker run --rm -it -v (your directory):/opt/work rnakato/custardpy <command>
 
 When calling loops using Juicer HICCUPS, supply the ``--gpus all`` option to allow GPU computation (GPU card needed):
@@ -54,7 +54,7 @@ Singularity will automatically mount the current directory. If you want to acces
 
     singularity exec --bind /work custardpy.sif <command>
 
-This command mounts `/work` directory.
+This command mounts the `/work` directory.
 
 When calling loops using Juicer HICCUPS, supply ``--nv`` option to allow GPU computation (GPU card needed):
 
