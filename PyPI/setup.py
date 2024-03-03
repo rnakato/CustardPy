@@ -1,12 +1,21 @@
 import setuptools
+from setuptools import setup
+package_name = 'custardpy'
+
+def get_version(rel_path):
+    for line in open(rel_path).read().splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
 
 with open("../README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="custardpy",
-    version="0.6.0",   # for PyPI
-#    version="0.4.9",    # for test
+    version=get_version(f"{package_name}/__init__.py"),
     license="GPL3.0",
     install_requires=[
         "numpy>=1.18",

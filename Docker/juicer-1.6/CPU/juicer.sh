@@ -347,7 +347,7 @@ then
 	echo "ln -s ${fastqdir} ${splitdir}/."
 	ln -s ${fastqdir} ${splitdir}/.
     else
-        echo -e "---  Using already created files in $splitdir\n"
+        echo -e "--- Using already created files in $splitdir\n"
     fi
 
     ## Loop over all read1 fastq files and create jobs for aligning read1,
@@ -390,8 +390,11 @@ then
 
         # call chimeric_blacklist.awk to deal with chimeric reads;
         # sorted file is sorted by read name at this point
-	touch $name${ext}_abnorm.sam $name${ext}_unmapped.sam
-	awk -v "fname1"=$name${ext}_norm.txt -v "fname2"=$name${ext}_abnorm.sam -v "fname3"=$name${ext}_unmapped.sam -f ${juiceDir}/scripts/common/chimeric_blacklist.awk $name$ext.sam
+#	touch $name${ext}_abnorm.sam $name${ext}_unmapped.sam
+#	awk -v "fname1"=$name${ext}_norm.txt -v "fname2"=$name${ext}_abnorm.sam -v "fname3"=$name${ext}_unmapped.sam -f ${juiceDir}/scripts/common/chimeric_blacklist.awk $name$ext.sam
+        echo "Juicer_chimeric_blacklist $name$ext.sam $name${ext}"
+        Juicer_chimeric_blacklist $name$ext.sam $name${ext}
+
 	if [ $? -ne 0 ]
 	then
             echo "***! Failure during chimera handling of $name${ext}"
@@ -417,6 +420,7 @@ then
         # sort by chromosome, fragment, strand, and position
 	echo "sort --parallel=$threads -T $tmpdir -k2,2d -k6,6d -k4,4n -k8,8n -k1,1n -k5,5n -k3,3n $name${ext}.frag.txt > $name${ext}.sort.txt"
 	sort --parallel=$threads -T $tmpdir -k2,2d -k6,6d -k4,4n -k8,8n -k1,1n -k5,5n -k3,3n $name${ext}.frag.txt > $name${ext}.sort.txt
+
 	if [ $? -ne 0 ]
 	then
             echo "***! Failure during sort of $name${ext}"
@@ -454,7 +458,9 @@ then
     then
 	awk -f ${juiceDir}/scripts/common/dups.awk -v name=${outputdir}/ -v nowobble=1 ${outputdir}/merged_sort.txt
     else
-	awk -f ${juiceDir}/scripts/common/dups.awk -v name=${outputdir}/ ${outputdir}/merged_sort.txt
+#	awk -f ${juiceDir}/scripts/common/dups.awk -v name=${outputdir}/ ${outputdir}/merged_sort.txt
+    echo "Juicer_remove_duplicate ${outputdir}/merged_sort.txt ${outputdir}"
+    Juicer_remove_duplicate ${outputdir}/merged_sort.txt ${outputdir}
     fi
     # for consistency with cluster naming in split_rmdups
     mv ${outputdir}/optdups.txt ${outputdir}/opt_dups.txt
@@ -470,7 +476,10 @@ then
     cat $splitdir/*.res.txt | awk -f ${juiceDir}/scripts/common/stats_sub.awk >> $outputdir/inter.txt
     ${juiceDir}/scripts/common/juicer_tools LibraryComplexity $outputdir inter.txt >> $outputdir/inter.txt
     cp $outputdir/inter.txt $outputdir/inter_30.txt
-    ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter.txt -q 1 $outputdir/merged_nodups.txt
+#    ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter.txt -q 1 $outputdir/merged_nodups.txt
+    echo "Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 1 $outputdir/inter"
+    Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 1 $outputdir/inter
+
     cat $splitdir/*_abnorm.sam > $outputdir/abnormal.sam
     cat $splitdir/*_unmapped.sam > $outputdir/unmapped.sam
     awk -f ${juiceDir}/scripts/common/collisions.awk $outputdir/abnormal.sam > $outputdir/collisions.txt
@@ -493,16 +502,18 @@ then
     then
         if [ "$nofrag" -eq 1 ]
         then
-            ${juiceDir}/scripts/common/juicer_tools pre -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
+            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
         else
-            ${juiceDir}/scripts/common/juicer_tools pre -f $site_file -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
+            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -f $site_file -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
         fi
-        ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter_30.txt -q 30 $outputdir/merged_nodups.txt
+#        ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter_30.txt -q 30 $outputdir/merged_nodups.txt
+        echo "Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 30 $outputdir/inter_30"
+        Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 30 $outputdir/inter_30
         if [ "$nofrag" -eq 1 ]
         then
-            ${juiceDir}/scripts/common/juicer_tools pre -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
+            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
         else
-            ${juiceDir}/scripts/common/juicer_tools pre -f $site_file -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
+            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -f $site_file -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
         fi
     fi
     # POSTPROCESSING

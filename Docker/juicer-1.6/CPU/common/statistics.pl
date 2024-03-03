@@ -474,6 +474,9 @@ sub distHindIII {
 	# get minimum value -- if (dist1 <= dist2), it's dist1, else dist2
 	my $retval = $dist1 <= $dist2 ? $dist1 : $dist2; 
 	# get which end of the fragment this is, 3' or 5' (depends on strand)
+
+#  print "chranme $_[1] position $_[2] index $index dist1 $dist1 dist2 $dist2 retval $retval\n";
+#  exit;
 	if ($retval == $dist1 && $_[4]) {
 		$_[0] == 0 ? $five_prime_end++ : $three_prime_end++;
 	}

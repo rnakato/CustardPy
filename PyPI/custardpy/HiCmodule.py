@@ -74,14 +74,6 @@ class JuicerMatrix:
             return self.eigen[self.eigen_sortindex]
         else:
             return self.eigen
-#        from sklearn.decomposition import PCA
-#        pca = PCA()
-#        ccmat = self.getPearson()
-#        index = np.isnan(ccmat).all(axis=1)
-#        transformed = pca.fit_transform(ccmat)
-#        pc1 = transformed[:, 0]
-#        pc1[index] = np.nan
-#        return transformed[:, 0]
 
     def getInsulationScore(self, *, distance=500000):
         return self.InsulationScore.getInsulationScore(distance=distance)

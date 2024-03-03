@@ -36,6 +36,7 @@ Contents:
    content/3DChromatin_ReplicateQC
    content/3dmodel
    content/Command
+   content/CustardPy_API
 
 Citation:
 --------------

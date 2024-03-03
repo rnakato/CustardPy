@@ -7,7 +7,6 @@ printHelpAndExit() {
     echo -e "\n  Options:"
     echo "    -S stage : steps to be executed [all|pairs|postproc] (default: all)"
     echo "       all: execute all process (default)"
-#    echo "       all-fastqc: omit fastqc from all"
     echo "       map: map reads and exit"
     echo "       pairs: generate .pair file from map file"
     echo "       postproc: generate .cool and .hic from .pair file"
@@ -132,20 +131,20 @@ odir=$outputdir/Cooler_$build/$prefix
 
 echo "Analyzing $fqdir..."
 
-if [ "$stage_all" = 1 ]; then
-    for fq1 in "$fqdir"/*"$postfix1"; do
-        if [ ! -f "$fq1" ]; then
-            echo "$dir: *$postfix1 does not exist. Skipping"
-            continue
-        fi
-        fq2="${fq1%$postfix1}$postfix2"
-        if [ ! -f "$fq2" ]; then
-            echo "$dir: FASTQ_2 "$fq2" does not exist. Skipping"
-        fi
-        fastqc -t $ncore $fq1
-        fastqc -t $ncore $fq2
-    done
-fi
+#if [ "$stage_all" = 1 ]; then
+#    for fq1 in "$fqdir"/*"$postfix1"; do
+#        if [ ! -f "$fq1" ]; then
+#            echo "$dir: *$postfix1 does not exist. Skipping"
+#            continue
+#        fi
+#        fq2="${fq1%$postfix1}$postfix2"
+#        if [ ! -f "$fq2" ]; then
+#            echo "$dir: FASTQ_2 "$fq2" does not exist. Skipping"
+#        fi
+#        fastqc -t $ncore $fq1
+#        fastqc -t $ncore $fq2
+#    done
+#fi
 
 if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then
     mapping_reads_bwa $fqdir $odir $prefix $index_bwa $ncore $postfix1 $postfix2

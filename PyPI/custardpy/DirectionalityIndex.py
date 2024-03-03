@@ -30,6 +30,9 @@ def calcDI(mat, resolution, *, distance=1000000):
     return array
 
 def getDirectionalityIndexOfMultiSample(samples, labels, *, distance=1000000):
+    if not isinstance(samples, list):
+        samples = [samples]
+
     for i, sample in enumerate(samples):
         if i==0: Matrix = sample.getDirectionalityIndex(distance=distance)
         else:    Matrix = np.vstack((Matrix,sample.getDirectionalityIndex(distance=distance)))

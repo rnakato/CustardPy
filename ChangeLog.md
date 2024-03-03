@@ -2,6 +2,18 @@
 
 ## CustardPy
 
+### 1.8.0 (2024-03-03)
+- Major Update: If you experience any problems with this version, try the previous version (v1.7.2) and compare the results. If the problem persists, please report it to GitHub issues.
+- The scripts in `juicer/scripts/common` used in Juicer were replaced to the original C codes and the computational time of Juicer is dramatically improved.
+    - Replaced `chimeric_blacklist.awk` with `Juicer_chimeric_blacklist`
+    - Replaced `dups.awk` with `Juicer_remove_duplicate`
+    - Replaced `fragment.pl` with `Juicer_fragment`
+    - Replaced `statistics.pl` with `Juicer_statistics`
+- During this improvement I found a bug in `chimeric_blacklist.awk` where the names of non-autosomes (e.g. chrX and chrY) were not distinguished. This bug has been fixed in the new `Juicer_chimeric_blacklist`.
+    - This bug seems to be related to the new version of Juicer, which uses the chromosome names chr1,chr2,chr3, not 1,2,3. I have confirmed that the output of `Juicer_chimeric_blacklist` is identical to the older Juicer.
+- Added the Jupyter notebooks for the CustardPy API in the `tutorial/` directory.
+- Added the notebooks to the Manual.
+
 ### 1.7.2 (2024-02-03)
 - Modified `gethg38genome.sh` and `getmm39genome.sh` to also create the genometable file.
 - Bug fix in samtools installation

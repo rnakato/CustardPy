@@ -651,3 +651,21 @@ Plot multi-scale insulation scores from Juicer matrix.
 
    Multi-Insulation Score (chr7)
 
+
+(Jupyter notebook) Plot Contact frequency distribution
+----------------------------------------------------------------
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   ContactDistancePlot.ipynb
+
+(Jupyter notebook) Plot Loop length distribution
+----------------------------------------------------------------
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   LoopLengthPlot.ipynb
