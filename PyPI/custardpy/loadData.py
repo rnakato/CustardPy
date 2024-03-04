@@ -16,7 +16,7 @@ def loadTADs(filename, chr, *, start=0, end=99999999999):
 #        tads = tads[tads.x2 >= start]
         tads = tads[(tads.chr1 == chr) & (tads.x1 < end) & (tads.x2 >= start)]
     else:
-        print ("Warning: " + filename + "is not available. Skipping")
+        print ("Warning: " + filename + " is not available. Skipping")
         tads = None
     return tads
 
@@ -31,7 +31,7 @@ def loadloops(filename, chr, *, start=0, end=99999999999):
 #        loops = loops[loops.y1 >= start]
         loops = loops[(loops.chr1 == chr) & (loops.chr2 == chr) & (loops.x2 < end) & (loops.y1 >= start)]
     else:
-        print ("Warning: " + filename + "is not available. Skipping")
+        print ("Warning: " + filename + " is not available. Skipping")
         loops = None
     return loops
 
