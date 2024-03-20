@@ -10,9 +10,11 @@ else
     input=$odir/aligned/merged_nodups.txt
 fi
 
-prefix=distance_vs_count.10kb.MAPQ30
-distance_vs_count.Juicer $input > $odir/distance/$prefix.txt
+winsize=50000
+qthre=30
+prefix=distance_vs_count.MAPQ$qthre
+distance_vs_count.Juicer $input $winsize $qthre > $odir/distance/$prefix.txt
 Rscript $(cd $(dirname $0) && pwd)/plot_distance_count.R $odir/distance/$prefix.txt $odir/distance/$prefix.pdf $cell
 
-distance_vs_count.Juicer.log $input > $odir/distance/$prefix.log.txt
+distance_vs_count.Juicer.log $input $qthre > $odir/distance/$prefix.log.txt
 Rscript $(cd $(dirname $0) && pwd)/plot_distance_count.log.R $odir/distance/$prefix.log.txt $odir/distance/$prefix.log.pdf $cell

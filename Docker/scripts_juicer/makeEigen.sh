@@ -54,15 +54,11 @@ ex(){ echo $1; eval $1; }
 
 getEigen(){
     h1d one PC1 $matrixdir/Matrix/intrachromosomal/$binsize/observed.$norm.chr$chr.matrix.gz $binsize chr$chr -p $dir/geneDensity.txt -o $dir/eigen.$norm.chr$chr
-    cut -f4 $dir/eigen.$norm.chr$chr.bedGraph | sed -e 's/^$/nan/g' > $dir/eigen.$norm.chr$chr.txt
-#    juicertools.sh eigenvector -p $norm $hic chr$chr BP $binsize $dir/eigen.$norm.chr$chr.txt
- #   $pwd/fixEigendir.py $dir/eigen.$norm.chr$chr.txt \
-#			            $dir/eigen.$norm.chr$chr.txt.temp \
-#			            $gene \
-#			            chr$chr \
-#			            $binsize
- #   mv $dir/eigen.$norm.chr$chr.txt.temp $dir/eigen.$norm.chr$chr.txt
-    gzip -f $dir/eigen.$norm.chr$chr.txt
+    
+    if test -e $dir/eigen.$norm.chr$chr.bedGraph; then
+        cut -f4 $dir/eigen.$norm.chr$chr.bedGraph | sed -e 's/^$/nan/g' > $dir/eigen.$norm.chr$chr.txt
+        gzip -f $dir/eigen.$norm.chr$chr.txt
+    fi
 }
 export -f getEigen
 
@@ -103,11 +99,13 @@ func(){
     matrixdir=$5
     if test $chr != "chrY" -a $chr != "chrM" -a $chr != "chrMT" ; then
        chr=$(echo $chr | sed -e 's/chr//g')
-#       if test ! -e $dir/eigen.$norm.chr$chr.txt.gz; then
-           getEigen
-#       fi
-       classifyCompartment.py $dir/eigen.$norm.chr$chr.txt.gz $dir/Compartment.$norm.chr$chr chr$chr $binsize
-       toBed12 $dir/Compartment.$norm.chr$chr
+
+       getEigen
+
+       if test -e $dir/eigen.$norm.chr$chr.txt.gz; then
+           classifyCompartment.py $dir/eigen.$norm.chr$chr.txt.gz $dir/Compartment.$norm.chr$chr chr$chr $binsize
+           toBed12 $dir/Compartment.$norm.chr$chr
+       fi
     fi
 }
 export -f func
@@ -116,6 +114,11 @@ echo ${chrlist[@]} | tr ' ' '\n' | xargs -n1 -I {} -P $ncore bash -c "func {} $d
 
 for str in A B All StrongA WeakA WeakB StrongB
 do
-    cat $dir/Compartment.$norm.chr*.$str.bed   > $dir/Compartment.$norm.genome.$str.bed
-    cat $dir/Compartment.$norm.chr*.$str.bed12 > $dir/Compartment.$norm.genome.$str.bed12
+    if find $dir -maxdepth 1 -name "Compartment.SCALE.chr*.$str.bed" | read; then
+        cat $dir/Compartment.$norm.chr*.$str.bed > $dir/Compartment.$norm.genome.$str.bed
+    fi
+
+    if find $dir -maxdepth 1 -name "Compartment.$norm.chr*.$str.bed12" | read; then
+        cat $dir/Compartment.$norm.chr*.$str.bed12 > $dir/Compartment.$norm.genome.$str.bed12
+    fi
 done

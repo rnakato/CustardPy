@@ -21,6 +21,39 @@
 # THE SOFTWARE.
 #
 # Juicer 1.5
+
+cmdname=`basename $0`
+function usage()
+{
+    echo "$cmdname [options] <commands>" 1>&2
+    echo '   Options:' 1>&2
+    echo '     -L: Allocate larger memory ("-Xms1024m -Xmx655360m", default: "-Xms512m -Xmx65536m", for deep-sequenced samples; e.g., Rao 2014)' 1>&2
+}
+
+memoryparam="-Xms512m -Xmx65536m"
+while getopts L option; do
+    case ${option} in
+        L) memoryparam="-Xms1024m -Xmx655360m";;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            exit 1
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+ex(){ echo $1; eval $1; }
+
 if [ "$CALLEDBY" = "AWS" ]
 then
     echo "AWS"
@@ -36,8 +69,6 @@ then
 elif [ "$CALLEDBY" = "LSF" ]
 then
     java -Djava.awt.headless=true -Djava.library.path=`dirname $0`/lib64 -Xmx16000m -Xms16000m -Xgcthreads1 -jar `dirname $0`/juicer_tools.7.0.jar $*
-else # default, don't use temp directory or gpus, use CUDA 7.0
-#    java -Djava.awt.headless=true  -Xmx16000m  -jar `dirname $0`/juicer_tools.jar  $*
-    echo -e "\njava -Djava.awt.headless=true -Xms1024m -Xmx65536m -jar `dirname $0`/juicer_tools.jar $*"
-    java -Djava.awt.headless=true  -Xms512m -Xmx65536m -jar `dirname $0`/juicer_tools.jar $*
+else
+    ex "java -Djava.awt.headless=true $memoryparam -jar `dirname $0`/juicer_tools.jar $*"
 fi

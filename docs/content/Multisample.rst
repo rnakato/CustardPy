@@ -121,21 +121,21 @@ Example
 .. code-block:: bash
 
     custardpy_differential_DRF --type VC_SQRT --gt genome_table.hg38.txt \
-        JuicerResults_20210517/Control_1/:Control_1 \
-        JuicerResults_20210517/Control_2/:Control_2 \
-        JuicerResults_20210517/Control_3/:Control_3 \
-        JuicerResults_20210517/Control_4/:Control_4 \
-        JuicerResults_20210517/Control_5/:Control_5 \
-        JuicerResults_20210517/Control_6/:Control_6 \
-        JuicerResults_20210517/Rad21KD_1/:Rad21KD_1 \
-        JuicerResults_20210517/Rad21KD_2/:Rad21KD_2 \
-        JuicerResults_20210517/Rad21KD_3/:Rad21KD_3 \
-        JuicerResults_20210517/NIPBLKD_1/:NIPBLKD_1 \
-        JuicerResults_20210517/NIPBLKD_2/:NIPBLKD_2 \
-        JuicerResults_20210517/NIPBLKD_2/:NIPBLKD_3 \
-        JuicerResults_20210517/CTCFKD_1/:CTCFKD_1 \
-        JuicerResults_20210517/CTCFKD_2/:CTCFKD_2 \
-        JuicerResults_20210517/CTCFKD_2/:CTCFKD_3 \
+        JuicerResults_hg38/Control_1/:Control_1 \
+        JuicerResults_hg38/Control_2/:Control_2 \
+        JuicerResults_hg38/Control_3/:Control_3 \
+        JuicerResults_hg38/Control_4/:Control_4 \
+        JuicerResults_hg38/Control_5/:Control_5 \
+        JuicerResults_hg38/Control_6/:Control_6 \
+        JuicerResults_hg38/Rad21KD_1/:Rad21KD_1 \
+        JuicerResults_hg38/Rad21KD_2/:Rad21KD_2 \
+        JuicerResults_hg38/Rad21KD_3/:Rad21KD_3 \
+        JuicerResults_hg38/NIPBLKD_1/:NIPBLKD_1 \
+        JuicerResults_hg38/NIPBLKD_2/:NIPBLKD_2 \
+        JuicerResults_hg38/NIPBLKD_2/:NIPBLKD_3 \
+        JuicerResults_hg38/CTCFKD_1/:CTCFKD_1 \
+        JuicerResults_hg38/CTCFKD_2/:CTCFKD_2 \
+        JuicerResults_hg38/CTCFKD_2/:CTCFKD_3 \
         -c Control_2,Control_3,Control_4,Control_5,Control_6,CTCFKD_1,CTCFKD_2,CTCFKD_3
 
 This command uses ``Control_1`` as the benchmark for calculating the DRF score across all other samples. It's important to note that ``Control_1`` is thus not included when specifying negative control samples with the ```-c`` option (samples separated by ',').

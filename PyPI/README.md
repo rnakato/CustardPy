@@ -14,6 +14,9 @@ The following are required before installing CustardPy:
 
 ## ChangeLog
 
+- 0.7.2 (2024-03-05)
+   - Fixed the error messages in `plotHiCfeature_module.py`
+
 - 0.7.1 (2024-03-03)
    - Added the function `plot_SamplePair_triu`
 

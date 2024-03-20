@@ -1,17 +1,27 @@
-library(GENOVA)
-library(data.table)
-library(tidyr)
-library(dplyr)
+print.usage <- function() {
+	cat('\nUsage: compartment_strength_GENOVA.R <coolfile> <sample_name>\n',file=stderr())
+	cat('\n',file=stderr())
+}
 
 args <- commandArgs(trailingOnly = TRUE)
+
+if (length(args) != 2) {
+  print.usage()
+  q()
+}
 coolfile <- args[1]
 sample_name <- args[2]
 #resolution <- as.numeric(args[3])
 #Peak <- args[3]
 
 coolfile
-#Peak
 sample_name
+#Peak
+
+library(GENOVA)
+library(data.table)
+library(tidyr)
+library(dplyr)
 
 loaded_contacts <- load_contacts(
     signal_path = coolfile,

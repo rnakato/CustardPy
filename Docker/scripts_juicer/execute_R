@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function usage()
+{
+    echo "execute_R <script> <command>" 1>&2
+    echo '   <script>: R script name' 1>&2
+    echo '   <command>: Arguments for the R script' 1>&2
+    echo "   Example:" 1>&2
+    echo "      execute_R plot_distance_count_all.R outputdir plot.pdf" 1>&2
+}
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+command=$1
+
+Rscript $(cd $(dirname $0) && pwd)/$command ${@:2}

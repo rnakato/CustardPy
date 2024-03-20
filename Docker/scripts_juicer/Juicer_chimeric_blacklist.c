@@ -8,14 +8,13 @@
 #define max(a, b) ((a) > (b)) ? (a) :(b)
 #define min(a, b) ((a) < (b)) ? (a) :(b)
 
-#define STR_LEN 10240
+#define STR_LEN 10000
 #define ELEM_NUM 10000
 #define MAPQ_ARRAYNUM 201
 #define MAX_CHROMOSOMES 100
 #define NUM_DISTCOUNT 2001
 #define MAX_RECORD_PARTS 12
 #define MAX_PART_LENGTH 256
-#define HEADER_LEN 1000000
 
 typedef enum{
   FILE_MODE_READ,
@@ -34,17 +33,16 @@ typedef struct {
   int m;
   int mapped;
   int read;
-  char chr[100];
-  char cigarstr[100];
-  char seq[500];
-  char name[100];
+  char chr[1000];
+  char cigarstr[1000];
+  char seq[5000];
+  char name[1000];
 } SAMline;
 
 // Static variables
 int tottot=-1;
 int count=1;
 int count_abnorm=-1, count_reg=0, count_unmapped=0, count_norm=0;
-
 
 void *my_calloc(size_t n, size_t s, char *name)
 {
@@ -431,13 +429,13 @@ int main(int argc, char *argv[])
   FILE *OUT_fname3 = my_fopen(fname3, FILE_MODE_WRITE);
 
   char *token=NULL;
-  char a[1024],  prev[1024];
+  char a[STR_LEN],  prev[STR_LEN];
   char *str = (char *)my_calloc(STR_LEN, sizeof(char), "str");
-  Elem *c = (Elem *)my_calloc(10, sizeof(Elem), "c");
+  Elem *c = (Elem *)my_calloc(ELEM_NUM, sizeof(Elem), "c");
   SAMline line[10];
   Elem *clm = (Elem *)my_calloc(ELEM_NUM, sizeof(Elem), "clm");
 
-  Elem *clmtemp = (Elem *)my_calloc(100, sizeof(Elem), "extract_and_assign_data_clm");
+  Elem *clmtemp = (Elem *)my_calloc(ELEM_NUM, sizeof(Elem), "extract_and_assign_data_clm");
 
   while((fgets(str, STR_LEN, IN))!=NULL) {
     if(str[0]=='\n') continue;
@@ -471,9 +469,14 @@ int main(int argc, char *argv[])
   fclose(OUT_fname2);
   fclose(OUT_fname3);
   fclose(OUT_fname4);
+
+//  printf("str\n");
   free(str);
+//  printf("c\n");
   free(c);
+//  printf("clm\n");
   free(clm);
+//  printf("ckntemp\n");
   free(clmtemp);
 
   return 0;

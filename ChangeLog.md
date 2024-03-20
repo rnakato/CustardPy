@@ -2,6 +2,19 @@
 
 ## CustardPy
 
+### 1.9.0 (2024-03-XX)
+- Updated `distance_vs_count.Juicer` and `distance_vs_count.Juicer.log` to use minimum Q-value threshold of 30 and window size 50 kbp by default
+- Updated `plot_distance_count.R` to set the background color to white
+- Updated `plot_distance_count.log.R` to set the background color to white and limit the x- and y-axes
+- Added `plot_distance_count_all.R`, `plot_distance_count_all.log.R`, `plot_distance_count_multi.R`, `plot_distance_count_multi.log.R`
+- Modified `juicer_pigz.sh` and `juicer_unpigz.sh` to compress/uncompress aligned/dups.txt, aligned/opt_dups.txt and aligned/collisions*txt as well
+- `makeEigen.sh`: Fixed the bug where the computation would not finish if the computation of PC1 in h1d failed.
+- Fixed a bug where `pairtools` was not found.
+- Added [CALDER2](https://github.com/CSOgroup/CALDER2)
+- Added [genomepy](https://vanheeringen-lab.github.io/genomepy/content/installation.html)
+- Updated chromap from v0.2.4 to v0.2.6
+- Updated bedtools from v2.30.0 to v2.31.0
+
 ### 1.8.0 (2024-03-03)
 - Major Update: If you experience any problems with this version, try the previous version (v1.7.2) and compare the results. If the problem persists, please report it to GitHub issues.
 - The scripts in `juicer/scripts/common` used in Juicer were replaced to the original C codes and the computational time of Juicer is dramatically improved.
@@ -13,6 +26,7 @@
     - This bug seems to be related to the new version of Juicer, which uses the chromosome names chr1,chr2,chr3, not 1,2,3. I have confirmed that the output of `Juicer_chimeric_blacklist` is identical to the older Juicer.
 - Added the Jupyter notebooks for the CustardPy API in the `tutorial/` directory.
 - Added the notebooks to the Manual.
+- Updated HiC1Dmetrics from v0.2.5 to v0.2.9
 
 ### 1.7.2 (2024-02-03)
 - Modified `gethg38genome.sh` and `getmm39genome.sh` to also create the genometable file.

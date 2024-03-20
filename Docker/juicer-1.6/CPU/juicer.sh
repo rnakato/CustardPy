@@ -119,7 +119,8 @@ printHelpAndExit() {
     exit "$1"
 }
 
-while getopts "d:g:a:hs:p:y:z:S:D:fjqt:b:e:m:" opt; do
+memoryparam=""
+while getopts "d:g:a:hs:p:y:z:S:D:fjqt:b:e:m:L" opt; do
     case $opt in
 	g) genomeID=$OPTARG ;;
 	h) printHelpAndExit 0;;
@@ -140,6 +141,7 @@ while getopts "d:g:a:hs:p:y:z:S:D:fjqt:b:e:m:" opt; do
 	q) earlyexit=1 ;;
 	e) fastqnameend=$OPTARG ;;
 	m) tmpdir=$OPTARG ;;
+	L) memoryparam="-L" ;;
 	[?]) printHelpAndExit 1;;
     esac
 done
@@ -160,8 +162,8 @@ then
         dedup) dedup=1 ;;
         early) earlyexit=1 ;;
         final) final=1 ;;
-	chimeric) chimeric=1 ;;
-	postproc) postproc=1 ;;
+	    chimeric) chimeric=1 ;;
+	    postproc) postproc=1 ;;
         *)  echo "$usageHelp"
 	    echo "$stageHelp"
 	    exit 1
@@ -206,12 +208,12 @@ fi
 if [ -z "$ligation" ]
 then
     case $site in
-	HindIII) ligation="AAGCTAGCTT";;
-	DpnII) ligation="GATCGATC";;
-	MboI) ligation="GATCGATC";;
-	NcoI) ligation="CCATGCATGG";;
+    	HindIII) ligation="AAGCTAGCTT";;
+	    DpnII) ligation="GATCGATC";;
+	    MboI) ligation="GATCGATC";;
+    	NcoI) ligation="CCATGCATGG";;
         Arima) ligation="'(GAATAATC|GAATACTC|GAATAGTC|GAATATTC|GAATGATC|GACTAATC|GACTACTC|GACTAGTC|GACTATTC|GACTGATC|GAGTAATC|GAGTACTC|GAGTAGTC|GAGTATTC|GAGTGATC|GATCAATC|GATCACTC|GATCAGTC|GATCATTC|GATCGATC|GATTAATC|GATTACTC|GATTAGTC|GATTATTC|GATTGATC)'" ;;
-	none) ligation="XXXX";;
+	    none) ligation="XXXX";;
 	*)  ligation="XXXX"
 	    echo "$site not listed as recognized enzyme. Using $site_file as site file"
 	    echo "Ligation junction is undefined"
@@ -447,6 +449,7 @@ then
         rm -r ${tmpdir}
     fi
 fi
+
 #REMOVE DUPLICATES
 if [ -z $final ] && [ -z $postproc ]
 then
@@ -466,6 +469,8 @@ then
     mv ${outputdir}/optdups.txt ${outputdir}/opt_dups.txt
 fi
 
+juicertools="${juiceDir}/scripts/common/juicer_tools $memoryparam"
+
 #STATISTICS
 #Skip if post-processing only is required
 if [ -z $postproc ]
@@ -474,7 +479,7 @@ then
     export LC_ALL=en_US.UTF-8
     tail -n1 $headfile | awk '{printf"%-1000s\n", $0}' > $outputdir/inter.txt;
     cat $splitdir/*.res.txt | awk -f ${juiceDir}/scripts/common/stats_sub.awk >> $outputdir/inter.txt
-    ${juiceDir}/scripts/common/juicer_tools LibraryComplexity $outputdir inter.txt >> $outputdir/inter.txt
+    $juicertools LibraryComplexity $outputdir inter.txt >> $outputdir/inter.txt
     cp $outputdir/inter.txt $outputdir/inter_30.txt
 #    ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter.txt -q 1 $outputdir/merged_nodups.txt
     echo "Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 1 $outputdir/inter"
@@ -502,24 +507,24 @@ then
     then
         if [ "$nofrag" -eq 1 ]
         then
-            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
+            $juicertools pre -j $threads -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
         else
-            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -f $site_file -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
+            $juicertools pre -j $threads -f $site_file -s $outputdir/inter.txt -g $outputdir/inter_hists.m -q 1 $outputdir/merged_nodups.txt $outputdir/inter.hic $genomePath
         fi
 #        ${juiceDir}/scripts/common/statistics.pl -s $site_file -l $ligation -o $outputdir/inter_30.txt -q 30 $outputdir/merged_nodups.txt
         echo "Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 30 $outputdir/inter_30"
         Juicer_statistics $outputdir/merged_nodups.txt $site_file $site 30 $outputdir/inter_30
         if [ "$nofrag" -eq 1 ]
         then
-            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
+            $juicertools pre -j $threads -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
         else
-            ${juiceDir}/scripts/common/juicer_tools pre -j $threads -f $site_file -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
+            $juicertools pre -j $threads -f $site_file -s $outputdir/inter_30.txt -g $outputdir/inter_30_hists.m -q 30 $outputdir/merged_nodups.txt $outputdir/inter_30.hic $genomePath
         fi
     fi
     # POSTPROCESSING
 #    if [ -z $rnakato_map ]
 #    then
-#	${juiceDir}/scripts/common/juicer_postprocessing.sh -j ${juiceDir}/scripts/common/juicer_tools -i ${outputdir}/inter_30.hic -m ${juiceDir}/references/motif -g ${genomeID}
+#	${juiceDir}/scripts/common/juicer_postprocessing.sh -j $juicertools -i ${outputdir}/inter_30.hic -m ${juiceDir}/references/motif -g ${genomeID}
 #    fi
 fi
 #CHECK THAT PIPELINE WAS SUCCESSFUL

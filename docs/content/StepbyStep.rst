@@ -1,7 +1,7 @@
-Step-by-step analysis of Hi-C
-=================================
+Step-by-Step Workflow of Hi-C Analysis
+=============================================
 
-Here we show the step-by-step analysis of Hi-C.
+Here we show the step-by-step analysis of Hi-C with CustardPy.
 See also the sample scripts in the `tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial/Hi-C>`_ on GitHub.
 
 .. note::
@@ -101,6 +101,11 @@ Using the FASTQ files and the BWA index, ``juicer_map.sh`` command generates the
     odir=CustardPyResults_Hi-C/Juicer_$build/$cell  # Output directory
 
     juicer_map.sh -p $ncore $fqdir $odir $build $gt $bwaindex $enzyme $fastq_post
+
+.. note::
+
+    If the number of sequenced reads is extremely large (e.g. GM12878 cells from Rao et al. 2014), the generation of the .hic file will fail with an error due to lack of memory. In such a case, supply the ``-L`` option to ``juicer_map.sh``, which allocates a larger amount of memory to juicertools.
+
 
 (Optional) Compress the intermediate files
 ----------------------------------------------------------
@@ -257,4 +262,43 @@ The generated statistics file (``Juicerstats.tsv``) looks like this:
    :width: 800px
    :align: center
    :alt: Alternate
+
+
+Plot Contact Distance Distribution for All Samples
+--------------------------------------------------------------------
+
+You can use the ``plot_distance_count_all.R`` script to plot the contact distance distribution for all samples.
+Use the ``execute_R`` command to run the R script as follows.
+
+.. code-block:: bash
+
+    odir=CustardPyResults_Hi-C/Juicer_$build/
+    execute_R plot_distance_count_all.R $odir $odir/plot_distance_count_all.pdf
+    execute_R plot_distance_count_all.log.R $odir $odir/plot_distance_count_all.log.pdf
+
+``plot_distance_count_all.R`` and ``plot_distance_count_all.log.R`` plot the contact distance distribution in linear and log scale, respectively.
+
+.. image:: img/Juicerstats.jpg
+   :width: 800px
+   :align: center
+   :alt: Alternate
+
+Plot Contact Distance Distribution for Selected Samples
+--------------------------------------------------------------------
+
+When the number of samples is large, the plot of the contact distance distribution for all samples may be difficult to see.
+In such a case, you can use the ``plot_distance_count_multi.R`` and ``plot_distance_count_all.log.R`` scripts to plot the contact distance distribution for selected samples.
+
+.. code-block:: bash
+
+    odir=CustardPyResults_Hi-C/Juicer_$build/
+    execute_R plot_distance_count_multi.R $odir/Control $odir/siRad21 $odir/plot_distance_count_multi.pdf
+
+This command plots the contact distance distribution for the control and siRad21 samples. Any number of samples can be specified.
+
+.. image:: img/Juicerstats.jpg
+   :width: 800px
+   :align: center
+   :alt: Alternate
+
 

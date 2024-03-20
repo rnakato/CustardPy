@@ -6,7 +6,7 @@
 
 #define max(a, b) ((a) > (b)) ? (a) :(b)
 
-#define MAPQTHRE_DEFAULT 0
+#define MAPQTHRE_DEFAULT 30
 #define ARRAYNUM 100
 #define STR_LEN 10000
 #define ELEM_NUM 256
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   }
 
   char *str = (char *)my_calloc(STR_LEN, sizeof(char), "str");
-  int *array = (int *)my_calloc(ARRAYNUM, sizeof(int), "array");
+  long *array = (long *)my_calloc(ARRAYNUM, sizeof(long), "array");
   unsigned long *array_maxval = (unsigned long *)my_calloc(ARRAYNUM, sizeof(unsigned long), "array_maxval");
   for(i=0; i<ARRAYNUM; i++) array_maxval[i] = pow(10, (i+1)*0.1);
 
@@ -75,9 +75,10 @@ int main(int argc, char *argv[])
   // 14 readname1
   // 15 readname2
 
-  int nread=0;
-  int nread_mapq_either=0;
-  int nread_mapq_both=0;
+  long nread=0;
+//  long nread_mapq_either=0;
+//  long nread_mapq_both=0;
+  long max_distance=0;
 
   unsigned long maxval = pow(10, ARRAYNUM*0.1);
 //  printf("maxval = %lu\n", maxval);
@@ -96,15 +97,16 @@ int main(int argc, char *argv[])
 
     int mapq1 = atoi(clm[8].str);
     int mapq2 = atoi(clm[11].str);
-    if(mapq1 >= thre_mapq && mapq2 >= thre_mapq) nread_mapq_both++;
-    else if(mapq1 >= thre_mapq || mapq2 >= thre_mapq) nread_mapq_either++;
+//    if(mapq1 >= thre_mapq && mapq2 >= thre_mapq) nread_mapq_both++;
+//    else if(mapq1 >= thre_mapq || mapq2 >= thre_mapq) nread_mapq_either++;
     if(mapq1 < thre_mapq || mapq2 < thre_mapq) continue;
 
-    int start = atoi(clm[2].str);
-    int end   = atoi(clm[6].str);
+    long start = atol(clm[2].str);
+    long end = atol(clm[6].str);
     unsigned long length = abs(end - start);
     if(length >= maxval) continue;
 
+    if (max_distance < length) max_distance = length;
 //    printf("length=%lu\n", length);
     for(i=0; i<ARRAYNUM; i++) {
       if(length < array_maxval[i]){
@@ -115,7 +117,10 @@ int main(int argc, char *argv[])
   }
 
   for (i=15; i<ARRAYNUM; i++) {
-    printf("%lu - %lu | %d\n", (unsigned long)pow(10,i*0.1), (unsigned long)pow(10,(i+1)*0.1)-1, array[i]);
+    unsigned long s = pow(10,i*0.1);
+    unsigned long e = pow(10,(i+1)*0.1)-1;
+    if (s > max_distance) break;
+    printf("%lu - %lu | %ld\n", s, e, array[i]);
   }
 
   free(str);

@@ -35,6 +35,7 @@ The results are stored in ``CustardPyResults_Hi-C/Juicer_$build/$prefix/``.
         -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)
         -p ncore: number of CPUs (default: 32)
         -m tmpdir: tempdir
+        -L: Allocate larger memory ("-Xms1024m -Xmx655360m", default: "-Xms512m -Xmx65536m", for deep-sequenced samples; e.g., Rao 2014)
     Example:
         custardpy_juicer -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A
 
@@ -61,6 +62,7 @@ The BWA index of the reference genome is necessary.
     Options:
         -p ncore: number of CPUs (default: 32)
         -m tmpdir: tempdir
+        -L: Allocate larger memory ("-Xms1024m -Xmx655360m", default: "-Xms512m -Xmx65536m", for deep-sequenced samples; e.g., Rao 2014)
     Example:
       juicer_map.sh $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 HindIII _R
 
@@ -78,6 +80,7 @@ The BWA index of the reference genome is necessary.
     - inter_30.txt ... stats for inter_30.hic
 
 We recommend using ``inter_30.hic`` for the downstream analysis.
+
 
 juicer_pigz.sh
 +++++++++++++++++++++++++++++++++++
@@ -97,6 +100,7 @@ Because these commands do not accept the compressed format, use ``juicer_unpigz.
 
      juicer_unpigz.sh <odir>
        <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
+
 
 plot_distance_count.sh
 +++++++++++++++++++++++++++++++++++
@@ -457,7 +461,8 @@ Utility tools
 distance_vs_count.Juicer
 +++++++++++++++++++++++++++++++++++
 
-Count genomic distance of read pairs in the input file (supposing ``align/merged_nodups.txt.gz`` in Juicer outputs.)
+Count the genomic distance of read pairs in the input file (supposing ``align/merged_nodups.txt.gz`` in Juicer outputs)
+The output file can be used for the distance plot with ``plot_distance_count.R``.
 
 .. code-block:: bash
 
@@ -465,6 +470,24 @@ Count genomic distance of read pairs in the input file (supposing ``align/merged
         <file>:    Input file  (merged_nodups.txt.gz)
         <winsize>: window size (default: 10000)
         <MAPQ>:    MAPQ threshold (default: 30)
+
+    Example:
+        distance_vs_count.Juicer align/merged_nodups.txt.gz 50000 30
+
+distance_vs_count.Juicer.log
++++++++++++++++++++++++++++++++++++
+
+Count the genomic distance of read pairs in the input file with the log-scale bins.
+The output file can be used for the distance plot with ``plot_distance_count.log.R``.
+
+.. code-block:: bash
+
+    distance_vs_count.Juicer.log                                                                                                     (base) Usage: distance_vs_count.Juicer.log <file> <MAPQ>
+        <file>:    Input file  (merged_nodups.txt)
+        <MAPQ>:    MAPQ threshold (default: 30)
+
+    Example:
+        distance_vs_count.Juicer.log align/merged_nodups.txt.gz 30
 
 
 convert_JuicerDump_to_dense.py

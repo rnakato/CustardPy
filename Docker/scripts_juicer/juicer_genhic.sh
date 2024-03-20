@@ -13,16 +13,19 @@ function usage()
     echo '   Options:' 1>&2
     echo '      -p ncore: number of CPUs (default: 32)' 1>&2
     echo '      -m tmpdir: tempdir' 1>&2
+    echo '      -L: Allocate larger memory ("-Xms1024m -Xmx655360m", default: "-Xms512m -Xmx65536m", for deep-sequenced samples; e.g., Rao 2014)' 1>&2
     echo '   Example:' 1>&2
     echo "      $cmdname $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 HindIII _R" 1>&2
 }
 
 tmpdir=""
 ncore=32
-while getopts p:m: option; do
+memoryparam=""
+while getopts p:m:L option; do
     case ${option} in
         p) ncore=${OPTARG} ;;
         m) tmpdir=${OPTARG} ;;
+	    L) memoryparam="-L" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -71,7 +74,7 @@ fi
 ex(){ echo $1; eval $1; }
 
 pwd=`pwd`
-ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param \
+ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param $memoryparam \
      -s $enzyme -a $label -p $gt \
      -z $bwaindex -D $jdir -e $fastq_post -S final \
-     >& $odir/juicer_genhic.log"
+     2>&1 | tee $odir/juicer_genhic.log"

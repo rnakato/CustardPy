@@ -17,6 +17,7 @@ function usage()
     echo '      -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
     echo '      -p ncore: number of CPUs (default: 32)' 1>&2
     echo '      -m tmpdir: tempdir' 1>&2
+    echo '      -L: Allocate larger memory ("-Xms1024m -Xmx655360m", default: "-Xms512m -Xmx65536m", for deep-sequenced samples; e.g., Rao 2014)' 1>&2
     echo '   Example:' 1>&2
     echo "      $cmdname -i bwaindex/hg38 -g genometable.hg38.txt -b hg38 -e HindIII -z _R -a refFlat.hg38.txt fastq/Hap1-A Hap1-A" 1>&2
 }
@@ -33,8 +34,9 @@ outputdir="CustardPyResults_Hi-C"
 norm="SCALE"
 resolutions="25000 50000 100000"
 gene=""
+memoryparam=""
 
-while getopts i:e:b:g:o:m:p:z:n:r:a: option; do
+while getopts i:e:b:g:o:m:p:z:n:r:a:L option; do
     case ${option} in
 	i) bwaindex=${OPTARG} ;;
 	e) enzyme=${OPTARG} ;;
@@ -47,6 +49,7 @@ while getopts i:e:b:g:o:m:p:z:n:r:a: option; do
 	n) norm=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
 	a) gene=${OPTARG} ;;
+	L) memoryparam="-L" ;;
     \?) 
         echo "Invalid option: -$OPTARG" >&2
         usage
@@ -106,7 +109,7 @@ ex(){ echo $1; eval $1; }
 pwd=`pwd`
 ex "mkdir -p $odir"
 if test ! -e $odir/fastq; then ln -s $fqdir $odir/fastq; fi
-ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param \
+ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param $memoryparam \
      -s $enzyme -a $label -p $gt \
      -z $bwaindex -D $jdir -e $fastq_post -S map"
 

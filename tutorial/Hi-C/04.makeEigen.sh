@@ -4,8 +4,8 @@ build=hg38
 gt=genometable.$build.txt
 gene=refFlat.$build.txt
 
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.8.0.sif"
-#sing="singularity exec custardpy.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.9.0.sif"
+sing="singularity exec custardpy.sif"
 
 for cell in Control siCTCF siRad21
 do

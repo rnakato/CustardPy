@@ -15,7 +15,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
     - `BWA <http://bio-bwa.sourceforge.net/>`_ v0.7.17
     - `Bowtie2 <http://bowtie-bio.sourceforge.net/bowtie2/index.shtml>`_ v2.4.5
-    - `chromap <https://github.com/haowenz/chromap>`_ v0.2.4
+    - `chromap <https://github.com/haowenz/chromap>`_ v0.2.6
 
 - Hi-C/Micro-C analysis
 
@@ -24,14 +24,15 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `JuiceBox <https://github.com/aidenlab/Juicebox>`_ v2.13.07
     - `Cooler <https://cooler.readthedocs.io/en/stable/>`_ v0.9.1
     - `cooltools <https://cooltools.readthedocs.io/en/latest/>`_ v0.5.4
-    - `pairtools <https://pairtools.readthedocs.io/en/latest/>`_ v0.3.0
+    - `Pairtools <https://pairtools.readthedocs.io/en/latest/>`_ v1.0.2
     - `coolpup.py <https://github.com/open2c/coolpuppy>`_ v1.0.0
     - `HiCExplorer <https://hicexplorer.readthedocs.io/en/latest/>`_ v3.5.1
     - `HOMER <http://homer.ucsd.edu/homer/interactions/index.html>`_
     - `FAN-C <https://fan-c.readthedocs.io/en/latest/index.html>`_ v0.9.25
     - `HiC-Pro <https://github.com/nservant/HiC-Pro>`_ v3.1.0
     - `HiCUP <https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/>`_ v0.9.2
-    - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ v0.2.5
+    - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ v0.2.9
+    - `CALDER2 <https://github.com/CSOgroup/CALDER2>`_ v2.0
 
 - Loop calling
     - `FitHiC <https://github.com/ay-lab/fithic>`_ v2.0.7
@@ -53,6 +54,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
 - Quality check
     - `3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ v1.0.1
+    - `MultiQC <https://multiqc.info/>`_ v
 
 - Hi-ChIP
     - `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ v11.0
@@ -66,12 +68,14 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
 - File processing
    - `SAMtools <http://www.htslib.org/>`_ v1.19.2
-   - `BEDtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.30.0
+   - `BEDtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.31.0
 
 - Utility tools
    - `SRAtoolkit <https://github.com/ncbi/sra-tools>`_ v3.0.10
+   - `genomepy <https://vanheeringen-lab.github.io/genomepy/>`_ v0.16.1
 
-See the original website for the full description about each tool.
+For a full description of each tool, visit the original website.
+
 
 RUN
 ++++++++++++++
