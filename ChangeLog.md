@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 1.9.0 (2024-03-XX)
+### 1.9.0 (2024-03-21)
 - Updated `distance_vs_count.Juicer` and `distance_vs_count.Juicer.log` to use minimum Q-value threshold of 30 and window size 50 kbp by default
 - Updated `plot_distance_count.R` to set the background color to white
 - Updated `plot_distance_count.log.R` to set the background color to white and limit the x- and y-axes
