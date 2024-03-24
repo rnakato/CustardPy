@@ -278,8 +278,8 @@ Use the ``execute_R`` command to run the R script as follows.
 
 ``plot_distance_count_all.R`` and ``plot_distance_count_all.log.R`` plot the contact distance distribution in linear and log scale, respectively.
 
-.. image:: img/Juicerstats.jpg
-   :width: 800px
+.. image:: img/plot_distance_count_all.jpg
+   :width: 500px
    :align: center
    :alt: Alternate
 
@@ -296,8 +296,8 @@ In such a case, you can use the ``plot_distance_count_multi.R`` and ``plot_dista
 
 This command plots the contact distance distribution for the control and siRad21 samples. Any number of samples can be specified.
 
-.. image:: img/Juicerstats.jpg
-   :width: 800px
+.. image:: img/plot_distance_count_all.log.jpg
+   :width: 500px
    :align: center
    :alt: Alternate
 
