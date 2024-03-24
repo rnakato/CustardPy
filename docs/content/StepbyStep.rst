@@ -137,10 +137,10 @@ The result is outputted in ``distance/`` directory.
 
 - Output
 
-    - distance_vs_count.10kb.MAPQ30.pdf ... figure of distance plot
-    - distance_vs_count.10kb.MAPQ30.txt ... values for the plot
-    - distance_vs_count.10kb.MAPQ30.log.pdf ... figure of distance plot (log scale)
-    - distance_vs_count.10kb.MAPQ30.log.txt ... values for the plot (log scale)
+    - distance_vs_count.MAPQ30.pdf ... Figure of distance plot
+    - distance_vs_count.MAPQ30.txt ... Values for the plot
+    - distance_vs_count.MAPQ30.log.pdf ... Figure of distance plot (log scale bins)
+    - distance_vs_count.MAPQ30.log.txt ... Values for the plot (log scale bins)
 
 .. image:: img/distanceplot.jpg
    :width: 600px

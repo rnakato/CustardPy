@@ -8,7 +8,7 @@ fastq_post="_"  # "_" or "_R"
 enzyme=MboI
 ncore=64
 
-#sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.8.0.sif"
+#sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.9.0.sif"
 sing="singularity exec custardpy.sif"
 
 cell=Control # siCTCF siRad21
