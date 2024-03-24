@@ -39,6 +39,6 @@ g <- g + theme_minimal() +
   theme(panel.background = element_rect(fill = "white", colour = NA))
 
 # Plotting
-pdf(outputfile, width = 6, height = 6)
+pdf(outputfile, width = 6, height = 5)
 print(g)
 dev.off()

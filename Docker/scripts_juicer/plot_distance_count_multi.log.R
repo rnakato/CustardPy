@@ -41,7 +41,7 @@ xbreaks <- c(10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 filtered_data <- combined_data[combined_data$distance > 10000, ]
 max_y_value <- max(filtered_data$probability)
 
-pdf(outputfile, width = 6, height = 6)
+pdf(outputfile, width = 6, height = 5)
 g <- ggplot(combined_data, aes(distance, probability, colour = Sample))
 g <- g + scale_x_log10(breaks=xbreaks, labels=xbreaks, limits=c(10000, NA))
 g <- g + scale_y_continuous(limits = c(NA, max_y_value))

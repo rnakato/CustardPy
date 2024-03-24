@@ -38,7 +38,7 @@ combined_data <- combined_data %>%
 xbreaks <- c(10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 ybreaks <- c(1, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
 
-pdf(outputfile, width = 6, height = 6)
+pdf(outputfile, width = 6, height = 5)
 
 g <- ggplot(combined_data, aes(distance, probability, colour = Sample))
 g <- g + scale_x_log10(breaks=xbreaks, labels=xbreaks)
