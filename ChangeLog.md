@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 1.9.1 (2024-04-03)
+### 1.9.1 (2024-04-04)
 - Updated  HiC1Dmetrics from v0.2.9 to v0.2.10
 - Omitted `${juiceDir}/scripts/common/check.sh` which checks the number of ${outputdir}/merged_sort.txt, ${outputdir}/merged_nodups.txt, ${outputdir}/dups.txt and ${outputdir}/opt_dups.txt.
 
