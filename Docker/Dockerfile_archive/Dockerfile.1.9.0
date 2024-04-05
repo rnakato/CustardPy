@@ -135,22 +135,28 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_23.5.2-0-Li
     && rm ~/miniconda.sh \
     && ln -s -f /opt/conda/bin/python /usr/bin/python
 
-### Python (FitHiC, cooltools, cooler, pairtools)
-# numpy<1.24.0 (avoid the error "AttributeError: module 'numpy' has no attribute 'int'.")
+### Python (FitHiC)
 RUN set -e \
     && conda update conda \
+    && conda config --set solver classic \
     && pip install --no-cache-dir nose MACS2 tabulate session_info \
     && conda install 'numpy<1.24.0' scipy matplotlib pandas seaborn scikit-learn scikit-learn-intelex \
        dash plotly black bokeh h5py click jupyter jupyterlab pytables Cython 'mistune<4,>=2.0.3' \
-    && conda install -c conda-forge -c bioconda pairtools fithic \
-    && pip install --no-cache-dir diskcache \
+#    && conda install -c conda-forge diskcache \
+    && conda install -c conda-forge -c bioconda fithic \
     && conda install -c bioconda hic2cool cooltools cooler 'genomepy>=0.15' \
 # CustardPy, HiC1Dmetrics, HiC-straw, PHi-C, CHESS, STRIPENN, FIREcaller, MACS2, Mustache, Chromosight
-    && pip install --no-cache-dir h1d==0.2.9 custardpy==0.7.2 hic-straw phic chess-hic stripenn FIREcaller \
+    && pip install --no-cache-dir h1d==0.2.10 custardpy==0.7.2 hic-straw phic chess-hic stripenn FIREcaller \
        mustache-hic chromosight multiqc \
 # JuiceBox
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 #    && conda uninstall samtools
+
+# Cooler, cooltools, pairtools
+RUN conda create -y -n coolenv python=3.8 \
+    && source activate coolenv \
+    && conda install -c conda-forge -c bioconda pairtools \
+    && conda deactivate
 
 # BEDtools
 ENV v 2.31.0

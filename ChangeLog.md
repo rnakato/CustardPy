@@ -2,6 +2,10 @@
 
 ## CustardPy
 
+### 1.9.1 (2024-04-03)
+- Updated  HiC1Dmetrics from v0.2.9 to v0.2.10
+- Omitted `${juiceDir}/scripts/common/check.sh` which checks the number of ${outputdir}/merged_sort.txt, ${outputdir}/merged_nodups.txt, ${outputdir}/dups.txt and ${outputdir}/opt_dups.txt.
+
 ### 1.9.0 (2024-03-21)
 - Updated `distance_vs_count.Juicer` and `distance_vs_count.Juicer.log` to use minimum Q-value threshold of 30 and window size 50 kbp by default
 - Updated `plot_distance_count.R` to set the background color to white
@@ -11,7 +15,6 @@
 - `makeEigen.sh`: Fixed the bug where the computation would not finish if the computation of PC1 in h1d failed.
 - Fixed a bug where `pairtools` was not found.
 - Added [CALDER2](https://github.com/CSOgroup/CALDER2)
-- Added [genomepy](https://vanheeringen-lab.github.io/genomepy/content/installation.html)
 - Updated chromap from v0.2.4 to v0.2.6
 - Updated bedtools from v2.30.0 to v2.31.0
 
