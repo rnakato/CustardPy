@@ -2,8 +2,6 @@
 
 <img src = "image/CustardPy.jpg" width = 700ptx>
 
-## Major Release! (version 1)
-
 This repository contains
 - Source code of **CustardPy** (PyPI),
 - Dockerfile of **CustardPy** Docker image, 

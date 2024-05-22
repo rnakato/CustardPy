@@ -2,7 +2,7 @@
 
 build=hg38
 
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.6.0.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.0.0.sif"
 sing="singularity exec custardpy.sif"
 
 cell=Control # siCTCF siRad21
