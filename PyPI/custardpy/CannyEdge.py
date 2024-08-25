@@ -1,3 +1,6 @@
+# Copyright(c) Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
+# All rights reserved.
+
 import numpy as np
 import matplotlib.pyplot as plt
 

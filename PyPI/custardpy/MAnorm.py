@@ -1,9 +1,11 @@
+# Copyright(c) Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
+# All rights reserved.
+
 import numpy as np
 import scipy.stats as sp
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import linear_model
-#from module.HiCmodule import *
 
 class MAdata: # log, asinhを仮定
     def __init__(self, mat1, mat2):

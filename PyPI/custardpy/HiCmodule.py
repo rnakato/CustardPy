@@ -1,3 +1,5 @@
+# Copyright(c) Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
+# All rights reserved.
 import os
 import sys
 import numpy as np
