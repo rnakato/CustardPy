@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 2.0.1 (2024-8-27)
+- Added `libgit2-dev` to install `gert` in R
+
 ### 2.0.0 (2024-5-22)
 - Changed Python environment from conda to micromamba (`/opt/micromamba`)
 - Updated Python from 3.8.17 to 3.10.13
