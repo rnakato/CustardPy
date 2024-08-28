@@ -4,6 +4,7 @@
 
 ### 2.0.1 (2024-8-27)
 - Added `libgit2-dev` to install `gert` in R
+- Added a message in ``juicer_pigz.sh`` and ``juicer_unpigz.sh``
 
 ### 2.0.0 (2024-5-22)
 - Changed Python environment from conda to micromamba (`/opt/micromamba`)
