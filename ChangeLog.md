@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 2.1.0 (2024-9-10)
+- Fixed a bug where ``juicer_map.sh`` failed when passing "\_" for ``fastq_post`` valuable and there were underscores (\_) in the FASTQ directory name.
+
 ### 2.0.1 (2024-8-27)
 - Added `libgit2-dev` to install `gert` in R
 - Added a message in ``juicer_pigz.sh`` and ``juicer_unpigz.sh``

@@ -145,12 +145,7 @@ while getopts "d:g:a:hs:p:y:z:S:D:fjqt:b:e:m:L" opt; do
 	[?]) printHelpAndExit 1;;
     esac
 done
-#	e) earlyexit=1 ;;
 
-# fastq files should look like filename_R1.fastq and filename_R2.fastq
-# if your fastq files look different, change this value
-#read1str="_R1"
-#read2str="_R2"
 read1str=${fastqnameend}1
 read2str=${fastqnameend}2
 
@@ -357,15 +352,16 @@ then
     ## merge. When merge jobs successfully finish, can launch final merge job.
     for i in ${read1}
     do
-        ext=${i#*$read1str}
+        filename=$(basename -- "$i")
+        ext="${filename##*$read1str}"
         name=${i%$read1str*}
         # these names have to be right or it'll break
-	name1=${name}${read1str}
+	    name1=${name}${read1str}
         name2=${name}${read2str}
 
-	echo $i
-	echo $ext $name ${read1str} ${read2str}
-	echo $name1 $name2
+        echo $i
+        echo $ext $name ${read1str} ${read2str}
+        echo $name1 $name2
         jname=$(basename $name)${ext}
         usegzip=0
         if [ ${ext: -3} == ".gz" ]
