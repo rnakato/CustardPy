@@ -2,6 +2,12 @@
 
 ## CustardPy
 
+### 2.1.2 (2024-9-18)
+- Fixed a bug where `run_3DChromatin_ReplicateQC.sh` gave a "No such file or directory" error.
+
+### 2.1.1 (2024-9-12)
+- Modified `convert_JuicerDump_to_dense.py` in **CustardPy** to fix a future warning message.
+
 ### 2.1.0 (2024-9-10)
 - Fixed a bug where ``juicer_map.sh`` failed when passing "\_" for ``fastq_post`` valuable and there were underscores (\_) in the FASTQ directory name.
 

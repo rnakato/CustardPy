@@ -8,21 +8,20 @@ import pandas as pd
 import sys
 import argparse
 
-def parse_argv():
-    usage = 'Usage: \n    python {} <inputfile> <outputfile> <genometable> <chr1> <chr2> <resolution> [--help]'.format(__file__)
-    arguments = sys.argv
-    if len(arguments) == 1:
-        print(usage)
-        exit()
-    # ファイル自身を指す最初の引数を除去
-    arguments.pop(0)
-    # - で始まるoption
-    options = [option for option in arguments if option.startswith('-')]
+#def parse_argv():
+#    usage = 'Usage: \n    python {} <inputfile> <outputfile> <genometable> <chr1> <chr2> <resolution> [--help]'.format(__file__)
+#    arguments = sys.argv
+#    if len(arguments) == 1:
+#        print(usage)
+#        exit()
 
-    if '-h' in options or '--help' in options:
-        print(usage)
-
-    return arguments
+#    arguments.pop(0)
+#    options = [option for option in arguments if option.startswith('-')]
+#
+#    if '-h' in options or '--help' in options:
+#        print(usage)
+#
+#    return arguments
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -44,10 +43,10 @@ if __name__ == '__main__':
     resolution = args.resolution
 
     genometable = pd.read_csv(gtfile, delimiter='\t', index_col=[0], header=None)
-    chrlen1 = int(genometable.loc[chr1])
-    binlen1 = int(chrlen1/resolution) +1
-    chrlen2 = int(genometable.loc[chr2])
-    binlen2 = int(chrlen2/resolution) +1
+    chrlen1 = int(genometable.loc[chr1].iloc[0])
+    binlen1 = int(chrlen1 / resolution) + 1
+    chrlen2 = int(genometable.loc[chr2].iloc[0])
+    binlen2 = int(chrlen2 / resolution) + 1
 
     d = pd.read_csv(inputfile, delimiter='\t', header=None)
     d = d.set_index([0,1])
@@ -67,15 +66,3 @@ if __name__ == '__main__':
         df.to_csv(outputfile, sep='\t', compression='gzip')
     else:
         d.to_csv(outputfile, sep='\t', compression='gzip')
-
-#    index = np.arange(binlen1) * resolution
-#    columns = np.arange(binlen2) * resolution
-#    d = d.reindex(index, columns=columns, fill_value=0)
-#    d.index.name = None
-#    d.columns.name = None
-
-#    triu = np.triu(d)
-#    array = triu + triu.T - np.diag(np.diag(triu))
-#    df = pd.DataFrame(array, index=d.index, columns=d.columns)
-
-#    df.to_csv(outputfile, sep='\t', compression='gzip')
