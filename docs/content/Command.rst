@@ -506,3 +506,28 @@ Convert interaction frequency file dumped by Juicertools to dense (two-dimension
         genome_table.txt \
         chrX \
         25000
+
+HiChIP analysis
+------------------------------------------------
+
+
+FitHiChIP
++++++++++++++++++++++++++++++++++++
+
+**CustardPy** includes `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ to process HiChIP data.
+It uses `HiC-Pro <https://nservant.github.io/HiC-Pro/>`_, which is installed in the ``hic-pro`` virtual environment.
+
+You can use FitHiChIP with the following command:
+
+.. code-block:: bash
+
+    run_fithic.sh FitHiChIP_HiCPro.sh -C <configfile>
+
+``run_fithic.sh`` is a script to activate the ``hic-pro`` environment and execute the commands of FitHiChIP.
+
+If you want to use any commands in the ``hic-pro`` environment, use the ``run_env.sh`` script:
+
+.. code-block:: bash
+
+    run_env.sh hic-pro <command>
+

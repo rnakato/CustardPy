@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 2.2.0 (2024-10-08)
+- Added [FitHiChIP](https://ay-lab.github.io/FitHiChIP/html/index.html)
+
 ### 2.1.2 (2024-9-18)
 - Fixed a bug where `run_3DChromatin_ReplicateQC.sh` gave a "No such file or directory" error.
 
@@ -151,7 +154,6 @@ Note: CustardPy does not support Juicer Tools v2 due to incompatibility with the
     - [STRIPENN](https://github.com/VahediLab/stripenn)
     - [HiC-Pro](https://github.com/nservant/HiC-Pro)
     - [coolpup.py](https://github.com/open2c/coolpuppy)
-    - [FitHiChIP](https://ay-lab.github.io/FitHiChIP/html/index.html)
     - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
 
 - Merged `drawTriangleRatioMulti` to `plotHiCfeature`
