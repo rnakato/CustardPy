@@ -552,7 +552,7 @@ drawTriangleRatioMulti
 "Right" and "left" shown as blue and orange line plots in the second row indicate the "B" and "A" in Fig. 4.15.
 
 Output the logfold change matrices
-========================================
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 ``--triangle_ratio_multi`` has an option ``--output_logfc_matrix`` to output the logfold change matrices used for the visualization.
 This command is useful if you want to do a downstream analysis using the matrices.
