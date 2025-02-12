@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 2.2.1 (2025-2-12)
+- Added the ``--output_logfc_matrix`` option in ``plotHiCfeature`` to output the logfold change matrices.
+
 ### 2.2.0 (2024-10-08)
 - Added [FitHiChIP](https://ay-lab.github.io/FitHiChIP/html/index.html)
 

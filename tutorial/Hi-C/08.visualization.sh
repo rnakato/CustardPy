@@ -1,6 +1,6 @@
 #!/bin/bash
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.0.0.sif"
-sing="singularity exec custardpy.sif"
+sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.2.1.sif"
+#sing="singularity exec custardpy.sif"
 
 outputdir=figure
 mkdir -p $outputdir
@@ -74,6 +74,17 @@ $sing plotHiCfeature \
       -o $outputdir/TriangleRatioMulti.$chr \
       -c $chr --start $start --end $end -r $resolution \
       --triangle_ratio_multi --type $norm -d 5000000
+
+# If you want to get the tsv file of the logfoldchange matrices
+$sing plotHiCfeature \
+      $Resdir/Control:Control \
+      $Resdir/siCTCF:siCTCF \
+      $Resdir/siRad21:siRad21 \
+      -o $outputdir/TriangleRatioMulti.$chr \
+      -c $chr --start $start --end $end -r $resolution \
+      --triangle_ratio_multi --type $norm -d 5000000 \
+      --output_logfc_matrix
+
 
 $sing plotHiCfeature \
       $Resdir/Control:Control \

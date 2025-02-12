@@ -34,6 +34,7 @@ def main():
     parser.add_argument("--drf_right",  help="(with --drf) plot DirectionalRelativeFreq (Right)", action='store_true')
     parser.add_argument("--drf_left",   help="(with --drf) plot DirectionalRelativeFreq (Left)", action='store_true')
     parser.add_argument("--triangle_ratio_multi",   help="plot Triangle ratio multi", action='store_true')
+    parser.add_argument("--output_logfc_matrix",   help="(with --triangle_ratio_multi) output logfoldchange matrix", action='store_true')
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
     parser.add_argument("--v4c",   help="plot virtual 4C from Hi-C data", action='store_true')
     parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
@@ -141,7 +142,8 @@ def main():
         plot_triangle_ratio_multi(samples, labels, nrow, nrow_now, nrow_heatmap, nrow_feature,
                                   s, e, figstart, figend, args.vizdistancemax, resolution,
                                   args.vmin_ratio, args.vmax_ratio,
-                                  colspan_plot, colspan_colorbar, colspan_legend, colspan_full)
+                                  colspan_plot, colspan_colorbar, colspan_legend, colspan_full,
+                                  args.output_logfc_matrix, args.output)
     # Directionality Index
     elif (args.di):  
         plot_directionality_index(samples, labels, nrow, nrow_now, nrow_feature,

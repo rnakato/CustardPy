@@ -1,6 +1,6 @@
 reponame=custardpy
 
-tag=2.2.0
+tag=2.2.1
 docker build -f Dockerfile.$tag -t rnakato/$reponame:$tag . #--no-cache
 #echo "docker save -o $reponame-$tag.tar rnakato/$reponame:$tag"
 #docker save -o $reponame-$tag.tar rnakato/$reponame:$tag

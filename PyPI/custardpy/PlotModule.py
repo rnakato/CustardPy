@@ -194,7 +194,8 @@ def drawHeatmapTriangle_subplot2grid(matrix, resolution, *, figstart=0, figend=0
                                      distance_max=5000000, vmin=0, vmax=50, label="",
                                      xticks=True, tads=None, loops=None, cmap=None,
                                      logratio=False, control_label="Control",
-                                     heatmap_ax=None, colorbar_ax=None):
+                                     heatmap_ax=None, colorbar_ax=None,
+                                     output_option=False, output_prefix="drawHeatmapTriangle_output"):
     if cmap is None:
         cmap = generate_cmap(['#FFFFFF', '#d10a3f'])
 
@@ -203,6 +204,17 @@ def drawHeatmapTriangle_subplot2grid(matrix, resolution, *, figstart=0, figend=0
 
     mat = extract_submatrix(matrix, s, e)
     rotated_mat = ndimage.rotate(mat, 45, order=0, reshape=True, prefilter=False, cval=0)
+    
+    if output_option:
+        df_mat = pd.DataFrame(mat)
+        index_values = list(range(figstart, figend, resolution))
+        df_mat.index = index_values
+        df_mat.columns = index_values
+
+        output_filename = f"{output_prefix}_{label}.logfc.tsv"
+        df_mat.to_csv(output_filename, sep='\t', index=True, header=True)
+
+        print(f"Submatrix saved to {output_filename}")
 
     if heatmap_ax is None:
         plt.imshow(rotated_mat, clim=(vmin, vmax), cmap=cmap, interpolation="nearest", aspect='auto')

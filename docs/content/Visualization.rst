@@ -523,7 +523,7 @@ This score estimates the inconsistency of relative contact frequence (log scale)
 drawTriangleRatioMulti
 ++++++++++++++++++++++++++++++++++++++
 
-``drawTriangleRatioMulti`` visualizes a relative contact frequency (log scale) of 2nd to the last samples against the first sample. Directional relative frequency is also shown.
+``--triangle_ratio_multi`` visualizes a relative contact frequency (log scale) of 2nd to the last samples against the first sample. Directional relative frequency is also shown.
 
 .. code-block:: bash
 
@@ -550,6 +550,12 @@ drawTriangleRatioMulti
      TriangleRatioMulti
 
 "Right" and "left" shown as blue and orange line plots in the second row indicate the "B" and "A" in Fig. 4.15.
+
+Output the logfold change matrices
+========================================
+
+``--triangle_ratio_multi`` has an option ``--output_logfc_matrix`` to output the logfold change matrices used for the visualization.
+This command is useful if you want to do a downstream analysis using the matrices.
 
 Virtual 4C
 ++++++++++++++++++++++++++++++++++++++

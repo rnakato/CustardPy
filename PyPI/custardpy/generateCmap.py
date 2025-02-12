@@ -1,7 +1,10 @@
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
 
 def generate_cmap(colors):
-    from matplotlib.colors import LinearSegmentedColormap
+    return LinearSegmentedColormap.from_list('custom_cmap', colors)
+    
+def generate_cmap_old(colors):
     values = range(len(colors))
 
     vmax = np.ceil(np.max(values))

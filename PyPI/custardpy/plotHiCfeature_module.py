@@ -94,6 +94,7 @@ def plot_triangle_ratio_multi(samples, labels, nrow, nrow_now, nrow_heatmap, nro
                               s, e, figstart, figend, distance_max, resolution,
                               vmin_ratio, vmax_ratio,
                               colspan_plot, colspan_colorbar, colspan_legend, colspan_full,
+                              output_option, output_prefix,
                               *, smooth_median_filter=3):
     if not isinstance(samples, list):
         samples = [samples]
@@ -114,7 +115,8 @@ def plot_triangle_ratio_multi(samples, labels, nrow, nrow_now, nrow_heatmap, nro
                                          distance_max=distance_max,
                                          label=labels[i+1], xticks=True,
                                          logratio=True, control_label=labels[0],
-                                         heatmap_ax=heatmap_ax, colorbar_ax=colorbar_ax)
+                                         heatmap_ax=heatmap_ax, colorbar_ax=colorbar_ax,
+                                         output_option=output_option, output_prefix=output_prefix)
         nrow_now += nrow_heatmap
 
         # DRF barplot (left & right)
@@ -374,7 +376,8 @@ def plot_HiC_Map(nrow, nrow_now, nrow_heatmap, sample, label, chr,
     drawHeatmapTriangle_subplot2grid(sample.getmatrix(), resolution, figstart=figstart, figend=figend,
                                      tads=tads, loops=loops, vmax=vmax, vmin=vmin, distance_max=distance_max,
                                      label="Contact map (" + label + ")",
-                                     xticks=True, heatmap_ax=heatmap_ax, colorbar_ax=colorbar_ax)
+                                     xticks=True, heatmap_ax=heatmap_ax, colorbar_ax=colorbar_ax,
+                                     output_option=False, output_prefix="")
 
 def plot_SamplePair_triu(sample1, sample2, label1, label2,
                         resolution, figstart, figend, vmax, vmin,
