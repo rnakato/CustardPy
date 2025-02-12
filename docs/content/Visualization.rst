@@ -552,10 +552,28 @@ drawTriangleRatioMulti
 "Right" and "left" shown as blue and orange line plots in the second row indicate the "B" and "A" in Fig. 4.15.
 
 Output the logfold change matrices
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+++++++++++++++++++++++++++++++++++++++
 
 ``--triangle_ratio_multi`` has an option ``--output_logfc_matrix`` to output the logfold change matrices used for the visualization.
 This command is useful if you want to do a downstream analysis using the matrices.
+
+.. code-block:: bash
+
+     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     norm=SCALE
+     resolution=25000
+     chr=chr20
+     start=8000000
+     end=16000000
+
+     plotHiCfeature \
+          $Resdir/Control:Control \
+          $Resdir/siCTCF:siCTCF \
+          $Resdir/siRad21:siRad21 \
+          -o TriangleRatioMulti.$chr \
+          -c $chr --start $start --end $end -r $resolution \
+          --triangle_ratio_multi --type $norm -d 5000000 \
+          --output_logfc_matrix
 
 Virtual 4C
 ++++++++++++++++++++++++++++++++++++++
