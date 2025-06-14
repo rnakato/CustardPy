@@ -54,7 +54,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
 - Quality check
     - `3DChromatin_ReplicateQC <https://github.com/kundajelab/3DChromatin_ReplicateQC>`_ v1.0.1
-    - `MultiQC <https://multiqc.info/>`_ v
+    - `MultiQC <https://multiqc.info/>`_
 
 - Hi-ChIP
     - `FitHiChIP <https://ay-lab.github.io/FitHiChIP/html/index.html>`_ v11.0
@@ -69,6 +69,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 - File processing
    - `SAMtools <http://www.htslib.org/>`_ v1.19.2
    - `BEDtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.31.0
+   - `hictk <https://hictk.readthedocs.io/en/stable/>`_ v2.1.2
 
 - Utility tools
    - `SRAtoolkit <https://github.com/ncbi/sra-tools>`_ v3.0.10

@@ -3,7 +3,7 @@
 ## CustardPy
 
 ### 2.2.2 (2025-6-14)
-- Updated hictk from v2.0.1 to 2.1.2.
+- Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.0.1 to 2.1.2.
 - Added the PATH to hictk.
 
 ### 2.2.1 (2025-2-12)
