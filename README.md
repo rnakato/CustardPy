@@ -85,6 +85,7 @@ Then type:
 
     docker build -f Dokerfile.<version> -t <account>/custardpy_juicer .
 
-## 6. Reference
+## 5. Citation
+Please cite this reference when using CustardPy in your study.
 
 - Nakato R, Sakata T, Wang J, Nagai LAE, Nagaoka Y, Oba GM, Bando M, Shirahige K, Context-dependent perturbations in chromatin folding and the transcriptome by cohesin and related factors, *Nature Communications*, 2023. doi: [10.1038/s41467-023-41316-4](https://www.nature.com/articles/s41467-023-41316-4)

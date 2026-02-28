@@ -9,7 +9,6 @@ printHelpAndExit() {
     echo "       all: execute all process (default)" 1>&2
     echo "       map: map reads and exit" 1>&2
     echo "       proc: generate .pair, .cool, and .hic files from the map file" 1>&2
-#    echo "       postproc: compartment and loop analysis using .cool and .hic files" 1>&2
     echo "    -i index : BWA index" 1>&2
     echo "    -f genome : Genome fasta file" 1>&2
     echo "    -g genometable : Genometable file (describing the chromosome length)" 1>&2
@@ -68,8 +67,8 @@ while getopts "i:f:g:e:b:o:q:p:S:m:n:r:x:h" opt; do
                 postfix2=_R2.fastq.gz
                 ;;
             *)
-                echo "Error: Specify 1 or 2 to the option '-p'."
-                usage
+                echo "Error: Specify 1 or 2 to the option '-x'."
+                printHelpAndExit
                 exit 1
                 ;;
            esac
@@ -91,8 +90,6 @@ then
 #       all-fastqc) stage_all_omitfastqc=1 ;;
        map) stage_map=1 ;;
        proc) stage_proc=1 ;;
-#       postproc) stage_postproc=1 ;;
-#       *) echo "Error: specify [all|map|proc|postproc] for stage (-S)."
        *) echo "Error: specify [all|map|proc] for stage (-S)."
           printHelpAndExit
     esac
@@ -100,14 +97,20 @@ fi
 
 if test "$build" = ""; then
     echo "Error: specify genome build (-b)."
-    exit 0
+    exit 1
 fi
 if test "$gt" = ""; then
     echo "Error: specify genome table (-g)."
-    exit 0
+    exit 1
 fi
 
-if test $enzyme = "HindIII"; then
+=======
+if test "$genome" = ""; then
+    echo "Error: specify genome (-f)."
+    exit 1
+fi
+
+if test "$enzyme" = "HindIII"; then
     enzymelen=6
 else
     enzymelen=4
@@ -130,11 +133,11 @@ mkdir -p $logdir
 
 echo "Analyzing $fqdir..."
 
-if [ -z "$stage_proc" ] && [ -z "$stage_postproc" ]; then
+if [ -z "$stage_proc" ]; then
     mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index_bwa" "$genome" "$ncore" "$postfix1" "$postfix2"
 fi
 
-if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
+if [ -z "$stage_map" ]; then
     # Generate .pair file
     parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen | tee $logdir/custardpy_parse_pairtools.log
     if [ $? -ne 0 ]; then

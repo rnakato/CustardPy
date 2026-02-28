@@ -64,8 +64,8 @@ while getopts "i:t:g:f:o:q:p:S:m:n:r:hx:" opt; do
                 postfix2=_R2.fastq.gz
                 ;;
             *)
-                echo "Error: Specify 1 or 2 to the option '-p'."
-                usage
+                echo "Error: Specify 1 or 2 to the option '-x'."
+                printHelpAndExit
                 exit 1
                 ;;
            esac
@@ -95,15 +95,15 @@ fi
 
 if test "$gt" = ""; then
     echo "Error: specify genome table (-g)."
-    exit 0
+    exit 1
 fi
 if test "$tool" != "bwa" -a "$tool" != "chromap"; then
     echo "Error: specify bwa or chromap for -t."
-    exit 0
+    exit 1
 fi
 if test "$genome" = ""; then
     echo "Error: specify genome fasta (-f)."
-    exit 0
+    exit 1
 fi
 
 ex(){ echo $1; eval $1; }
