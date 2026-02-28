@@ -5,8 +5,6 @@ import sys
 import numpy as np
 import scipy.stats as sp
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn import linear_model
 from custardpy.InsulationScore import *
 from custardpy.DirectionalityIndex import *
 from custardpy.loadData import loadDenseMatrix
@@ -32,7 +30,11 @@ class JuicerMatrix:
             print ("Error: " + rawmatrix + " does not exist.")
             sys.exit()
         if os.path.exists(eigenfile):
-            self.eigen = np.loadtxt(eigenfile)
+#            self.eigen = np.loadtxt(eigenfile)
+            df = pd.read_csv(eigenfile, header=None, skip_blank_lines=False)
+            df[0] = pd.to_numeric(df[0], errors='coerce')
+            df[0] = df[0].fillna(0)
+            self.eigen = df[0].to_numpy()
             eigen_sortindex = np.argsort(self.eigen)
             eigen_sort = self.eigen[eigen_sortindex]
             self.eigen_sortindex = eigen_sortindex[~np.isnan(eigen_sort)]
@@ -45,9 +47,9 @@ class JuicerMatrix:
                                                     1000000, 100000, self.res)
 
     def getmatrix(self, *, isNonZero=False, sortEigen=False):
-        if isNonZero == True:
+        if isNonZero:
             return getNonZeroMatrix(self.raw, 0)
-        elif sortEigen == True:
+        elif sortEigen:
             m = self.raw.iloc[self.eigen_sortindex,:]
             m = m.iloc[:,self.eigen_sortindex]
             return m
@@ -72,7 +74,7 @@ class JuicerMatrix:
 #        return ccmat
 
     def getEigen(self, *, sortEigen=False):
-        if sortEigen == True:
+        if sortEigen:
             return self.eigen[self.eigen_sortindex]
         else:
             return self.eigen

@@ -30,6 +30,7 @@ def main():
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
     parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
     parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+    parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
     args = parser.parse_args()
 #    print(args)
@@ -69,14 +70,24 @@ def main():
     tads = []
     loops = []
     for dir in dirs:
-       observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-       samples.append(JuicerMatrix("RPM", observed, resolution))
-       tadfile = dir + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-       print(tadfile)
-       tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
-       loopfile = dir + "/loops/"  + type + "/merged_loops.bedpe"
-       print(loopfile)
-       loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
+        if args.cooler:
+            observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution))
+            tadfile = f"{dir}/InsulationScore/{resolution}/TADs.w500000.bed"
+            print(tadfile)
+            tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
+            loopfile = f"{dir}/loops/cooltools/dots.25000.tsv"
+            print(loopfile)
+            loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
+        else:
+            observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution))
+            tadfile = dir + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+            print(tadfile)
+            tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
+            loopfile = dir + "/loops/"  + type + "/merged_loops.bedpe"
+            print(loopfile)
+            loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
 
     ### Plot
     drawHeatmapTrianglePair(samples[0].getmatrix(), samples[1].getmatrix(),

@@ -26,6 +26,7 @@ def main():
     parser.add_argument("-e", "--end", help="end bp (default: 1000000)", type=int, default=1000000)
     parser.add_argument("--vmax", help="max value of color bar (default: 1)", type=int, default=1)
     parser.add_argument("--vmin", help="min value of color bar (default: -1)", type=int, default=-1)
+    parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
     args = parser.parse_args()
 #    print(args)
@@ -61,8 +62,14 @@ def main():
     print (resolution)
     samples = []
     for dir in dirs:
-        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-        samples.append(JuicerMatrix("RPM", observed, resolution))
+        if args.cooler:
+            observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
+            eigen = f"{dir}/Eigen/{resolution}/eigs.cis.{chr}.txt.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+        else:
+            observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+            eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
+            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
 
     ### Plot
     smooth_median_filter = 3

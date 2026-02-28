@@ -14,6 +14,9 @@ The following are required before installing CustardPy:
 
 ## ChangeLog
 
+- 0.7.6 (2025-06-27)
+   - Lint check with Ruff.
+
 - 0.7.2 (2024-03-05)
    - Fixed the error messages in `plotHiCfeature_module.py`
 

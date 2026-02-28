@@ -27,8 +27,7 @@ def main():
     parser.add_argument("-e", "--end", help="end bp (default: 1000000)", type=int, default=1000000)
     parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
     parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
-#    parser.add_argument("--xsize", help="xsize for figure", type=int, default=3)
-#    parser.add_argument("--ysize", help="ysize for figure", type=int, default=3)
+    parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
     args = parser.parse_args()
 #    print(args)
@@ -66,21 +65,34 @@ def main():
     print (resolution)
     samples = []
     for dir in dirs:
-        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-        eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
-        samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+        if args.cooler:
+            observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
+            eigen = f"{dir}/Eigen/{resolution}/eigs.cis.{chr}.txt.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+        else:
+            observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+            eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
+            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
 
     ### Plot
     nsample = len(samples)
     plt.figure(figsize=(6, 3 * max(2,math.ceil(nsample/2))))
 
     for i, sample in enumerate(samples):
-        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-        print(tadfile)
-        tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-        loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
-        print(loopfile)
-        loops = loadloops(loopfile, chr, start=figstart, end=figend)
+        if args.cooler:
+            tadfile = f"{dirs[i]}/InsulationScore/{resolution}/TADs.w500000.bed"
+            print(tadfile)
+            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
+            loopfile = f"{dirs[i]}/loops/cooltools/dots.25000.tsv"
+            print(loopfile)
+            loops = loadloops(loopfile, chr, start=figstart, end=figend)
+        else:
+            tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+            print(tadfile)
+            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
+            loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
+            print(loopfile)
+            loops = loadloops(loopfile, chr, start=figstart, end=figend)
         
         # Hi-C Map
         plt.subplot(int(len(labels)/2)+1, 2, i+1)

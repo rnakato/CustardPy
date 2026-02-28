@@ -9,17 +9,26 @@ import subprocess
 
 def add_compartment(d, prefix):
     d["Compartment"] = "NaN"
-    st = d["Eigen"].describe().transpose()
+    d["Eigen"] = pd.to_numeric(d["Eigen"], errors="coerce")
+    q25, q50, q75 = d["Eigen"].quantile([0.25, 0.50, 0.75])
 
-    for i, row in d.iterrows():
-        if row['Eigen'] > st["75%"]:
-            d.loc[i, 'Compartment'] = 'Strong A'
-        elif row['Eigen'] > np.nanmedian(d["Eigen"]):
-            d.loc[i,'Compartment'] = 'Weak A'
-        elif row['Eigen'] > st["25%"]:
-            d.loc[i,'Compartment'] = 'Weak B'
-        elif row['Eigen'] >= st["min"]:
-            d.loc[i,'Compartment'] = 'Strong B'
+    d["Compartment"] = np.select(
+        [d["Eigen"] > q75,
+         d["Eigen"] > q50,
+         d["Eigen"] > q25],
+        ["Strong A", "Weak A", "Weak B"],
+        default="Strong B"      # q25 以下
+    )
+#    st = d["Eigen"].describe().transpose()
+#    for i, row in d.iterrows():
+#        if row['Eigen'] > st["75%"]:
+#            d.loc[i, 'Compartment'] = 'Strong A'
+#        elif row['Eigen'] > np.nanmedian(d["Eigen"]):
+#            d.loc[i,'Compartment'] = 'Weak A'
+#        elif row['Eigen'] > st["25%"]:
+#            d.loc[i,'Compartment'] = 'Weak B'
+#        elif row['Eigen'] >= st["min"]:
+#            d.loc[i,'Compartment'] = 'Strong B'
 
     plt.hist(d["Eigen"], bins=50, alpha=0.7, rwidth=0.9)
     plt.xlabel('PC1')
@@ -27,11 +36,11 @@ def add_compartment(d, prefix):
     plt.title('Compartment PC1 distribution')
 #    plt.xlim(-0.02,0.02)
     plt.axvline(x=np.nanmedian(d["Eigen"]), color='black', linestyle='--')
-    plt.axvline(x=st["25%"], color='blue', linestyle='--')
-    plt.axvline(x=st["75%"], color='red', linestyle='--')
+    plt.axvline(x=q25, color='blue', linestyle='--')
+    plt.axvline(x=q75, color='red',  linestyle='--')
 
     # グラフの表示
-    plt.savefig(prefix +".PC1distribution.pdf")
+    plt.savefig(prefix +".distribution.pdf")
 
     return d
 
@@ -43,7 +52,7 @@ def merge_compartmentfiles(prefix, outfile):
         f"grep 'Strong B' {outfile} | bedtools merge -d 1 > {prefix}.StrongB.bed",
         f"cat {prefix}.StrongA.bed {prefix}.WeakA.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.A.bed",
         f"cat {prefix}.StrongB.bed {prefix}.WeakB.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.B.bed",
-        f"cat {prefix}.WeakA.bed   {prefix}.WeakB.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.Suppressed.bed"
+#        f"cat {prefix}.WeakA.bed   {prefix}.WeakB.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.Weak.bed"
     ]
 
     for cmd in commands:

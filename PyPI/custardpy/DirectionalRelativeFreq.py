@@ -69,9 +69,9 @@ def output_DRF(args):
 #    import pdb; pdb.set_trace()
 
     drf = DirectionalRelativeFreq(EnrichMatrices[0], resolution)
-    if (args.drf_right == True):
+    if (args.drf_right):
         array = drf.getarrayplus()
-    elif (args.drf_left == True):
+    elif (args.drf_left):
         array = drf.getarrayminus()
     else:
         array = drf.getarraydiff()

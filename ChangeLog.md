@@ -2,6 +2,23 @@
 
 ## CustardPy
 
+### 3.0.0 (2025-X-XX)
+- ``custardpy_cooler``:
+    - Marged ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` into a single command ``custardpy_cooler``.
+    - Omit outputting the duplicated pairs file (dup.bwa.q30.pairs.gz) and unmapped pair file (unmapped.bwa.q30.pairs.gz).
+    - Added the log files for ``pairtools_parse`` and ``gen_cool_hic``.
+- Added ``custardpy_process_cool`` to process the Cooler data.
+    - Added ``cooler_dump.py`` to dump a contact matrix from the Cooler data.
+    - Added ``makeEigen_cool.sh`` to calculate the PC1 from the Cooler data.
+    - Added ``cooltools_insulation.py`` to calculate the insulation score from the Cooler data.
+    - Added ``cooltools_eigs.py`` to calculate the PC1 from the Cooler data.
+    - Added ``cooltools_dots.py`` to call loops from the Cooler data.
+- Added ``run_fithic.sh`` to run FitHiC for .pair file.
+- ``juicertools.sh``: The ``-a`` option was added to use a new version of juicertools (juicer_tools.2.20.00.jar).
+- Added the virtual environments for HiC-Pro, hictk, and MultiQC.
+- Added ``hicpro`` to execute HiC-Pro in CustardPy.
+- Added a tutorial for HiC-Pro in the `tutorial/Hi-C` directory.
+
 ### 2.2.2 (2025-6-14)
 - Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.0.1 to 2.1.2.
 - Added the PATH to hictk.

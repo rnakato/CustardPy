@@ -10,8 +10,12 @@ from custardpy.plotHiCfeature_module import *
 def get_samples(dirs, chr, type, resolution):
     samples = []
     for dir in dirs:
-        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-        eigen = dir + "/Eigen/" + str(resolution) + "/eigen."  + type + "." + chr + ".txt.gz"
+        if type == "Cooler":
+            observed = dir + "/Matrix/" + str(resolution) + "/balanced." + chr + ".matrix.gz"
+            eigen = dir + "/Eigen/" + str(resolution) + "/eigs.cis." + chr + ".txt.gz"
+        else:
+            observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+            eigen = dir + "/Eigen/" + str(resolution) + "/eigen."  + type + "." + chr + ".txt.gz"
         samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
     return samples
 
@@ -117,8 +121,12 @@ def main():
     nrow_now = 0
 
     # Hi-C Map
-    tadfile = dirs[0] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-    loopfile = dirs[0] + "/loops/" + type + "/merged_loops.bedpe"
+    if type == "Cooler":
+        tadfile = dirs[0] + f"/InsulationScore/{resolution}/TADs.w100000.bed"
+        loopfile = dirs[0] + f"/loops/cooltools/dots.25000.tsv"
+    else:
+        tadfile = dirs[0] + f"/TAD/{type}/{resolution}_blocks.bedpe"
+        loopfile = dirs[0] + f"/loops/{type}/merged_loops.bedpe"
 
     plot_HiC_Map(nrow, nrow_now, nrow_heatmap, samples[0], labels[0], chr,
                 type, resolution, vmax, vmin, figstart, figend, args.vizdistancemax,

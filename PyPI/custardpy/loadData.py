@@ -12,12 +12,10 @@ def loadDenseMatrix(filename):
 
 def loadTADs(filename, chr, *, start=0, end=99999999999):
     if os.path.exists(filename):
-        tads = pd.read_csv(filename, delimiter='\t', usecols=['#chr1','x1','x2'])
-        tads.rename(columns={"#chr1":"chr1"},inplace =True)
-#        tads = tads[tads.chr1 == chr]
-#        tads = tads[tads.x1 < end]
-#        tads = tads[tads.x2 >= start]
-        tads = tads[(tads.chr1 == chr) & (tads.x1 < end) & (tads.x2 >= start)]
+#        tads = pd.read_csv(filename, delimiter='\t', usecols=['#chr1','x1','x2'])
+        tads = pd.read_csv(filename, header=0, delimiter='\t', usecols=[0,1,2], names=['chr','x1','x2'])
+#        tads.rename(columns={"#chr1":"chr"},inplace =True)
+        tads = tads[(tads.chr == chr) & (tads.x1 < end) & (tads.x2 >= start)]
     else:
         print ("Warning: " + filename + " is not available. Skipping")
         tads = None
@@ -25,9 +23,9 @@ def loadTADs(filename, chr, *, start=0, end=99999999999):
 
 def loadloops(filename, chr, *, start=0, end=99999999999):
     if os.path.exists(filename):
-        loops = pd.read_csv(filename, delimiter='\t', usecols=['#chr1','x1','x2','chr2','y1','y2']) #loops = pd.read_csv(filename, delimiter='\t', usecols=['chr1','x1','x2','chr2','y1','y2'])
-        loops.rename(columns={"#chr1":"chr1"},inplace =True)
-        loops.drop([0],inplace= True)
+#        loops = pd.read_csv(filename, delimiter='\t', usecols=['#chr1','x1','x2','chr2','y1','y2'])
+        loops = pd.read_csv(filename, header=0, delimiter='\t', usecols=[0,1,2,3,4,5], names=['chr1','x1','x2','chr2','y1','y2'], comment="#")
+#        loops.drop([0], inplace=True)
 #        loops = loops[loops.chr1 == chr]
 #        loops = loops[loops.chr2 == chr]
 #        loops = loops[loops.x2 < end]

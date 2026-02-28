@@ -7,9 +7,10 @@ mapping_reads_bwa(){
     odir=$2
     prefix=$3
     index_bwa=$4
-    ncore=$5
-    postfix1=$6
-    postfix2=$7
+    genome=$5
+    ncore=$6
+    postfix1=$7
+    postfix2=$8
 
     if [ ! -d "$dir" ]; then
         echo "Error: $dir does not exist."
@@ -18,6 +19,16 @@ mapping_reads_bwa(){
     if test "$index_bwa" = ""; then
         echo "Error: specify BWA index (-i)."
         exit 1
+    fi
+    if test "$genome" = ""; then
+        echo "Error: specify genome fasta (-f)."
+        exit 1
+    fi
+
+    bamdir=$odir/mapfile
+    if test -s "$bamdir/mapped.bwa.cram"; then
+        echo "$bamdir/mapped.bwa.cram already exists and is non‑empty. Skipping mapping."
+        return
     fi
 
     echo "start mapping by BWA..."
@@ -40,7 +51,6 @@ mapping_reads_bwa(){
         fq2_list+=("$fq2")
     done
 
-    bamdir=$odir/mapfile
     logdir=$odir/log
     tempdir=$odir/temp
     mkdir -p $bamdir $logdir $tempdir
@@ -51,6 +61,12 @@ mapping_reads_bwa(){
         fq2=${fq2_list[$i]}
         name=`basename $fq1 $postfix1`
 
+        ## for 3C+ data aligners must align the two reads of a pair independently (i.e., avoid ’pair rescue’).
+        ## Adding the -SP flags ensures this behavior.
+        # -5: for split alignment, take the alignment with the smallest coordinate as primary
+        # -S: skip mate rescue
+        # -P: skip pairing; mate rescue performed unless -S also in use
+        # -T <INT>: minimum score to output [30]
         ex "bwa mem -5SP -T0 -t $ncore $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping_sam_$name > $tempdir/$name.bwa.sam"
 
         bams+=" $tempdir/$name.bwa.sam"

@@ -5,23 +5,7 @@
 
 import numpy as np
 import pandas as pd
-import sys
 import argparse
-
-#def parse_argv():
-#    usage = 'Usage: \n    python {} <inputfile> <outputfile> <genometable> <chr1> <chr2> <resolution> [--help]'.format(__file__)
-#    arguments = sys.argv
-#    if len(arguments) == 1:
-#        print(usage)
-#        exit()
-
-#    arguments.pop(0)
-#    options = [option for option in arguments if option.startswith('-')]
-#
-#    if '-h' in options or '--help' in options:
-#        print(usage)
-#
-#    return arguments
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

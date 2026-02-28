@@ -11,16 +11,19 @@ function usage()
     echo '     -r resolutions: the resolutions for ArrowHead (default: "10000 25000 50000", should be quoted and separated by spaces)' 1>&2
     echo '     -p ncore: number of CPUs (default: 24)' 1>&2
     echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
+    echo '     -a: Use juicer_tools.jar version 2 (juicer_tools.2.20.00.jar, takes precedence over -o)' 1>&2
 }
 
 resolutions="10000 25000 50000"
 ncore=24
 useoldversion="no"
-while getopts r:p:o option; do
+usever2="no"
+while getopts r:p:oa option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
         p) ncore=${OPTARG} ;;
         o) useoldversion="yes" ;;
+        a) usever2="yes" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -49,7 +52,10 @@ mkdir -p $dir
 
 for res in $resolutions; do
     if test ! -e $dir/${res}_blocks.bedpe; then
-        if test $useoldversion = "no"; then
+    
+        if test $usever2 = "yes"; then
+            juicertools.sh -a arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir 
+        elif test $useoldversion = "no"; then
             # juicer_tools.1.22.01.jar
             juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm --ignore-sparsity $hic $dir 
         else 

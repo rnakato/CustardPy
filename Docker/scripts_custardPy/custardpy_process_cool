@@ -1,0 +1,123 @@
+#!/bin/bash -e
+cmdname=`basename $0`
+function usage()
+{
+    echo "$cmdname [Options] <cool> <odir> <label>" 1>&2
+    echo '   <cool>: .cool file' 1>&2
+    echo "   <odir> : Output directory"
+    echo "   <label> : Label of the sample"
+    echo '   Options:' 1>&2
+    echo "      -g genometable: Genome table file (describing the chromosome length)"
+    echo '      -f genome: Genome file' 1>&2
+    echo '      -p pair: .pair file (for fithic)' 1>&2
+    echo '      -r resolutions : Resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
+    echo '      -s resolutions : Resolutions for loop calling (default: "5000 10000 250000", should be quoted and separated by spaces)' 1>&2
+    echo '      -t ncore: Number of CPUs (default: 32)' 1>&2
+    echo '      -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
+    echo '      -a: Use juicer_tools.jar version 3 (takes precedence over -o)' 1>&2
+    echo '   Example:' 1>&2
+    echo "      $cmdname cooler.dedup.q30.multires.cool CustardPyResults/ Control" 1>&2
+}
+
+gt=""
+ncore=32
+
+norm="SCALE"
+resolutions="25000 50000 100000"
+resolutions_loops="5000 10000 25000"
+genome=""
+pairfile=""
+useversion=""
+while getopts g:f:r:s:t:p:oa option; do
+    case ${option} in
+	g) gt=${OPTARG} ;;
+	f) genome=${OPTARG} ;;
+	r) resolutions=${OPTARG} ;;
+	r) resolutions_loops=${OPTARG} ;;
+    t) ncore=${OPTARG} ;;
+    p) pairfile=${OPTARG} ;;
+    o) useversion="-o" ;;
+    a) useversion="-a" ;;
+    \?)
+        echo "Invalid option: -$OPTARG" >&2
+        usage
+        exit 1
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 3 ]; then
+  usage
+  exit 1
+fi
+
+cool=$1
+odir=$2
+label=$3
+
+if test "$gt" = ""; then
+    echo "Error: specify genome table (-g)."
+    exit 0
+fi
+
+if [[ ${odir} =~ ^/.+$ ]]; then
+    odir=$odir
+else
+    odir=$(pwd)/$odir
+fi
+
+logdir=$odir/log
+mkdir -p $logdir
+
+
+ex(){ echo $1; eval $1; }
+
+for resolution in $resolutions
+do
+    echo "calculate PC1 with resolution $resolution.."
+    if test "$genome" = ""; then
+        echo "genome file is not specified. PC1 calculation is skipped."
+    else
+        ex "makeEigen_cool.sh -p $ncore $odir/Eigen/$resolution $cool $resolution $gt $genome"
+    fi
+
+    # Contact matrix
+    echo "generate Matrix..."
+    matdir=$odir/Matrix/$resolution
+    mkdir -p $matdir
+    chrlist=$(getchr_from_genometable.sh $gt)
+    for chr in $chrlist
+    do
+        if test $chr = "chrY" -o $chr = "chrM" -o $chr = "chrMT"; then continue; fi
+        echo -en "$chr.."
+        cooler_dump.py --resolution $resolution $cool $chr $matdir 
+    done
+    echo "done."
+
+    # InsulationScore
+    echo "calculate Insulation score.."
+    ex "cooltools_insulation.py $cool $odir/InsulationScore $gt --resolution $resolution"
+done
+
+# Loop
+for resolution in $resolutions_loops
+do
+    echo "call loops.."
+    ex "cooltools_dots.py $cool $odir $gt --resolution $resolution -p $ncore"
+    if test "$pairfile" = ""; then
+        echo ".pair file is not specified. Fithic is skipped."
+    else
+        mkdir -p $odir/loops/fithic/$resolution
+#        if test $resolution -lt 10000; then
+#            echo "$resolution is too small. Fithic skipped."
+#        else
+#            ex "run_fithic.sh -g $gt $pairfile $odir/loops/fithic/$resolution $label $resolution | tee $logdir/custardpy_fithic.$resolution.log"
+#        fi
+        ex "run_fithic.sh -g $gt $pairfile $odir/loops/fithic/$resolution $label $resolution | tee $logdir/custardpy_fithic.$resolution.log"
+    fi
+done

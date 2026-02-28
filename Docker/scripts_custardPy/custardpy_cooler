@@ -1,0 +1,159 @@
+#!/bin/bash
+
+printHelpAndExit() {
+    echo "Usage: ${0##*/} [options] -i <index> -g <gt> <fastqdir> <odir>" 1>&2
+    echo '  fastqdir: Directory that contains input fastq files (e.g., "fastq/")' 1>&2
+    echo "  odir: Name of output directory" 1>&2
+    echo -e "\n  Options:" 1>&2
+    echo "    -S stage : steps to be executed [all|map|proc] (default: all)" 1>&2
+    echo "       all: execute all process (default)" 1>&2
+    echo "       map: map reads and exit" 1>&2
+    echo "       proc: generate .pair, .cool, and .hic files from the map file" 1>&2
+#    echo "       postproc: compartment and loop analysis using .cool and .hic files" 1>&2
+    echo "    -i index : BWA index" 1>&2
+    echo "    -f genome : Genome fasta file" 1>&2
+    echo "    -g genometable : Genometable file (describing the chromosome length)" 1>&2
+    echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)" 1>&2
+    echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)" 1>&2
+    echo "    -o outputdir : output directory (default: 'CustardPyResults_Hi-C')" 1>&2
+    echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)" 1>&2
+    echo "    -p ncore : number of CPUs (default: 4)" 1>&2
+    echo "    -x postfix" 1>&2
+    echo "       1: '*_1.fastq.gz' and '*_2.fastq.gz' (default)" 1>&2
+    echo "       2: '*_R1.fastq.gz' and '*_R2.fastq.gz'" 1>&2
+    echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)" 1>&2
+    echo "    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)" 1>&2
+    echo "    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')" 1>&2
+   exit 0
+}
+
+ncore=4
+index_bwa=""
+genome=""
+gt=""
+enzyme="HindIII"
+build=""
+outputdir="CustardPyResults_Hi-C"
+qthre=30
+stage="all"
+max_split=2
+max_distance=8.4
+binsize_min=5000
+binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
+postfix1=_1.fastq.gz
+postfix2=_2.fastq.gz
+
+while getopts "i:f:g:e:b:o:q:p:S:m:n:r:x:h" opt; do
+    case $opt in
+        i) index_bwa=$OPTARG;;
+        f) genome=$OPTARG;;
+        g) gt=$OPTARG;;
+        e) enzyme=$OPTARG;;
+        b) build=$OPTARG;;
+        o) outputdir=${OPTARG};;
+        q) qthre=$OPTARG;;
+        p) ncore=$OPTARG;;
+        S) stage=$OPTARG;;
+        m) max_distance=$OPTARG;;
+        n) binsize_min=$OPTARG;;
+        r) binsize_multi=$OPTARG;;
+	    s) resolutions=${OPTARG};;
+        x) case ${OPTARG} in
+            1)
+                postfix1=_1.fastq.gz
+                postfix2=_2.fastq.gz
+                ;;
+            2)
+                postfix1=_R1.fastq.gz
+                postfix2=_R2.fastq.gz
+                ;;
+            *)
+                echo "Error: Specify 1 or 2 to the option '-p'."
+                usage
+                exit 1
+                ;;
+           esac
+           ;;
+        h) printHelpAndExit;;
+        [?]) printHelpAndExit;;
+        esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 2 ]; then
+    printHelpAndExit
+fi
+
+if [ ! -z "$stage" ]
+then
+    case $stage in
+       all) stage_all=1 ;;
+#       all-fastqc) stage_all_omitfastqc=1 ;;
+       map) stage_map=1 ;;
+       proc) stage_proc=1 ;;
+#       postproc) stage_postproc=1 ;;
+#       *) echo "Error: specify [all|map|proc|postproc] for stage (-S)."
+       *) echo "Error: specify [all|map|proc] for stage (-S)."
+          printHelpAndExit
+    esac
+fi
+
+if test "$build" = ""; then
+    echo "Error: specify genome build (-b)."
+    exit 0
+fi
+if test "$gt" = ""; then
+    echo "Error: specify genome table (-g)."
+    exit 0
+fi
+
+if test $enzyme = "HindIII"; then
+    enzymelen=6
+else
+    enzymelen=4
+fi
+
+restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
+
+ex(){ echo $1; eval $1; }
+
+pwd=$(cd $(dirname $0) && pwd)
+. $pwd/custardpy_mappingFASTQ_bwa.sh
+. $pwd/custardpy_cooler_subfunc.sh
+
+fqdir=$1
+prefix=$2
+
+odir=$outputdir/Cooler_$build/$prefix
+logdir=$odir/log
+mkdir -p $logdir
+
+echo "Analyzing $fqdir..."
+
+if [ -z "$stage_proc" ] && [ -z "$stage_postproc" ]; then
+    mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index_bwa" "$genome" "$ncore" "$postfix1" "$postfix2"
+fi
+
+if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
+    # Generate .pair file
+    parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen | tee $logdir/custardpy_parse_pairtools.log
+    if [ $? -ne 0 ]; then
+        echo "Error: pairtools parse failed. Check the log file $logdir/pairtools_parse.log"
+        exit 1
+    fi
+
+    # Generate .cool and .hic files
+    pair=$odir/pairs/dedup.bwa.q$qthre.pairs.gz
+ #   pair=$odir/pairs/dedup.restricted.q$qthre.pairs.gz # not used
+#    gen_cool_hic $odir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
+    gen_cool_hic $odir $gt $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
+    if [ $? -ne 0 ]; then
+        echo "Error: cooler processing failed. Check the log files in $odir/log"
+        exit 1
+    fi
+
+    # MultiQC
+    /opt/micromamba/envs/multiqc/bin/multiqc $odir/qc_report/ --outdir $odir/qc_report/
+fi
+
+echo "${0##*/} finished!"

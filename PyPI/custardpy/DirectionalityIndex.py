@@ -4,7 +4,6 @@
 # All rights reserved.
 
 import numpy as np
-import pandas as pd
 import argparse
 from custardpy.loadData import loadDenseMatrix
 from custardpy.InsulationScore import MultiInsulationScore

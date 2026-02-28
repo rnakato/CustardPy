@@ -1,5 +1,4 @@
 import setuptools
-from setuptools import setup
 package_name = 'custardpy'
 
 def get_version(rel_path):

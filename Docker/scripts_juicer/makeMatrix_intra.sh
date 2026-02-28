@@ -11,14 +11,17 @@ function usage()
     echo '   Options:' 1>&2
     echo '     -l: output contact matrix as a list (default: dense matrix)' 1>&2
     echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
+    echo '     -a: Use juicer_tools.jar version 2 (juicer_tools.2.20.00.jar, takes precedence over -o)' 1>&2
 }
 
 list="no"
-useoldversion=""
-while getopts lo option; do
+useoldversion="no"
+usever2="no"
+while getopts loa option; do
     case ${option} in
         l) list="yes" ;;
-        o) useoldversion="-o" ;;
+        o) useoldversion="yes" ;;
+        a) usever2="yes" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -56,7 +59,16 @@ do
     for type in observed oe
     do
 	tempfile=$dir/$type.$norm.$chr.txt
-        juicertools.sh $useoldversion dump $type $norm $hic $chr $chr BP $binsize $tempfile
+
+    if test $usever2 = "yes"; then
+        juicertools.sh -a dump $type $norm $hic $chr $chr BP $binsize $tempfile
+    elif test $useoldversion = "no"; then
+        # juicer_tools.1.22.01.jar
+        juicertools.sh dump $type $norm $hic $chr $chr BP $binsize $tempfile
+    else 
+        juicertools.sh -o dump $type $norm $hic $chr $chr BP $binsize $tempfile
+    fi
+
 	if test $list = "no" -o -s $tempfile; then
         convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.$chr.matrix.gz $gt $chr $chr -r $binsize
 	    rm $tempfile

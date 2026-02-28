@@ -70,5 +70,6 @@ elif [ "$CALLEDBY" = "LSF" ]
 then
     java -Djava.awt.headless=true -Djava.library.path=`dirname $0`/lib64 -Xmx16000m -Xms16000m -Xgcthreads1 -jar `dirname $0`/juicer_tools.7.0.jar $*
 else
-    ex "java -Djava.awt.headless=true $memoryparam -jar `dirname $0`/juicer_tools.jar $*"
+#    ex "java -Djava.awt.headless=true $memoryparam -jar `dirname $0`/juicer_tools.jar $*"
+    ex "java -Djava.awt.headless=true $memoryparam -jar /opt/juicer/juicer_tools.1.22.01.jar $*"
 fi

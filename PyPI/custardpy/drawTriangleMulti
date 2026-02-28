@@ -27,8 +27,8 @@ def main():
     parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
     parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
-#    parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
     parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+    parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
     args = parser.parse_args()
 #    print(args)
@@ -66,8 +66,13 @@ def main():
     print (resolution)
     samples = []
     for dir in dirs:
-        observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-        samples.append(JuicerMatrix("RPM", observed, resolution))
+        if args.cooler:
+            observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution))
+        else:
+            observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
+            samples.append(JuicerMatrix("RPM", observed, resolution))
+
     nsample = len(samples)
 
     ### Plot
@@ -76,12 +81,21 @@ def main():
     plt.figure(figsize=(figsize_x, figsize_y))
 
     for i, sample in enumerate(samples):
-        tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-        print(tadfile)
-        tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-        loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
-        print(loopfile)
-        loops = loadloops(loopfile, chr, start=figstart, end=figend)
+        if args.cooler:
+            tadfile = f"{dirs[i]}/InsulationScore/{resolution}/TADs.w500000.bed"
+            print(tadfile)
+            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
+            loopfile = f"{dirs[i]}/loops/cooltools/dots.25000.tsv"
+            print(loopfile)
+            loops = loadloops(loopfile, chr, start=figstart, end=figend)
+        else:
+            tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+            print(tadfile)
+            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
+            loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
+            print(loopfile)
+            loops = loadloops(loopfile, chr, start=figstart, end=figend)
+
         # Hi-C Map
         plt.subplot2grid((nsample*2, 4), (i*2,0), rowspan=2, colspan=4)
         if (args.log):

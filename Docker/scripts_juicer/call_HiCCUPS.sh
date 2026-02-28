@@ -9,14 +9,17 @@ function usage()
     echo '   Options:' 1>&2
     echo '     -r resolutions: the resolutions (default: "5000,10000,25000", should be quoted and separated by comma)' 1>&2
     echo '     -o: Use older version of juicer_tools.jar (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
+    echo '     -a: Use juicer_tools.jar version 3 (juicer_tools.3.0.0.jar)' 1>&2
 }
 
 resolutions="5000,10000,25000"
 useoldversion="no"
-while getopts r:o option; do
+usever3="no"
+while getopts r:oa option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
         o) useoldversion="yes" ;;
+        a) usever3="yes" ;;
         \?) 
             echo "Invalid option: -$OPTARG" >&2
             usage
@@ -46,7 +49,10 @@ pwd=$(cd $(dirname $0) && pwd)
 hicdir=$odir/loops/$norm
 mkdir -p $hicdir
 
-if test $useoldversion = "no"; then
+
+if test $usedver3 = "yes"; then
+    ex "juicertools.sh -a hiccups -r $resolutions -k $norm $hic $hicdir"
+elif test $useoldversion = "no"; then
     # juicer_tools.1.22.01.jar
     ex "juicertools.sh hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
 else 

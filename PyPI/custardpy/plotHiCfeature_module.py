@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-from custardpy.HiCmodule import JuicerMatrix
 from custardpy.DirectionalityIndex import getDirectionalityIndexOfMultiSample
 from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
