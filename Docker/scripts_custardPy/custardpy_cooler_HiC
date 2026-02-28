@@ -5,7 +5,7 @@ printHelpAndExit() {
     echo '  fastqdir: Directory that contains input fastq files (e.g., "fastq/")'
     echo "  odir: Name of output directory"
     echo -e "\n  Options:"
-    echo "    -S stage : steps to be executed [all|pairs|postproc] (default: all)"
+    echo "    -S stage : steps to be executed [all|map|pairs|postproc] (default: all)"
     echo "       all: execute all process (default)"
     echo "       map: map reads and exit"
     echo "       pairs: generate .pair file from map file"
@@ -67,8 +67,8 @@ while getopts "i:g:f:e:b:o:q:p:S:m:n:r:x:h" opt; do
                 postfix2=_R2.fastq.gz
                 ;;
             *)
-                echo "Error: Specify 1 or 2 to the option '-p'."
-                usage
+                echo "Error: Specify 1 or 2 to the option '-x'."
+                printHelpAndExit
                 exit 1
                 ;;
            esac
@@ -99,18 +99,18 @@ fi
 
 if test "$build" = ""; then
     echo "Error: specify genome build (-b)."
-    exit 0
+    exit 1
 fi
 if test "$gt" = ""; then
     echo "Error: specify genome table (-g)."
-    exit 0
+    exit 1
 fi
 if test "$genome" = ""; then
     echo "Error: specify genome (-f)."
-    exit 0
+    exit 1
 fi
 
-if test $enzyme = "HindIII"; then
+if test "$enzyme" = "HindIII"; then
     enzymelen=6
 else
     enzymelen=4
@@ -146,15 +146,15 @@ echo "Analyzing $fqdir..."
 #    done
 #fi
 
-if [ -z "$stage_pairs" ] && [ -z "$stage_postproc" ]; then
+if [ "$stage_all" = 1 ] || [ "$stage_map" = 1 ]; then
     mapping_reads_bwa $fqdir $odir $prefix $index_bwa $ncore $postfix1 $postfix2
 fi
 
-if [ -z "$stage_map" ] && [ -z "$stage_postproc" ]; then
+if [ "$stage_all" = 1 ] || [ "$stage_pairs" = 1 ]; then
     parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen
 fi
 
-if [ -z "$stage_map" ] && [ -z "$stage_pairs" ]; then
+if [ "$stage_all" = 1 ] || [ "$stage_postproc" = 1 ]; then
     pair=$odir/pairs/dedup.restricted.q$qthre.pairs.gz
     gen_cool_hic $odir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair
 fi
