@@ -134,10 +134,11 @@ RUN R -e "install.packages('BiocManager')" \
                                     'rhdf5', \
                                     'S4Vectors', \
                                     'ShortRead'))"
-RUN R -e 'devtools::install_url("https://github.com/SooLee/plotosaurus/archive/0.9.2.zip")' \
+
+RUN R -e 'remotes::install_url("https://github.com/SooLee/plotosaurus/archive/0.9.2.zip")' \
     && R -e 'remotes::install_github(c("robinweide/GENOVA", "yycunc/FIREcaller", "CSOgroup/CALDER2.0"))' \
-    && R -e 'devtools::install_bitbucket("chicagoTeam/Chicago", subdir="Chicago")' \
-    && R -e 'devtools::install_bitbucket("chicagoTeam/Chicago", subdir="PCHiCdata")'
+    && R -e 'remotes::install_bitbucket("chicagoTeam/Chicago", subdir="Chicago")' \
+    && R -e 'remotes::install_bitbucket("chicagoTeam/Chicago", subdir="PCHiCdata")'
 
 COPY hicrep_1.12.2.tar.gz hicrep_1.12.2.tar.gz
 RUN R -e 'install.packages("/opt/hicrep_1.12.2.tar.gz", repo = NULL, type = "source")' \
@@ -162,7 +163,7 @@ RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
     # iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
     # about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
     && micromamba run -n base pip install --no-cache-dir --no-build-isolation iced==0.5.10 \
-    && micromamba run -n base pip install --no-cache-dir pastis==0.4.0 \
+    && micromamba run -n base pip install --no-cache-dir pastis==0.4.0 --no-build-isolation \
     && micromamba clean --all --yes
 
 # stripenn (pandas==1.5.3)
