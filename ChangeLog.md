@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 3.0.0 (2025-X-XX)
+### 3.0.0 (2026-2-28)
 - ``custardpy_cooler``:
     - Marged ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` into a single command ``custardpy_cooler``.
     - Omit outputting the duplicated pairs file (dup.bwa.q30.pairs.gz) and unmapped pair file (unmapped.bwa.q30.pairs.gz).
