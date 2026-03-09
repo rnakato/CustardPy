@@ -104,7 +104,6 @@ if test "$gt" = ""; then
     exit 1
 fi
 
-=======
 if test "$genome" = ""; then
     echo "Error: specify genome (-f)."
     exit 1
