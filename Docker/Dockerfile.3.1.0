@@ -2,9 +2,9 @@ FROM rnakato/ubuntu_gpu_20.04:cuda11.0.3-cudnn8 AS base
 LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 # For sorting, LC_ALL is C
-ENV LC_ALL=C
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV LC_ALL C
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES all
 
 WORKDIR /opt/
 USER root
@@ -71,18 +71,13 @@ RUN tar xvfj bwa-0.7.17.tar.bz2 \
     && cd .. \
     && rm bwa-0.7.17.tar.bz2
 
-# Chromap 0.2.6
-#COPY chromap-0.2.6_x64-linux.tar.bz2 chromap-0.2.6_x64-linux.tar.bz2
-#RUN tar xvfj chromap-0.2.6_x64-linux.tar.bz2 \
-#    && rm chromap-0.2.6_x64-linux.tar.bz2
-
-# Chromap 0.3.0
-COPY chromap-0.3.0.tar.gz chromap-0.3.0.tar.gz
-RUN tar zxvf chromap-0.3.0.tar.gz \
-    && cd chromap-0.3.0 \
+# Chromap 0.3.2
+COPY chromap-0.3.2.tar.gz chromap-0.3.2.tar.gz
+RUN tar zxvf chromap-0.3.2.tar.gz \
+    && cd chromap-0.3.2 \
     && make \
     && cp chromap /usr/local/bin/ \
-    && rm -rf /opt/chromap-0.3.0 /opt/chromap-0.3.0.tar.gz
+    && rm -rf /opt/chromap-0.3.2 /opt/chromap-0.3.2.tar.gz
 
 # Bowtie2.4.5
 COPY bowtie2-2.4.5-linux-x86_64.zip bowtie2-2.4.5-linux-x86_64.zip
@@ -156,7 +151,7 @@ ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=$PATH:/opt/micromamba/bin
 COPY micromamba /opt/micromamba
 RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
-    && micromamba run -n base pip install --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.6.8 \
+    && micromamba run -n base pip install --no-cache-dir custardpy==0.7.8 \
     # JuiceBox
     && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git \
     # pastis
@@ -201,7 +196,7 @@ RUN git clone https://github.com/ay-lab/FitHiChIP.git \
     && micromamba run -n hic-pro pip install --no-cache-dir networkx==3.1 numpy==1.22.* hic-straw==1.3.1 cooler==0.9.3 macs2==2.2.9.1
 COPY localbin/bedToBigBed /opt/FitHiChIP/bedToBigBed
 COPY scripts_Docker/interact.as /opt/FitHiChIP/interact.as
-RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as 
+RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as
 
 # Mango (modified version by Wang)
 RUN git clone https://github.com/wangjk321/mango_multithreads_wang.git \
@@ -218,23 +213,25 @@ RUN R CMD INSTALL ChIAPoP_0.99.9.7.tar.gz \
 #    && pip install -r python-requirements.txt
 
 # hictk
-RUN micromamba create -n hictk -c defaults -c conda-forge -c bioconda hictk==2.1.2
+RUN micromamba create -n hictk -c defaults -c conda-forge -c bioconda hictk==2.2.0
 
 # MultiQC
 RUN micromamba create -n multiqc python==3.8 -c defaults \
    && micromamba run -n multiqc pip install --upgrade --force-reinstall git+https://github.com/open2c/MultiQC.git \
    && micromamba clean --all --yes
 
+RUN mkdir /opt/restriction_sites/
+
 ## Cooler restriction sites
 RUN wget --quiet https://x.gd/qH1Lw -O Cooler-restriction_sites.tar.gz \
     && tar zxvf Cooler-restriction_sites.tar.gz \
-    && mv Cooler-restriction_sites / \
+    && mv Cooler-restriction_sites /opt/restriction_sites/ \
     && rm Cooler-restriction_sites.tar.gz
 
 ## HiC-Pro restriction sites
 RUN wget --quiet https://x.gd/0DJOX -O HiCPro-restriction_sites.tar.gz \
     && tar zxvf HiCPro-restriction_sites.tar.gz \
-    && mv HiCPro-restriction_sites / \
+    && mv HiCPro-restriction_sites /opt/restriction_sites/ \
     && rm HiCPro-restriction_sites.tar.gz
 
 # Juicer v1.6 and Juicer tools v1.22.01
@@ -243,10 +240,10 @@ COPY juicer-1.6 /opt/juicer
 COPY juicer_tools.1.22.01.jar /opt/juicer/juicer_tools.1.22.01.jar
 COPY juicer_tools.1.9.9_jcuda.0.8.jar /opt/juicer/juicer_tools.1.9.9_jcuda.0.8.jar
 COPY juicer_tools.2.20.00.jar /opt/juicer/juicer_tools.2.20.00.jar
-RUN wget --quiet https://x.gd/5ND8F -O restriction_sites.tar.gz \
-    && tar zxvf restriction_sites.tar.gz \
-    && mv restriction_sites /opt/juicer/ \
-    && rm restriction_sites.tar.gz
+RUN wget --quiet https://x.gd/5ND8F -O Juicer-restriction_sites.tar.gz \
+    && tar zxvf Juicer-restriction_sites.tar.gz \
+    && mv Juicer-restriction_sites /opt/restriction_sites/ \
+    && rm Juicer-restriction_sites.tar.gz
 
 COPY motiffiles motiffiles
 RUN unpigz /opt/motiffiles/*gz

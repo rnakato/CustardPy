@@ -6,7 +6,7 @@ gene=refFlat.$build.txt
 bwaindex=bwa-indexes/$build
 ncore=64
 
-sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.0.0.sif"
+sing="singularity exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
 #sing="singularity exec --nv custardpy.sif"
 
 fastq_post="_"  # "_" or "_R"

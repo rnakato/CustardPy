@@ -2,6 +2,13 @@
 
 ## CustardPy
 
+### 3.1.0 (2026-3-14)
+    - Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.1.2 to 2.2.0.
+    - Updated chromap from v0.3.0 to v0.3.2
+    - Added the restriction sites for T2T and RPE1 genomes to Juicer, Cooler, and HiC-Pro.
+        - Moved the restriction site files to /opt/restriction_sites/ and modified the scripts to use the new path.
+    - Bug fix: lost path to sratoolkit 3.2.1 in PATH
+
 ### 3.0.0 (2026-2-28)
 - ``custardpy_cooler``:
     - Marged ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` into a single command ``custardpy_cooler``.

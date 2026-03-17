@@ -1,10 +1,10 @@
 # CustardPy: Docker image for 3D genome analysis
 
-<img src = "image/CustardPy.jpg" width = 700ptx>
+<img src = "CustardPy.jpg" width = 700ptx>
 
 This repository contains
 - Source code of **CustardPy** (PyPI),
-- Dockerfile of **CustardPy** Docker image, 
+- Dockerfile of **CustardPy** Docker image,
 - [Full Manual](https://custardpy.readthedocs.io), and
 - Tutorial data of Hi-C and Micro-C analysis using demo data.
 
@@ -41,7 +41,7 @@ Singularity is the alternative way to use CustardPy.
 With this command, you can build the singularity file (.sif) of CustardPy:
 
     singularity build custardpy.sif docker://rnakato/custardpy
-    
+
 Instead, you can download the CustardPy singularity image from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0) (We use singularity version 3.8.5).
 
 Then you can run CustardPy with the command:

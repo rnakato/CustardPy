@@ -1,4 +1,4 @@
-sing="singularity exec --bind /work,/work2,/work3 --cleanenv /work/SingularityImages/custardpy.3.0.0.sif"
+sing="singularity exec --bind /work,/work2,/work3 --cleanenv /work/SingularityImages/custardpy.3.1.0.sif"
 
 $sing gethg38genome.sh
 genome=genome.hg38.fa

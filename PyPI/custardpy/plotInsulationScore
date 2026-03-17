@@ -4,6 +4,7 @@
 # All rights reserved.
 
 import argparse
+import matplotlib.pyplot as plt
 from custardpy.InsulationScore import *
 
 if(__name__ == '__main__'):

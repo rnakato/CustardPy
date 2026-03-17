@@ -1,3 +1,4 @@
+from pathlib import Path
 import setuptools
 package_name = 'custardpy'
 
@@ -9,8 +10,8 @@ def get_version(rel_path):
     else:
         raise RuntimeError("Unable to find version string.")
 
-with open("../README.md", "r") as fh:
-    long_description = fh.read()
+here = Path(__file__).resolve().parent
+long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setuptools.setup(
     name="custardpy",

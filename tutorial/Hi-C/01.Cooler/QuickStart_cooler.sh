@@ -7,7 +7,7 @@ genome=genome.$build.fa
 ncore=64
 enzyme=MboI
 
-sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.0.0.sif"
+sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
 #sing="singularity exec custardpy.sif"
 
 for cell in Control #siCTCF siRad21 siNIPBL

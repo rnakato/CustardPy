@@ -223,7 +223,8 @@ fi
 
 if [ -z "$site_file" ]
 then
-    site_file="${juiceDir}/restriction_sites/${genomeID}_${site}.txt"
+#    site_file="${juiceDir}/restriction_sites/${genomeID}_${site}.txt"
+    site_file="/opt/restriction_sites/Juicer-restriction_sites/${genomeID}_${site}.txt"
 fi
 
 ## Check that site file exists, needed for fragment number for merged_nodups

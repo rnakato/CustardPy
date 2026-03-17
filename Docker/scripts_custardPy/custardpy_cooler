@@ -115,7 +115,7 @@ else
     enzymelen=4
 fi
 
-restrictionsite=/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
+restrictionsite=/opt/restriction_sites/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 
 ex(){ echo $1; eval $1; }
 

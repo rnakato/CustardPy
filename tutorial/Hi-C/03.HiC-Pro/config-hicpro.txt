@@ -64,7 +64,8 @@ REPORT_CAPTURE_REPORTER = 1
 ## Digestion Hi-C
 #######################################################################
 
-GENOME_FRAGMENT = /home/rnakato/DockerFiles/CustardPy/tutorial/Hi-C/03.HiC-Pro/MboI_resfrag_hg38.bed
+#GENOME_FRAGMENT = /home/rnakato/DockerFiles/CustardPy/tutorial/Hi-C/03.HiC-Pro/MboI_resfrag_hg38.bed
+GENOME_FRAGMENT = /opt/restriction_sites/HiCPro-restriction_sites/MboI_resfrag_hg38.bed
 LIGATION_SITE = GATC
 MIN_FRAG_SIZE =
 MAX_FRAG_SIZE =
