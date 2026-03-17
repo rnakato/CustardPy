@@ -8,6 +8,7 @@
     - Added the restriction sites for T2T and RPE1 genomes to Juicer, Cooler, and HiC-Pro.
         - Moved the restriction site files to /opt/restriction_sites/ and modified the scripts to use the new path.
     - Bug fix: lost path to sratoolkit 3.2.1 in PATH
+    - Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
 
 ### 3.0.0 (2026-2-28)
 - ``custardpy_cooler``:

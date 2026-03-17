@@ -1,20 +1,17 @@
 # CustardPy (PyPI)
 
-
-- 0.7.8 (2026.3.16)
-   - Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
-The core component of CustardPy can be installed using pip3:
-The following are required before installing CustardPy:
-
 - Python 3.7+
 
 ## Installation
+
+The core component of CustardPy can be installed using pip3:
+The following are required before installing CustardPy:
 
     pip3 install custardpy
 
 ## ChangeLog
 
-- 0.7.7 (2026.3.16)
+- 0.7.8 (2026.3.16)
    - Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
 
 - 0.7.6 (2025-06-27)
