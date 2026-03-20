@@ -4,11 +4,12 @@ Quickstart
 CustardPy using Docker or Apptainer
 ---------------------------------------------
 
-Since CustardPy is provided as a Docker image, you need to use docker or apptainer commands. We recommended to use Apptainer. 
+Since CustardPy is provided as a Docker image, you need to use ``docker`` or ``apptainer`` commands. We recommended to use Apptainer. 
 
 The command below is a general example of how to run CustardPy using Docker or Apptainer.
 It will mount the ``/work`` directory of the host machine to the ``/work`` directory of the container.
-See also the sample scripts in the `tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ on GitHub.
+``--gpus all`` option in docker or ``--nv`` option in Apptainer is required to use GPU in the container. 
+If you do not have a GPU or do not want to use it, simply omit this option.
 
 .. code-block:: bash
 
@@ -26,8 +27,8 @@ See also the sample scripts in the `tutorial <https://github.com/rnakato/Custard
         custardpy_cooler -g $gt -f $genome -b $build -e $enzyme \
         -i $index_bwa -p $ncore fastq/$cell $cell
 
-``--gpus all`` option in docker or ``--nv`` option in Apptainer is required to use GPU in the container. 
-If you do not have a GPU or do not want to use it, simply omit this option.
+
+See also the sample scripts in the `tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ on GitHub.
 
 
 Hi-C analysis using Juicer
