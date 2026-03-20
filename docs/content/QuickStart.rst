@@ -33,7 +33,7 @@ See also the sample scripts in the `CustardPy Tutorial <https://github.com/rnaka
 Available Genome Builds
 -----------------------------------
 
-CustardPy provides the reference genome files and restriction enzyme files for Cooler/Juicer/HiC-Pro the following genome builds.
+CustardPy provides the reference genome files and restriction enzyme files for **Cooler/Juicer/HiC-Pro** the following genome builds.
 
 .. csv-table::
    :class: align-center
@@ -52,10 +52,12 @@ CustardPy provides the reference genome files and restriction enzyme files for C
 Hi-C analysis using Juicer
 ---------------------------------------------
 
-Hi-C analysis from FASTQ files
+Analysis from FASTQ files
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ``custardpy_juicer`` command performs the Hi-C analysis from FASTQ files using `Juicer <https://github.com/aidenlab/juicer/wiki>`_.
+
+This command includes the ``custardpy_process_hic`` command described below.
 
 .. code-block:: bash
 
@@ -78,10 +80,10 @@ Hi-C analysis from FASTQ files
 - Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI**
 
 
-Hi-C analysis from a .hic file
+Analysis from a .hic file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-If you start the Hi-C analysis from a ``.hic`` file, use ``custardpy_process_hic`` command.
+If you start the Hi-C analysis from a ``.hic`` file, use the ``custardpy_process_hic`` command.
 
 .. code-block:: bash
 
@@ -89,16 +91,20 @@ If you start the Hi-C analysis from a ``.hic`` file, use ``custardpy_process_hic
     gt=genometable.$build.txt # genome_table file
     gene=refFlat.$build.txt   # gene annotation (refFlat format)
     ncore=64  # number of CPUs
-    cell=Control
+    odir=outputdir
     hic=sample.hic
 
-    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $cell
+    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
-- The outputs are stored in ``$cell``.
+- The outputs are stored in ``$odir``.
 
 .. note::
 
-    Due to the backward incompatibility of Juicertools, ``custardpy_process_hic`` fails with an error when processing .hic files created by older Juicertools. In this case, use the ``-o`` option which uses older versions of Juicertools in CustardPy.
+    Due to the backward incompatibility of `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ , ``custardpy_process_hic`` fails with an error when processing .hic files created by older versions of Juicertools. In this case, try the ``-o`` option which uses older versions of Juicertools in CustardPy.
+
+
+Output data
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Hi-C analysis using Cooler
