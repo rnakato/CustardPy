@@ -58,7 +58,7 @@ Hi-C analysis using Juicer
 Analysis from FASTQ files
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-``custardpy_juicer`` command performs the Hi-C analysis from FASTQ files using `Juicer <https://github.com/aidenlab/juicer/wiki>`_.
+The ``custardpy_juicer`` command performs the Hi-C analysis from FASTQ files using `Juicer <https://github.com/aidenlab/juicer/wiki>`_.
 
 This command includes the ``custardpy_process_hic`` command described below.
 
@@ -115,12 +115,11 @@ These commands create the directories ``Eigen/``, ``InsulationScore/``, ``Matrix
 - The ``InsulationScore/`` directory contains the insulation scores and TAD boundaries for each chromosome.
 - The ``Matrix/`` directory contains the normalized contact matrices (observed and O/E).
 - The ``TAD/`` directory contains the TADs called by `ArrowHead`.
-- The ``loops/`` directory contains the chromatin loops called by HiCCUPS.
+- The ``loops/`` directory contains the chromatin loops called by `HiCCUPS`. If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
 
-.. note::
+The ``custardpy_juicer`` command also creates the ``distance/`` directory in ``$odir`` and saves the distance decay curve there.
 
-    If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
-
+The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large files are automatically gzipped.
 
 Hi-C analysis using Cooler
 ---------------------------------------------
