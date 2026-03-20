@@ -1,10 +1,10 @@
 Quickstart
 =====================
 
+**CustardPy** provides the functions for the analysis using **Cooler**, **Juicer**, and **HiC-Pro** pipelines. Here we describe how to run the analysis using these pipelines.
+
 .. contents:: 
    :depth: 3
-
-CustardPy provides the functions for the analysis using **Cooler**, **Juicer**, and **HiC-Pro** pipelines. Here we describe how to run the analysis using these pipelines.
 
 CustardPy using Docker or Apptainer
 ---------------------------------------------
@@ -38,7 +38,7 @@ See also the sample scripts in the `CustardPy Tutorial <https://github.com/rnaka
 Available Genome Builds
 -----------------------------------
 
-CustardPy provides the reference genome files and restriction enzyme files the following genome builds.
+The CustardPy docker image includes restriction enzyme files for the following genome builds, so users can perform Hi-C analysis without preparing them in advance.
 
 .. csv-table::
    :class: align-center
@@ -129,14 +129,14 @@ The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs fro
 Hi-C/Micro-C analysis using Cooler
 ---------------------------------------------
 
+Although the Juicer pipeline is widely used for Hi-C analysis, it is not suitable for Micro-C analysis.
+CustardPy also allows the Hi-C and Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
+
 .. note::
    Starting from version 3.0.0, ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` were merged into a single command, ``custardpy_cooler``.
 
-Analysis from FASTQ files
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Although the Juicer pipeline is widely used for Hi-C analysis, it is not suitable for Micro-C analysis.
-CustardPy also allows the Hi-C and Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_. 
+Hi-C Analysis from FASTQ files
+++++++++++++++++++++++++++++++++++++++
 
 The ``custardpy_cooler`` command performs the analysis from FASTQ files, generates a ``.cool`` file, and converts it to a ``.hic`` file. 
 The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
@@ -162,6 +162,8 @@ The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI, None (for Micro-C)**
 
+Micro-C Analysis from FASTQ files
+++++++++++++++++++++++++++++++++++++++
 
 For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``custardpy_cooler`` command.
 
