@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 3.1.0 (2026-3-19)
+### 3.1.0 (2026-3-20)
 - Changed the option to specify the $fastq_post ("_" or "_R") from ``-x`` to ``-z`` in ``custardpy_cooler``.
 - Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.1.2 to 2.2.0.
 - Updated chromap from v0.3.0 to v0.3.2
@@ -14,8 +14,8 @@
 - Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
 
 ### 3.0.0 (2026-2-28)
+- ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` were merged into a single command, ``custardpy_cooler``.
 - ``custardpy_cooler``:
-    - Marged ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` into a single command ``custardpy_cooler``.
     - Omit outputting the duplicated pairs file (dup.bwa.q30.pairs.gz) and unmapped pair file (unmapped.bwa.q30.pairs.gz).
     - Added the log files for ``pairtools_parse`` and ``gen_cool_hic``.
 - Added ``custardpy_process_cool`` to process the Cooler data.

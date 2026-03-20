@@ -8,13 +8,11 @@ Docker image of **CustardPy** is available at `DockerHub <https://hub.docker.com
 This image contains various tools for 3D genome analysis in addition to **CustardPy** core components as below:
 
 - Mapping
-
     - `BWA <http://bio-bwa.sourceforge.net/>`_
     - `Bowtie2 <http://bowtie-bio.sourceforge.net/bowtie2/index.shtml>`_ 
     - `chromap <https://github.com/haowenz/chromap>`_ 
 
 - Hi-C/Micro-C analysis
-
     - `Juicer <https://github.com/aidenlab/juicer/wiki>`_ (v1.6)
     - `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ 
     - `JuiceBox <https://github.com/aidenlab/Juicebox>`_ 
@@ -73,7 +71,6 @@ This image contains various tools for 3D genome analysis in addition to **Custar
 
 For a full description of each tool, visit the original website.
 
-
 Download and run the Docker image
 +++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -109,3 +106,24 @@ Core components of **CustardPy** (e.g., commands for visualization) can by insta
 .. code-block:: bash
 
     pip3 install custardpy
+
+
+Available Genome Builds
+-----------------------------------
+
+CustardPy provides the reference genome files and restriction enzyme files for **Cooler/Juicer/HiC-Pro** the following genome builds.
+
+.. csv-table::
+   :class: align-center
+
+   "**Species**", "**Builds**"
+   "Human", "hg38, hg39, T2T"
+   "Mouse", "mm10, mm39"
+   "Rat",   "rn7"
+   "Zebrafish", "danRer11"
+   "Chicken", "galGal5, galGal6"
+   "Xenopus_tropicalis", "xenLae2"
+   "Fly", "dm6"
+   "C.elegans", "ce10, ce11"
+   "S.serevisiae", "sacCer3"
+
