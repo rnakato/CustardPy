@@ -45,9 +45,9 @@ CustardPy provides the reference genome files and restriction enzyme files for C
    "Zebrafish", "danRer11"
    "Chicken", "galGal5, galGal6"
    "Xenopus_tropicalis", "xenLae2"
-   "Fly",   "BDGP6",  "dm6"
+   "Fly", "dm6"
    "C.elegans", "ce10, ce11"
-   "S.serevisiae", "R64-1-1", "sacCer3"
+   "S.serevisiae", "sacCer3"
 
 Hi-C analysis using Juicer
 ---------------------------------------------
