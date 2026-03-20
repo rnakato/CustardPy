@@ -5,7 +5,7 @@ CustardPy Docker image
 ---------------------------------
 
 Docker image of **CustardPy** is available at `DockerHub <https://hub.docker.com/r/rnakato/custardpy>`_.
-This image contains various tools for Hi-C/Micro-C analysis in addition to **CustardPy** core components as below:
+This image contains various tools for 3D genome analysis in addition to **CustardPy** core components as below:
 
 - Mapping
 
@@ -15,7 +15,7 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
 
 - Hi-C/Micro-C analysis
 
-    - `Juicer <https://github.com/aidenlab/juicer/wiki>`_ v1.6
+    - `Juicer <https://github.com/aidenlab/juicer/wiki>`_ (v1.6)
     - `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ 
     - `JuiceBox <https://github.com/aidenlab/Juicebox>`_ 
     - `Cooler <https://cooler.readthedocs.io/en/stable/>`_
@@ -26,14 +26,14 @@ This image contains various tools for Hi-C/Micro-C analysis in addition to **Cus
     - `HOMER <http://homer.ucsd.edu/homer/interactions/index.html>`_
     - `FAN-C <https://fan-c.readthedocs.io/en/latest/index.html>`_
     - `HiC-Pro <https://github.com/nservant/HiC-Pro>`_ 
-    - `HiCUP <https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/>`_ 
+    - `HiCUP <https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/>`_
     - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ 
     - `CALDER2 <https://github.com/CSOgroup/CALDER2>`_
 
 - Loop calling
     - `FitHiC <https://github.com/ay-lab/fithic>`_
     - `CHiCAGO <https://bitbucket.org/chicagoTeam/chicago/src/master/>`_
-
+ 
 - Stripe analysis
     - `STRIPENN <https://github.com/VahediLab/stripenn>`_
 
@@ -96,7 +96,7 @@ For Apptainer:
 
    # build image
    apptainer build custardpy.<version>.sif docker://rnakato/custardpy:<version>
-:
+
    # execute a command
    apptainer exec custardpy.<version>.sif <command>
 
