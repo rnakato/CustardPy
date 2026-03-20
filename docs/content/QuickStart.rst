@@ -78,9 +78,10 @@ This command includes the ``custardpy_process_hic`` command described below.
     custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
         -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
 
-- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults/Juicer_$build/$cell``.
+- ``custardpy_juicer`` assumes that the paired-end fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults/Juicer_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI**
+
 
 .. _process_hic:
 
@@ -145,13 +146,19 @@ The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
     index_bwa=bwa-indexes/hg38
     gene=refFlat.$build.txt
     genome=genome.$build.fa
+    fastq_post="_"  # "_" or "_R"
     ncore=64
 
     cell=Control
     enzyme=MboI
 
     # Generate .cool and .hic files from FASTQ
-    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
+    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme \
+        -i $index_bwa -z $fastq_post -p $ncore fastq/$cell $cell
+
+- ``custardpy_cooler`` assumes that the paired-end fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
+- ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
+- Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI, None (for Micro-C)**
 
 
 For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``custardpy_cooler`` command.
@@ -159,15 +166,18 @@ For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``cus
 .. code-block:: bash
 
     build=mm39
-    ncore=64
     gt=genome_table.$build.txt  # genome_table file
     bwa_index=bwa-indexes/UCSC-$build
     genome=genome.$build.fa
+    fastq_post="_"  # "_" or "_R"
+    ncore=64
+
     cell=Control   # modify this for your FASTQ data
     enzyme=None
 
     # Generate .hic file from FASTQ
-    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
+    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme \
+        -i $index_bwa -z $fastq_post -p $ncore fastq/$cell $cell
 
 
 Analysis from a .cool file
@@ -207,7 +217,7 @@ The ``custardpy_process_cool`` commands create the directories ``Eigen/``, ``Ins
 - The ``TAD/`` directory contains the TADs called by `ArrowHead`.
 - The ``loops/`` directory contains the chromatin loops called by `HiCCUPS`. If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
 
-The ``custardpy_juicer`` command also creates the ``distance/`` directory and saves the distance decay curve plot there.
+The ``custardpy_cooler`` command also creates the ``distance/`` directory and saves the distance decay curve plot there.
 
 The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large intermediate files are automatically gzipped.
 

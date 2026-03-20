@@ -3,6 +3,7 @@
 ## CustardPy
 
 ### 3.1.0 (2026-3-19)
+    - Changed the option to specify the $fastq_post ("_" or "_R") from ``-x`` to ``-z`` in ``custardpy_cooler``.
     - Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.1.2 to 2.2.0.
     - Updated chromap from v0.3.0 to v0.3.2
     - Modified the default output directory name in `custardpy_cooler` and  `custardpy_juicer` from "CustardPyResults_Hi-C" to "CustardPyResults".

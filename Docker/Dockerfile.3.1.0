@@ -2,9 +2,9 @@ FROM rnakato/ubuntu_gpu_20.04:cuda11.0.3-cudnn8 AS base
 LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 # For sorting, LC_ALL is C
-ENV LC_ALL C
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES all
+ENV LC_ALL=C
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=all
 
 WORKDIR /opt/
 USER root
@@ -269,7 +269,7 @@ RUN gcc -Wall /opt/scripts_juicer/Juicer_statistics.c -o /opt/scripts_juicer/Jui
 FROM rnakato/ubuntu_gpu_20.04:cuda11.0.3-cudnn8
 COPY --from=base / /
 COPY --from=rnakato/homer:20.04 /opt/HOMER /opt/HOMER
-LABEL maintainer "Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 SHELL ["/bin/bash", "-c"]
 USER root

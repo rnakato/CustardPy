@@ -17,9 +17,10 @@ printHelpAndExit() {
     echo "    -o outputdir : output directory (default: 'CustardPyResults')" 1>&2
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)" 1>&2
     echo "    -p ncore : number of CPUs (default: 4)" 1>&2
-    echo "    -x postfix" 1>&2
-    echo "       1: '*_1.fastq.gz' and '*_2.fastq.gz' (default)" 1>&2
-    echo "       2: '*_R1.fastq.gz' and '*_R2.fastq.gz'" 1>&2
+    echo '    -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")' 1>&2
+#    echo "    -x postfix" 1>&2
+#    echo "       1: '*_1.fastq.gz' and '*_2.fastq.gz' (default)" 1>&2
+#    echo "       2: '*_R1.fastq.gz' and '*_R2.fastq.gz'" 1>&2
     echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)" 1>&2
     echo "    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)" 1>&2
     echo "    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')" 1>&2
@@ -33,16 +34,17 @@ gt=""
 enzyme="HindIII"
 build=""
 outputdir="CustardPyResults"
+fastq_post="_"
 qthre=30
 stage="all"
 max_split=2
 max_distance=8.4
 binsize_min=5000
 binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
-postfix1=_1.fastq.gz
-postfix2=_2.fastq.gz
+#postfix1=_1.fastq.gz
+#postfix2=_2.fastq.gz
 
-while getopts "i:f:g:e:b:o:q:p:S:m:n:r:x:h" opt; do
+while getopts "i:f:g:e:b:o:q:p:S:m:n:r:z:h" opt; do
     case $opt in
         i) index_bwa=$OPTARG;;
         f) genome=$OPTARG;;
@@ -57,20 +59,21 @@ while getopts "i:f:g:e:b:o:q:p:S:m:n:r:x:h" opt; do
         n) binsize_min=$OPTARG;;
         r) binsize_multi=$OPTARG;;
 	    s) resolutions=${OPTARG};;
-        x) case ${OPTARG} in
-            1)
-                postfix1=_1.fastq.gz
-                postfix2=_2.fastq.gz
-                ;;
-            2)
-                postfix1=_R1.fastq.gz
-                postfix2=_R2.fastq.gz
-                ;;
-            *)
-                echo "Error: Specify 1 or 2 to the option '-x'."
-                printHelpAndExit
-                exit 1
-                ;;
+   	    z) fastq_post=${OPTARG} ;;
+#        x) case ${OPTARG} in
+#            1)
+#                postfix1=_1.fastq.gz
+#                postfix2=_2.fastq.gz
+#                ;;
+#            2)
+#                postfix1=_R1.fastq.gz
+#                postfix2=_R2.fastq.gz
+#                ;;
+#            *)
+#                echo "Error: Specify 1 or 2 to the option '-x'."
+#                printHelpAndExit
+#                exit 1
+#                ;;
            esac
            ;;
         h) printHelpAndExit;;
@@ -108,6 +111,9 @@ if test "$genome" = ""; then
     echo "Error: specify genome (-f)."
     exit 1
 fi
+
+postfix1=${fastq_post}1.fastq.gz
+postfix2=${fastq_post}2.fastq.gz
 
 restrictionsite=/opt/restriction_sites/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 if test "$enzyme" = "HindIII"; then
