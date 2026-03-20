@@ -100,11 +100,23 @@ If you start the Hi-C analysis from a ``.hic`` file, use the ``custardpy_process
 
 .. note::
 
-    Due to the backward incompatibility of `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ , ``custardpy_process_hic`` fails with an error when processing .hic files created by older versions of Juicertools. In this case, try the ``-o`` option which uses older versions of Juicertools in CustardPy.
+    Due to the backward incompatibility of `Juicertools <https://github.com/aidenlab/juicer/wiki>`_ , ``custardpy_process_hic`` fails with an error when processing ``.hic`` files created by older versions of Juicertools. In this case, try the ``-o`` option which uses older versions of Juicertools in CustardPy.
 
 
 Output data
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+These commands create the directories ``Eigen/``, ``InsulationScore/``, ``Matrix/``, ``TAD/``, and ``loops/`` in ``$odir`` and save the results there. 
+
+- The ``Eigen/`` directory contains the eigenvectors and compartment structures for each chromosome.
+- The ``InsulationScore/`` directory contains the insulation scores and TAD boundaries for each chromosome.
+- The ``Matrix/`` directory contains the normalized contact matrices (observed and O/E).
+- The ``TAD/`` directory contains the TADs called by `ArrowHead`.
+- The ``loops/`` directory contains the chromatin loops called by HiCCUPS.
+
+.. note::
+
+    If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
 
 
 Hi-C analysis using Cooler
