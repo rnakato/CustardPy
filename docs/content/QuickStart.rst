@@ -82,6 +82,7 @@ This command includes the ``custardpy_process_hic`` command described below.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
 - Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI**
 
+.. _process_hic:
 
 Analysis from a .hic file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -133,7 +134,6 @@ CustardPy also allows the Hi-C and Micro-C analysis by `Cooler <https://cooler.r
 
 The ``custardpy_cooler`` command performs the analysis from FASTQ files, generates a ``.cool`` file, and converts it to a ``.hic`` file. 
 The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
-You can apply ``custardpy_process_hic`` command to it.
 
 .. code-block:: bash
 
@@ -150,12 +150,6 @@ You can apply ``custardpy_process_hic`` command to it.
     # Generate .cool and .hic files from FASTQ
     custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
 
-    # Downstream analysis using .hic
-    odir=CustardPyResults/Cooler_$build/$cell
-    hic=$odir/hic/contact_map.q30.hic
-    norm=SCALE
-
-    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
 For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``custardpy_cooler`` command.
 
@@ -172,11 +166,27 @@ For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``cus
     # Generate .hic file from FASTQ
     custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
 
+
+Analysis from a .cool file
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+    cool=$odir/cool/cooler.dedup.q30.multires.cool
+    pair=$odir/pairs/dedup.bwa.q30.pairs.gz
+    $sing custardpy_process_cool -t $ncore -g $gt -p $pair -f $genome $cool $odir $cell
+
+Analysis from a .hic file
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+You can apply ``custardpy_process_hic`` command to it (see :ref:`process_hic`).
+
+.. code-block:: bash
+
     # Downstream analysis using .hic
     odir=CustardPyResults/Cooler_$build/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
 
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
-
 
