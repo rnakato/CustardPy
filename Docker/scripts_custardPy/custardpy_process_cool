@@ -9,7 +9,7 @@ function usage()
     echo '   Options:' 1>&2
     echo "      -g genometable: Genome table file (describing the chromosome length)"
     echo '      -f genome: Genome file' 1>&2
-    echo '      -p pair: .pair file (for fithic)' 1>&2
+#    echo '      -p pair: .pair file (for fithic)' 1>&2
     echo '      -r resolutions : Resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
     echo '      -s resolutions : Resolutions for loop calling (default: "5000 10000 250000", should be quoted and separated by spaces)' 1>&2
     echo '      -t ncore: Number of CPUs (default: 32)' 1>&2
@@ -28,14 +28,14 @@ resolutions_loops="5000 10000 25000"
 genome=""
 pairfile=""
 useversion=""
-while getopts g:f:r:s:t:p:oa option; do
+while getopts g:f:r:s:t:oa option; do
     case ${option} in
 	g) gt=${OPTARG} ;;
 	f) genome=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
-	r) resolutions_loops=${OPTARG} ;;
+	s) resolutions_loops=${OPTARG} ;;
     t) ncore=${OPTARG} ;;
-    p) pairfile=${OPTARG} ;;
+#    p) pairfile=${OPTARG} ;;
     o) useversion="-o" ;;
     a) useversion="-a" ;;
     \?)
@@ -107,17 +107,6 @@ done
 # Loop
 for resolution in $resolutions_loops
 do
-    echo "call loops.."
+    echo "call loops by cooltools.."
     ex "cooltools_dots.py $cool $odir $gt --resolution $resolution -p $ncore"
-    if test "$pairfile" = ""; then
-        echo ".pair file is not specified. Fithic is skipped."
-    else
-        mkdir -p $odir/loops/fithic/$resolution
-#        if test $resolution -lt 10000; then
-#            echo "$resolution is too small. Fithic skipped."
-#        else
-#            ex "run_fithic.sh -g $gt $pairfile $odir/loops/fithic/$resolution $label $resolution | tee $logdir/custardpy_fithic.$resolution.log"
-#        fi
-        ex "run_fithic.sh -g $gt $pairfile $odir/loops/fithic/$resolution $label $resolution | tee $logdir/custardpy_fithic.$resolution.log"
-    fi
 done
