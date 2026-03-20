@@ -10,9 +10,6 @@ users can perform a variety of 3D genome analyses without installing them indivi
 A common problem in Hi-C analysis is the strict requirement of specific input formats. Many tools require input data to be in a specific format, and consequently, their use is hindered if the data under investigation does not conform to these specifications. 
 Since CustardPy covers the processing of Hi-C data from FASTQ and uses the generated data for subsequent analysis, users can avoid potential format incompatibilities.
 
-.. **Major Release! (version 1)**
-   - Unified the Docker images for `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ and `CustardPy_Juicer <https://hub.docker.com/r/rnakato/custardpy_juicer>`_. Version 1 of the `CustardPy <https://hub.docker.com/r/rnakato/custardpy>`_ docker image now supports all analyses previously offered by CustardPy and CustardPy_Juicer, rendering the latter unnecessary.
-
 .. figure:: CustardPy.jpg
    :width: 800px
    :align: center

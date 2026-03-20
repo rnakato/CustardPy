@@ -117,16 +117,21 @@ These commands create the directories ``Eigen/``, ``InsulationScore/``, ``Matrix
 - The ``TAD/`` directory contains the TADs called by `ArrowHead`.
 - The ``loops/`` directory contains the chromatin loops called by `HiCCUPS`. If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
 
-The ``custardpy_juicer`` command also creates the ``distance/`` directory in ``$odir`` and saves the distance decay curve there.
+The ``custardpy_juicer`` command also creates the ``distance/`` directory and saves the distance decay curve plot there.
 
-The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large files are automatically gzipped.
+The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large intermediate files are automatically gzipped.
 
-Hi-C analysis using Cooler
+
+Hi-C/Micro-C analysis using Cooler
 ---------------------------------------------
 
+.. note::
+   Starting from version 3.0.0, ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` were merged into a single command, ``custardpy_cooler``.
+
 CustardPy allows the Hi-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_. 
-``custardpy_cooler_HiC`` generates a ``.cool`` file and converts it to a ``.hic`` file. You can apply ``custardpy_process_hic`` command to it.
-The outputs are stored in ``CustardPyResults_MicroC/Cooler_$build//$cell``.
+``custardpy_cooler`` generates a ``.cool`` file and converts it to a ``.hic`` file. 
+You can apply ``custardpy_process_hic`` command to it.
+The outputs are stored in ``CustardPyResults/Cooler_$build/$cell``.
 
 .. code-block:: bash
 
@@ -141,25 +146,16 @@ The outputs are stored in ``CustardPyResults_MicroC/Cooler_$build//$cell``.
     enzyme=MboI
 
     # Generate .cool and .hic files from FASTQ
-    custardpy_cooler_HiC -g $gt -b $build -f $genome -i $index_bwa -p $ncore fastq/$cell $cell
+    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
 
     # Downstream analysis using .hic
-    odir=CustardPyResults_cooler/$build/$cell
+    odir=CustardPyResults/Cooler_$build/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
+
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
-
-    
-Micro-C analysis using Cooler
---------------------------------------------------
-
-Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_.
-
-Micro-C using BWA
-+++++++++++++++++++++++++++++++++
-
-The command ``custardpy_cooler_MicroC`` maps Micro-C reads by BWA and makes ``.cool`` and ``.hic`` files. The ``.hic`` file is processed using ``custardpy_process_hic``.
+For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``custardpy_cooler`` command.
 
 .. code-block:: bash
 
@@ -168,17 +164,17 @@ The command ``custardpy_cooler_MicroC`` maps Micro-C reads by BWA and makes ``.c
     gt=genome_table.$build.txt  # genome_table file
     bwa_index=bwa-indexes/UCSC-$build
     genome=genome.$build.fa
-    cell=C36_rep1   # modify this for your FASTQ data
+    cell=Control   # modify this for your FASTQ data
+    enzyme=None
 
     # Generate .hic file from FASTQ
-    custardpy_cooler_MicroC -t bwa -g $gt -f $genome -i $bwa_index -p $ncore fastq/$cell $cell
+    custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
 
-    # Juicer analysis with the .hic file
-    odir=CustardPyResults_MicroC/Cooler_bwa/$cell
+    # Downstream analysis using .hic
+    odir=CustardPyResults/Cooler_$build/$cell
     hic=$odir/hic/contact_map.q30.hic
     norm=SCALE
 
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
-- ``custardpy_cooler_MicroC`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/C36_rep1``). The outputs are stored in ``CustardPyResults_MicroC/Cooler_bwa/$cell``.
-    
+
