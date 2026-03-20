@@ -170,6 +170,8 @@ For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``cus
 Analysis from a .cool file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+Use the ``custardpy_process_cool`` command to analyze a ``.cool`` file created by the ``custardpy_cooler`` command or any other tools.
+
 .. code-block:: bash
 
     cool=$odir/cool/cooler.dedup.q30.multires.cool
