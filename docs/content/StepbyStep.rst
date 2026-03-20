@@ -6,26 +6,7 @@ See also the sample scripts in the `tutorial <https://github.com/rnakato/Custard
 
 .. note::
 
-    As the CustardPy commands below are included in the CustardPy docker image, you need to add docker or singularity commands as shown below.
-
-.. code-block:: bash
-
-    # This example command will mount the /work directory of the host machine
-    # For docker
-    singularity exec [--nv] --bind /work custardpy.sif <command>
-    # For singularity
-    docker run --rm -it [--gpus all] -v /work:/work rnakato/custardpy <command>
-
-    # Example of custardpy_juicer
-    # For docker
-    docker run --rm -it --gpus all -v /work:/work rnakato/custardpy \
-        custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
-        -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
-
-    # For singularity
-    singularity exec --nv --bind /work custardpy.sif \
-        custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
-        -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
+    See the `Quickstart <https://custardpy.readthedocs.io/en/latest/content/QuickStart.html#custardpy-using-docker-or-apptainer>`_ section for how to run CustardPy using Docker or Apptainer.`
 
 .. contents:: 
    :depth: 2

@@ -1,6 +1,9 @@
 Quickstart
 =====================
 
+.. contents:: 
+   :depth: 3
+
 CustardPy using Docker or Apptainer
 ---------------------------------------------
 
