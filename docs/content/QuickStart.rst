@@ -28,8 +28,26 @@ If you do not have a GPU or do not want to use it, simply omit this option.
         -i $index_bwa -p $ncore fastq/$cell $cell
 
 
-See also the sample scripts in the `tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ on GitHub.
+See also the sample scripts in the `CustardPy Tutorial <https://github.com/rnakato/CustardPy/tree/main/tutorial>`_ on GitHub.
 
+Available Genome Builds
+-----------------------------------
+.. csv-table::
+   :class: align-center
+
+   "**Species**", "**Builds**"
+   "Human", "hg38, hg39, T2T"
+   "Mouse", "mm10, mm39"
+   "Rat",   "rn7"
+   "Zebrafish", "danRer11"
+   "Chicken", "galGal5, galGal6"
+   "Xenopus_tropicalis", "xenLae2"
+   "Fly",   "BDGP6",  "dm6"
+   "C.elegans", "ce10, ce11"
+   "S.serevisiae", "R64-1-1", "sacCer3"
+
+
+- Avaible genome build:danRer11, dm6, xenLae2, sacCer3
 
 Hi-C analysis using Juicer
 ---------------------------------------------
@@ -50,14 +68,13 @@ Hi-C analysis from FASTQ files
     cell=Control
     fastq_post="_"  # "_" or "_R"
     enzyme=MboI
-
     fqdir=fastq/$cell
+
     custardpy_juicer -p $ncore -a $gene -b $build -g $gt \
         -i $bwaindex -e $enzyme -z $fastq_post $fqdir $cell
 
-- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults_Hi-C/Juicer_$build/$cell``.
+- ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults/Juicer_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
-- Avaible genome build: hg19, hg38, mm10, mm39, rn7, galGal5, galGal6, ce10, ce11, danRer11, dm6, xenLae2, sacCer3
 - Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima, AluI
 
 
