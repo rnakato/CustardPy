@@ -170,10 +170,11 @@ For the Micro-C analysis, use ``-e None`` not to specify the enzyme in the ``cus
 Analysis from a .cool file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Use the ``custardpy_process_cool`` command to analyze a ``.cool`` file created by the ``custardpy_cooler`` command or any other tools.
+The ``custardpy_process_cool`` command to analyze a ``.cool`` file created by the ``custardpy_cooler`` command or any other tools.
 
 .. code-block:: bash
 
+    odir=CustardPyResults/Cooler_$build/$cell
     cool=$odir/cool/cooler.dedup.q30.multires.cool
     pair=$odir/pairs/dedup.bwa.q30.pairs.gz
     $sing custardpy_process_cool -t $ncore -g $gt -p $pair -f $genome $cool $odir $cell
@@ -181,7 +182,7 @@ Use the ``custardpy_process_cool`` command to analyze a ``.cool`` file created b
 Analysis from a .hic file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can apply ``custardpy_process_hic`` command to it (see :ref:`process_hic`).
+You can apply the ``custardpy_process_hic`` command to the `.hic` file (see :ref:`process_hic`).
 
 .. code-block:: bash
 
@@ -192,3 +193,48 @@ You can apply ``custardpy_process_hic`` command to it (see :ref:`process_hic`).
 
     custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 
+Output data
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The ``custardpy_process_cool`` commands create the directories ``Eigen/``, ``InsulationScore/``, ``Matrix/``, ``TAD/``, and ``loops/`` in ``$odir`` and save the results there. 
+
+- The ``Eigen/`` directory contains the eigenvectors and compartment structures for each chromosome.
+- The ``InsulationScore/`` directory contains the insulation scores and TAD boundaries for each chromosome.
+- The ``Matrix/`` directory contains the normalized contact matrices (observed and O/E).
+- The ``TAD/`` directory contains the TADs called by `ArrowHead`.
+- The ``loops/`` directory contains the chromatin loops called by `HiCCUPS`. If the GPU is unavailable, the chromatin loops will not be calculated and ``loops/`` directory will be blank.
+
+The ``custardpy_juicer`` command also creates the ``distance/`` directory and saves the distance decay curve plot there.
+
+The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large intermediate files are automatically gzipped.
+
+
+Hi-C/Micro-C analysis using HiC-Pro
+---------------------------------------------
+
+CustardPy also allows the Hi-C  analysis by `HiC-Pro <https://nservant.github.io/HiC-Pro/>`_.
+
+First, edit ``config-hicpro.txt``. 
+Set the ``BOWTIE2_IDX_PATH`` and ``GENOME_SIZE`` variables to absolute paths that match your environment.
+
+The CustardPy docker image stores the restriction files for HiC-Pro in ``/opt/restriction_sites/HiCPro-restriction_sites/``. 
+You can set ``GENOME_FRAGMENT`` accordingly without preparing them. An example is shown below.
+
+.. code-block:: bash
+
+    BOWTIE2_IDX_PATH = /home/youraccount/CustardPy/tutorial/Hi-C/03.HiC-Pro/bowtie2-indexes
+    REFERENCE_GENOME = hg38
+    GENOME_SIZE = /home/youraccount/CustardPy/tutorial/Hi-C/03.HiC-Pro/genometable.hg38.txt
+    GENOME_FRAGMENT = /opt/restriction_sites/HiCPro-restriction_sites/MboI_resfrag_hg38.bed
+
+
+Then, run the command below to perform the Hi-C analysis from FASTQ files using HiC-Pro.
+CustardPy provices the ``hicpro`` command to run HiC-Pro.
+
+.. code-block:: bash
+
+    fqdir=fastq/
+    hicpro -i $fqdir -o HiCProResults -c config-hicpro.txt
+
+Analysis will be run for all subdirectories in ``$fqdir``. 
+The output files are the same as that of HiC-Pro. For details, please refer to the official website.
