@@ -32,6 +32,9 @@ See also the sample scripts in the `CustardPy Tutorial <https://github.com/rnaka
 
 Available Genome Builds
 -----------------------------------
+
+CustardPy provides the reference genome files and restriction enzyme files for Cooler/Juicer/HiC-Pro the following genome builds.
+
 .. csv-table::
    :class: align-center
 
@@ -45,9 +48,6 @@ Available Genome Builds
    "Fly",   "BDGP6",  "dm6"
    "C.elegans", "ce10, ce11"
    "S.serevisiae", "R64-1-1", "sacCer3"
-
-
-- Avaible genome build:danRer11, dm6, xenLae2, sacCer3
 
 Hi-C analysis using Juicer
 ---------------------------------------------
