@@ -129,6 +129,9 @@ Hi-C/Micro-C analysis using Cooler
 .. note::
    Starting from version 3.0.0, ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` were merged into a single command, ``custardpy_cooler``.
 
+Analysis from FASTQ files
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 Although the Juicer pipeline is widely used for Hi-C analysis, it is not suitable for Micro-C analysis.
 CustardPy also allows the Hi-C and Micro-C analysis by `Cooler <https://cooler.readthedocs.io/en/latest/index.html>`_ and `cooltools <https://github.com/open2c/cooltools>`_. 
 
