@@ -229,10 +229,10 @@ The ``custardpy_cooler`` command also creates the ``distance/`` directory and sa
 The ``fastq/``, ``aligned/``, and ``splits/`` directories are direct outputs from **Juicer**, while several large intermediate files are automatically gzipped.
 
 
-Hi-C/Micro-C analysis using HiC-Pro
+Hi-C analysis using HiC-Pro
 ---------------------------------------------
 
-CustardPy also allows the Hi-C  analysis by `HiC-Pro <https://nservant.github.io/HiC-Pro/>`_.
+CustardPy also allows the Hi-C analysis by `HiC-Pro <https://nservant.github.io/HiC-Pro/>`_.
 
 First, edit ``config-hicpro.txt``. 
 Set the ``BOWTIE2_IDX_PATH`` and ``GENOME_SIZE`` variables to absolute paths that match your environment.
