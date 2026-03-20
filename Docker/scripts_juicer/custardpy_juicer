@@ -9,7 +9,7 @@ function usage()
     echo "      -i index : bwa index"
     echo "      -g genometable : genome table file (describing the chromosome length)"
     echo "      -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)"
-    echo "      -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3)"
+    echo "      -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3|T2T)"
     echo '      -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")' 1>&2
     echo "      -o outputdir : output directory (default: 'CustardPyResults')"
     echo "      -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)"
