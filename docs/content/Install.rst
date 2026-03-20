@@ -106,24 +106,3 @@ Core components of **CustardPy** (e.g., commands for visualization) can by insta
 .. code-block:: bash
 
     pip3 install custardpy
-
-
-Available Genome Builds
------------------------------------
-
-CustardPy provides the reference genome files and restriction enzyme files for **Cooler/Juicer/HiC-Pro** the following genome builds.
-
-.. csv-table::
-   :class: align-center
-
-   "**Species**", "**Builds**"
-   "Human", "hg38, hg39, T2T"
-   "Mouse", "mm10, mm39"
-   "Rat",   "rn7"
-   "Zebrafish", "danRer11"
-   "Chicken", "galGal5, galGal6"
-   "Xenopus_tropicalis", "xenLae2"
-   "Fly", "dm6"
-   "C.elegans", "ce10, ce11"
-   "S.serevisiae", "sacCer3"
-

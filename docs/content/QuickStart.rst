@@ -4,6 +4,8 @@ Quickstart
 .. contents:: 
    :depth: 3
 
+CustardPy provides the functions for the analysis using **Cooler**, **Juicer**, and **HiC-Pro** pipelines. Here we describe how to run the analysis using these pipelines.
+
 CustardPy using Docker or Apptainer
 ---------------------------------------------
 
@@ -36,7 +38,7 @@ See also the sample scripts in the `CustardPy Tutorial <https://github.com/rnaka
 Available Genome Builds
 -----------------------------------
 
-CustardPy provides the reference genome files and restriction enzyme files for **Cooler/Juicer/HiC-Pro** the following genome builds.
+CustardPy provides the reference genome files and restriction enzyme files the following genome builds.
 
 .. csv-table::
    :class: align-center
