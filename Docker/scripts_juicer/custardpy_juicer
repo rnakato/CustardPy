@@ -11,7 +11,7 @@ function usage()
     echo "      -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|Arima, default: HindIII)"
     echo "      -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal5|galGal6|ce10|ce11|danRer11|dm6|xenLae2|sacCer3)"
     echo '      -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")' 1>&2
-    echo "      -o outputdir : output directory (default: 'CustardPyResults_Hi-C')"
+    echo "      -o outputdir : output directory (default: 'CustardPyResults')"
     echo "      -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)"
     echo '      -a <refFlat>: gene annotation file' 1>&2
     echo '      -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
@@ -29,7 +29,7 @@ enzyme="HindIII"
 tmpdir=""
 ncore=32
 fastq_post="_"
-outputdir="CustardPyResults_Hi-C"
+outputdir="CustardPyResults"
 
 norm="SCALE"
 resolutions="25000 50000 100000"

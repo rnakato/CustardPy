@@ -12,9 +12,9 @@ printHelpAndExit() {
     echo "    -i index : BWA index" 1>&2
     echo "    -f genome : Genome fasta file" 1>&2
     echo "    -g genometable : Genometable file (describing the chromosome length)" 1>&2
-    echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI, default: HindIII)" 1>&2
+    echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|None, default: HindIII)" 1>&2
     echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)" 1>&2
-    echo "    -o outputdir : output directory (default: 'CustardPyResults_Hi-C')" 1>&2
+    echo "    -o outputdir : output directory (default: 'CustardPyResults')" 1>&2
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)" 1>&2
     echo "    -p ncore : number of CPUs (default: 4)" 1>&2
     echo "    -x postfix" 1>&2
@@ -32,7 +32,7 @@ genome=""
 gt=""
 enzyme="HindIII"
 build=""
-outputdir="CustardPyResults_Hi-C"
+outputdir="CustardPyResults"
 qthre=30
 stage="all"
 max_split=2
@@ -109,13 +109,15 @@ if test "$genome" = ""; then
     exit 1
 fi
 
+restrictionsite=/opt/restriction_sites/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 if test "$enzyme" = "HindIII"; then
     enzymelen=6
+elif test "$enzyme" = "None"; then
+    enzymelen=0
+    restrictionsite=""
 else
     enzymelen=4
 fi
-
-restrictionsite=/opt/restriction_sites/Cooler-restriction_sites/${enzyme}_resfrag_$build.bed
 
 ex(){ echo $1; eval $1; }
 

@@ -202,6 +202,7 @@ RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as
 RUN git clone https://github.com/wangjk321/mango_multithreads_wang.git \
     && mv mango_multithreads_wang mango \
     && R CMD INSTALL --no-multiarch --with-keep.source mango
+
 # ChIAPoP
 COPY ChIAPoP_0.99.9.7.tar.gz ChIAPoP_0.99.9.7.tar.gz
 RUN R CMD INSTALL ChIAPoP_0.99.9.7.tar.gz \

@@ -10,9 +10,9 @@ enzyme=MboI
 sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
 #sing="singularity exec custardpy.sif"
 
-for cell in Control #siCTCF siRad21 siNIPBL
+for cell in Control siCTCF siRad21 siNIPBL
 do
-    $sing custardpy_cooler -g $gt -f $genome -b $build -i $index_bwa -p $ncore fastq/$cell $cell
+    $sing custardpy_cooler -g $gt -f $genome -b $build -e $enzyme -i $index_bwa -p $ncore fastq/$cell $cell
 
     odir=CustardPyResults_Hi-C/Cooler_$build/$cell
 
