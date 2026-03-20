@@ -75,7 +75,7 @@ Hi-C analysis from FASTQ files
 
 - ``custardpy_juicer`` assumes that the fastq files are stored in ``fastq/$cell`` (here ``fastq/Control``). The outputs are stored in ``CustardPyResults/Juicer_$build/$cell``.
 - ``$fastq_post`` indicates the filename of input fastqs is ``*_[1|2].fastq.gz`` or ``*_[R1|R2].fastq.gz``.
-- Available Enzymes: HindIII, DpnII, MboI, Sau3AI, Arima, AluI
+- Available Enzymes: **HindIII, DpnII, MboI, Sau3AI, Arima, AluI**
 
 
 Hi-C analysis from a .hic file
