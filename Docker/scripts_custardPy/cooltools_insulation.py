@@ -44,22 +44,46 @@ def format_ticks(ax, x=True, y=True, rotate=True):
     if rotate:
         ax.tick_params(axis='x',rotation=45)
 
-
 def plot_chr(clr, insul_table, chrom, res, windows, odir):
     """Draw Hi-C + insulation for a single chromosome."""
     chrom_len = clr.chromsizes[chrom]
     region    = (chrom, 0, chrom_len)
 
     # ── Hi-C matrix ────────────────────────────────────────────
-    mat   = clr.matrix(balance=True).fetch(region)
-    vmax  = np.nanpercentile(mat, 90)      # dynamic color scale
-    norm  = LogNorm(vmin=vmax*1e-3, vmax=vmax)
+    mat = clr.matrix(balance=True).fetch(region)
+
+    # LogNorm用に、有限かつ正の値だけを使う
+    valid = mat[np.isfinite(mat) & (mat > 0)]
+
+    # 描画不能な染色体はスキップ
+    if valid.size == 0:
+        print(f"[warn] {chrom}: no positive finite values in matrix, skipping plot")
+        return
+
+    vmax = np.nanpercentile(valid, 90)
+    vmin = np.nanpercentile(valid, 10)
+
+    # 念のための保険
+    if not np.isfinite(vmax) or vmax <= 0:
+        print(f"[warn] {chrom}: invalid vmax={vmax}, skipping plot")
+        return
+
+    if not np.isfinite(vmin) or vmin <= 0:
+        vmin = vmax * 1e-3
+
+    if vmin >= vmax:
+        vmin = vmax * 1e-3
+
+    norm = LogNorm(vmin=vmin, vmax=vmax)
+
+    # 非正値はmaskedにしてLogNormへ渡す
+    mat_plot = np.ma.masked_invalid(mat)
+    mat_plot = np.ma.masked_less_equal(mat_plot, 0)
 
     fig, ax = plt.subplots(figsize=(20, 10))
-    im = pcolormesh_45deg(ax, mat, start=0, resolution=res,
+    im = pcolormesh_45deg(ax, mat_plot, start=0, resolution=res,
                           norm=norm, cmap='fall')
     ax.set_aspect(0.5)
-    # display the top 10 × smallest window (edit as you like)
     ax.set_ylim(0, 10 * windows[0])
     format_ticks(ax, rotate=False)
     ax.xaxis.set_visible(False)
@@ -67,9 +91,9 @@ def plot_chr(clr, insul_table, chrom, res, windows, odir):
     # ── color-bar ──────────────────────────────────────────────
     div = make_axes_locatable(ax)
     cax = div.append_axes("right", size="1%", pad=0.1, aspect=6)
-    plt.colorbar(im, cax=cax)
+    fig.colorbar(im, cax=cax)
 
-    # ── insulation track ──────────────────────────────────────
+    # 以下はそのまま
     ins_ax = div.append_axes("bottom", size="50%", pad=0., sharex=ax)
     ins_chr = bioframe.select(insul_table, region)
 
@@ -81,7 +105,6 @@ def plot_chr(clr, insul_table, chrom, res, windows, odir):
                 ins_chr[score_col],
                 label=f"Window {windows[0]} bp")
 
-    # weak / strong boundaries
     boundaries = ins_chr[~np.isnan(ins_chr[bstrength_col])]
     weak   = boundaries[~boundaries[isbound_col]]
     strong = boundaries[boundaries[isbound_col]]
@@ -95,7 +118,6 @@ def plot_chr(clr, insul_table, chrom, res, windows, odir):
     format_ticks(ins_ax, y=False, rotate=False)
     ax.set_xlim(0, chrom_len)
 
-    # ── save & clean up ───────────────────────────────────────
     out = f"{odir}/{chrom}_insulation.png"
     fig.savefig(out, dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -130,7 +152,6 @@ def write_insulation_bedgraphs(ins_table, windows, resolution,
             bg.to_csv(f, sep='\t', header=False, index=False)
 
         print(f"✔  {fname}")
-
 
 
 def write_boundary_bed(ins_table, window_bp, out_path,

@@ -74,8 +74,8 @@ while getopts "i:f:g:e:b:o:q:p:S:m:n:r:z:h" opt; do
 #                printHelpAndExit
 #                exit 1
 #                ;;
-           esac
-           ;;
+#           esac
+#           ;;
         h) printHelpAndExit;;
         [?]) printHelpAndExit;;
         esac

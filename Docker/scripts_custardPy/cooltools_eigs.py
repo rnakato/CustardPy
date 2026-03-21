@@ -9,6 +9,7 @@ import cooltools.lib.plotting
 import bioframe
 import cooltools
 import sys
+from functools import partial
 
 from matplotlib.colors import LogNorm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -37,42 +38,6 @@ def saddleplot(
     cbar_kws=None,
     subplot_spec=None,
 ):
-    """
-    Generate a saddle plot.
-    Parameters
-    ----------
-    track : pd.DataFrame
-        See cooltools.digitize() for details.
-    saddledata : 2D array-like
-        Saddle matrix produced by `make_saddle`. It will include 2 flanking
-        rows/columns for outlier signal values, thus the shape should be
-        `(n+2, n+2)`.
-    cmap : str or matplotlib colormap
-        Colormap to use for plotting the saddle heatmap
-    scale : str
-        Color scaling to use for plotting the saddle heatmap: log or linear
-    vmin, vmax : float
-        Value limits for coloring the saddle heatmap
-    color : matplotlib color value
-        Face color for margin bar plots
-    fig : matplotlib Figure, optional
-        Specified figure to plot on. A new figure is created if none is
-        provided.
-    fig_kws : dict, optional
-        Passed on to `plt.Figure()`
-    heatmap_kws : dict, optional
-        Passed on to `ax.imshow()`
-    margin_kws : dict, optional
-        Passed on to `ax.bar()` and `ax.barh()`
-    cbar_kws : dict, optional
-        Passed on to `plt.colorbar()`
-    subplot_spec : GridSpec object
-        Specify a subregion of a figure to using a GridSpec.
-    Returns
-    -------
-    Dictionary of axes objects.
-    """
-
     from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
     from matplotlib.colors import Normalize, LogNorm
     from matplotlib import ticker
@@ -89,33 +54,65 @@ def saddleplot(
                 return "{x:g}".format(x=x)
 
     track_value_col = track.columns[3]
-    track_values = track[track_value_col].values
-
     digitized_track, binedges = cooltools.digitize(
         track, n_bins, vrange=vrange, qrange=qrange
     )
     x = digitized_track[digitized_track.columns[3]].values.astype(int).copy()
     x = x[(x > -1) & (x < len(binedges) + 1)]
 
-    groupmean = track[track.columns[3]].groupby(digitized_track[digitized_track.columns[3]]).mean()
+    groupmean = track[track.columns[3]].groupby(
+        digitized_track[digitized_track.columns[3]]
+    ).mean()
 
     if qrange is not None:
         lo, hi = qrange
         binedges = np.linspace(lo, hi, n_bins + 1)
+    else:
+        lo, hi = binedges[0], binedges[-1]
 
-    # Barplot of mean values and saddledata are flanked by outlier bins
     n = saddledata.shape[0]
     X, Y = np.meshgrid(binedges, binedges)
-    C = saddledata
+    C = np.asarray(saddledata, dtype=float)
+
     if (n - n_bins) == 2:
         C = C[1:-1, 1:-1]
         groupmean = groupmean[1:-1]
 
-    # Layout
+    # log表示では non-positive を mask
+    if scale == "log":
+        C = np.ma.masked_invalid(C)
+        C = np.ma.masked_less_equal(C, 0)
+
+        valid = np.asarray(C.compressed(), dtype=float)
+        if valid.size == 0:
+            raise ValueError("Saddle matrix has no positive finite values for log scale.")
+
+        if vmin is None or (not np.isfinite(vmin)) or vmin <= 0:
+            vmin = np.nanpercentile(valid, 5)
+        if vmax is None or (not np.isfinite(vmax)) or vmax <= 0:
+            vmax = np.nanpercentile(valid, 95)
+        if vmin >= vmax:
+            vmin = max(np.min(valid), vmax * 1e-3)
+
+        norm = LogNorm(vmin=vmin, vmax=vmax)
+
+    elif scale == "linear":
+        C = np.ma.masked_invalid(C)
+        if vmin is None:
+            vmin = np.nanmin(C)
+        if vmax is None:
+            vmax = np.nanmax(C)
+        norm = Normalize(vmin=vmin, vmax=vmax)
+
+    else:
+        raise ValueError("Only linear and log color scaling is supported")
+
     if subplot_spec is not None:
-        GridSpec = partial(GridSpecFromSubplotSpec, subplot_spec=subplot_spec)
-    grid = {}
-    gs = GridSpec(
+        GridSpecLocal = partial(GridSpecFromSubplotSpec, subplot_spec=subplot_spec)
+    else:
+        GridSpecLocal = GridSpec
+
+    gs = GridSpecLocal(
         nrows=3,
         ncols=3,
         width_ratios=[0.2, 1, 0.1],
@@ -124,53 +121,39 @@ def saddleplot(
         hspace=0.05,
     )
 
-    # Figure
     if fig is None:
         fig_kws_default = dict(figsize=(5, 5))
         fig_kws = merge(fig_kws_default, fig_kws if fig_kws is not None else {})
         fig = plt.figure(**fig_kws)
 
-    # Heatmap
-    if scale == "log":
-        norm = LogNorm(vmin=vmin, vmax=vmax)
-    elif scale == "linear":
-        norm = Normalize(vmin=vmin, vmax=vmax)
-    else:
-        raise ValueError("Only linear and log color scaling is supported")
-
+    grid = {}
     grid["ax_heatmap"] = ax = plt.subplot(gs[4])
-    heatmap_kws_default = dict(cmap="coolwarm", rasterized=True)
+    heatmap_kws_default = dict(cmap=cmap, rasterized=True)
     heatmap_kws = merge(
         heatmap_kws_default, heatmap_kws if heatmap_kws is not None else {}
     )
     img = ax.pcolormesh(X, Y, C, norm=norm, **heatmap_kws)
     plt.gca().yaxis.set_visible(False)
 
-    # Margins
     margin_kws_default = dict(edgecolor="k", facecolor=color, linewidth=1)
     margin_kws = merge(margin_kws_default, margin_kws if margin_kws is not None else {})
-    # left margin hist
+
     grid["ax_margin_y"] = plt.subplot(gs[3], sharey=grid["ax_heatmap"])
-
     plt.barh(
-        binedges, height=1/len(binedges), width=groupmean, align="edge", **margin_kws
+        binedges, height=1 / len(binedges), width=groupmean, align="edge", **margin_kws
     )
-
-    plt.xlim(plt.xlim()[1], plt.xlim()[0])  # fliplr
+    plt.xlim(plt.xlim()[1], plt.xlim()[0])
     plt.ylim(hi, lo)
     plt.gca().spines["top"].set_visible(False)
     plt.gca().spines["bottom"].set_visible(False)
     plt.gca().spines["left"].set_visible(False)
     plt.gca().xaxis.set_visible(False)
-    # top margin hist
+
     grid["ax_margin_x"] = plt.subplot(gs[1], sharex=grid["ax_heatmap"])
-
     plt.bar(
-        binedges, width=1/len(binedges), height=groupmean, align="edge", **margin_kws
+        binedges, width=1 / len(binedges), height=groupmean, align="edge", **margin_kws
     )
-
     plt.xlim(lo, hi)
-    # plt.ylim(plt.ylim())  # correct
     plt.gca().spines["top"].set_visible(False)
     plt.gca().spines["right"].set_visible(False)
     plt.gca().spines["left"].set_visible(False)
@@ -180,24 +163,23 @@ def saddleplot(
     grid["ax_cbar"] = plt.subplot(gs[5])
     cbar_kws_default = dict(fraction=0.8, label=clabel or "")
     cbar_kws = merge(cbar_kws_default, cbar_kws if cbar_kws is not None else {})
-    if scale == "linear" and vmin is not None and vmax is not None:
-        grid["ax_cbar"] = cb = plt.colorbar(img, **cbar_kws)
-        # cb.set_ticks(np.arange(vmin, vmax + 0.001, 0.5))
-        # # do linspace between vmin and vmax of 5 segments and trunc to 1 decimal:
+
+    if scale == "linear":
+        cb = plt.colorbar(img, cax=grid["ax_cbar"], **cbar_kws)
         decimal = 10
         nsegments = 5
         cd_ticks = np.trunc(np.linspace(vmin, vmax, nsegments) * decimal) / decimal
         cb.set_ticks(cd_ticks)
     else:
-        print('cbar')
-
-        cb = plt.colorbar(img, format=MinOneMaxFormatter(), cax=grid["ax_cbar"], **cbar_kws)
+        cb = plt.colorbar(
+            img, format=MinOneMaxFormatter(), cax=grid["ax_cbar"], **cbar_kws
+        )
         cb.ax.yaxis.set_minor_formatter(MinOneMaxFormatter())
 
-    # extra settings
     grid["ax_heatmap"].set_xlim(lo, hi)
     grid["ax_heatmap"].set_ylim(hi, lo)
-    grid['ax_heatmap'].grid(False)
+    grid["ax_heatmap"].grid(False)
+
     if title is not None:
         grid["ax_margin_x"].set_title(title)
     if xlabel is not None:
@@ -228,16 +210,35 @@ def main():
 
     # ── loop over chromosomes ──────────────────────────────────────
     for chrom in clr.chromnames:
-        if chrom in ["chrY","chrM","chrMT"]:
+        if chrom in ["chrY", "chrM", "chrMT"]:
             continue
 
         mat_chr = matrix_balanced.fetch(chrom)
-        eig_chr = eigenvector_track.query("chrom == @chrom")['E1'].values
+        eig_chr = eigenvector_track.query("chrom == @chrom")["E1"].values
+
+        # finite & positive only for LogNorm
+        valid = mat_chr[np.isfinite(mat_chr) & (mat_chr > 0)]
+        if valid.size == 0:
+            print(f"[warn] {chrom}: no positive finite balanced contacts, skipping.")
+            continue
+
+        vmax = np.nanpercentile(valid, 99)
+        vmin = np.nanpercentile(valid, 5)
+
+        if not np.isfinite(vmax) or vmax <= 0:
+            print(f"[warn] {chrom}: invalid vmax={vmax}, skipping.")
+            continue
+        if not np.isfinite(vmin) or vmin <= 0 or vmin >= vmax:
+            vmin = vmax * 1e-3
+
+        norm = LogNorm(vmin=vmin, vmax=vmax)
+
+        mat_plot = np.ma.masked_invalid(mat_chr)
+        mat_plot = np.ma.masked_less_equal(mat_plot, 0)
 
         fig, ax_hic = plt.subplots(figsize=(7, 6))
-        norm = LogNorm(vmax=np.nanpercentile(mat_chr, 99))  # 濃度合わせ
-        im = ax_hic.matshow(mat_chr, norm=norm, cmap='fall')
-        ax_hic.set_title(f"{chrom} Hi-C map", loc='left', fontsize=10)
+        im = ax_hic.matshow(mat_plot, norm=norm, cmap="fall")
+        ax_hic.set_title(f"{chrom} Hi-C map", loc="left", fontsize=10)
         ax_hic.set_xlabel(f"{chrom} (bins)")
         ax_hic.set_ylabel(f"{chrom} (bins)")
 
@@ -299,8 +300,8 @@ def main():
     plt.xlabel('extent')
     plt.ylabel('(AA + BB) / (AB + BA)')
     plt.title('saddle strength profile')
-    plt.axhline(0, c='grey', ls='--', lw=1) # Q: is there a reason this is 0 not 1?
-    plt.xlim(0, len(x)//2); # Q: is this less intuitive than showing for all x, as it converges to no difference (i.e. 1)?
+    plt.axhline(1, c='grey', ls='--', lw=1) 
+    plt.xlim(0, 1);
     plt.savefig(f"{odir}/saddle_strength.pdf", dpi=300)
     print("Done: saddle strength profile saved.")
 

@@ -109,6 +109,7 @@ RUN R -e "install.packages('BiocManager')" \
                                 'parallel', \
                                 'plyr', \
                                 'Rcpp', \
+				'remotes', \
                                 'reshape2', \
                                 'sm', \
                                 'splines', \
