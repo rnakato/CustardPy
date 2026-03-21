@@ -8,8 +8,7 @@ wget -nv --timestamping ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR167/098/SRR1676319
 wget -nv --timestamping ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR167/098/SRR16763198/SRR16763198_2.fastq.gz -P fastq/C36_rep1
 
 ### Download the reference genome and build genome index
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.6.0.sif"
-sing="singularity exec custardpy.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
 
 $sing getmm39genome.sh
 
@@ -19,6 +18,6 @@ mkdir -p $indexdir
 $sing bwa index -p $indexdir/mm39 $genome
 ln -rsf $genome $indexdir/mm39
 
-indexdir=chromap-indexes
-mkdir -p $indexdir
-$sing chromap -i -t 12 -r $genome -o $indexdir/mm39
+#indexdir=chromap-indexes
+#mkdir -p $indexdir
+#$sing chromap -i -t 12 -r $genome -o $indexdir/mm39
