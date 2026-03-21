@@ -22,6 +22,8 @@ tutorial/01.Cooler_Hi-C/CustardPyResults_Hi-C.3.0.1/
 tutorial/01.Cooler_Hi-C/fastq
 tutorial/01.Cooler_Hi-C/genome.hg38.fa.fai
 tutorial/02.Cooler_Micro-C/genome.mm39.fa.fai
+tutorial/02.Cooler_Micro-C/fastq/
+tutorial/03.Juicer_Hi-C/fastq
 **/CustardPyResults/
 Docker/gputest.sh
 Docker/log/

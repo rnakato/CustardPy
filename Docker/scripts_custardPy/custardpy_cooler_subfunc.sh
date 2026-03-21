@@ -42,7 +42,7 @@ parse_pairtools(){
     get_qc.py -p $qcdir/pairtools_dedup.stats.txt > $qcdir/mapping_stats.txt
 
     pairtools stats $pairdir/dedup.bwa.q$qthre.pairs.gz -o $qcdir/pairtools.stats.txt
-    multiqc -o qcdir/ $qcdir/pairtools.stats.txt
+    multiqc -o $qcdir/ $qcdir/pairtools.stats.txt
 #    rm $qcdir/pairtools.stats.txt
 
 
