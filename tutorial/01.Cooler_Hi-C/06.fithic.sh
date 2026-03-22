@@ -1,0 +1,20 @@
+#!/bin/bash
+
+build=hg38
+gt=genometable.$build.txt
+
+sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
+
+cell=Control
+odir=CustardPyResults_Hi-C/Cooler_$build/$cell/
+
+mkdir -p $odir/log
+resolutions="10000 25000"
+
+for resolution in $resolutions
+do
+    echo "Run Fit-Hi-C.."
+    pairfile=$odir/pairs/dedup.bwa.q30.pairs.gz
+    odir_fithic=$odir/loops/fithic/$resolution
+    $sing run_fithic.sh -g $gt $pairfile $odir_fithic $cell $resolution | tee $odir/log/fithic.$resolution.log
+done
