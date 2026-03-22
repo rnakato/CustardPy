@@ -290,19 +290,23 @@ def main():
     print("Done: saddle plot saved.")
     
     ### Saddle strength profile
-    print("Generating saddle strength profile...")
     from cooltools.api.saddle import saddle_strength
 
-    x = np.arange(N_GROUPS + 2)
+    print("Generating saddle strength profile...")
 
-    plt.step(x, saddle_strength(interaction_sum, interaction_count), where='pre')
+    strength = saddle_strength(interaction_sum, interaction_count)
+    x = np.linspace(0, 1, len(strength))
+
+    plt.figure()
+    plt.step(x, strength, where='pre')
 
     plt.xlabel('extent')
     plt.ylabel('(AA + BB) / (AB + BA)')
     plt.title('saddle strength profile')
-    plt.axhline(1, c='grey', ls='--', lw=1) 
-    plt.xlim(0, 1);
-    plt.savefig(f"{odir}/saddle_strength.pdf", dpi=300)
+    plt.axhline(1, c='grey', ls='--', lw=1)
+    plt.xlim(0, 1)
+
+    plt.savefig(f"{odir}/saddle_strength.pdf", dpi=300, bbox_inches='tight')
     print("Done: saddle strength profile saved.")
 
 
