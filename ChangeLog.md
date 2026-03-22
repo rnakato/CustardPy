@@ -6,12 +6,13 @@
 - Changed the option to specify the $fastq_post ("_" or "_R") from ``-x`` to ``-z`` in ``custardpy_cooler``.
 - Updated [hictk](https://hictk.readthedocs.io/en/stable/) from v2.1.2 to 2.2.0.
 - Updated chromap from v0.3.0 to v0.3.2
-- Modified the default output directory name in `custardpy_cooler` and  `custardpy_juicer` from "CustardPyResults_Hi-C" to "CustardPyResults".
+- Modified the default output directory name in ``custardpy_cooler`` and  ``custardpy_juicer`` from "CustardPyResults_Hi-C" to "CustardPyResults".
 - Added the restriction sites for T2T and RPE1 genomes to Juicer, Cooler, and HiC-Pro.
-    - Moved the restriction site files to /opt/restriction_sites/ and modified the scripts to use the new path.
-- Bug fix in the 01.Cooler tutorial: the `-e` option for enzyme was not specified.
+    - Moved the restriction site files to ``/opt/restriction_sites/`` and modified the scripts to use the new path.
+- Bug fix in the 01.Cooler tutorial: the ``-e`` option for enzyme was not specified.
 - Bug fix: lost path to sratoolkit 3.2.1 in PATH
-- Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
+- Bug fix in ``plotInsulationScore`` where the matplotlib.pyplot was not imported.
+- Bug fix: renamed ``makeInslationScore.sh`` to ``makeInsulationScore.sh``.
 
 ### 3.0.0 (2026-2-28)
 - ``custardpy_cooler_HiC`` and ``custardpy_cooler_MicroC`` were merged into a single command, ``custardpy_cooler``.
