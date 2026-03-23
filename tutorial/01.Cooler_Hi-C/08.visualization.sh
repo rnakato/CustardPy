@@ -5,7 +5,7 @@ sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custa
 outputdir=figure
 mkdir -p $outputdir
 
-Resdir=CustardPyResults_Hi-C/Cooler_hg38
+Resdir=CustardPyResults/Cooler_hg38
 resolution=50000
 norm=Cooler
 

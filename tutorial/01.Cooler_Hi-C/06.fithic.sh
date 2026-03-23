@@ -6,7 +6,7 @@ gt=genometable.$build.txt
 sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
 
 cell=Control
-odir=CustardPyResults_Hi-C/Cooler_$build/$cell/
+odir=CustardPyResults/Cooler_$build/$cell/
 
 mkdir -p $odir/log
 resolutions="10000 25000"
