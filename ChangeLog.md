@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 3.1.1 (2026-3-23)
+### 3.1.1 (2026-3-25)
 - Bug fix in ``plotMultiScaleInsulationScore`` where the matplotlib.pyplot was not imported.
 - Bug fix in ``call_HiCCUPS.sh where the error`` "test: =: unary operator expected" was occurred
 
