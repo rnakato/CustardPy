@@ -25,6 +25,10 @@ tutorial/02.Cooler_Micro-C/genome.mm39.fa.fai
 tutorial/02.Cooler_Micro-C/fastq/
 tutorial/03.Juicer_Hi-C/fastq
 **/CustardPyResults/
+tutorial/02.Cooler_Micro-C/CustardPyResults_MicroC/
+tutorial/02.Cooler_Micro-C/archive/
+tutorial/03.Juicer_Hi-C/CustardPyResults_Hi-C.default/
+**/figure
 Docker/gputest.sh
 Docker/log/
 Docker/ToBeConsidered/

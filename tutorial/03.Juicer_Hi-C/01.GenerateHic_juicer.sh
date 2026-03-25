@@ -8,7 +8,7 @@ fastq_post="_"  # "_" or "_R"
 enzyme=MboI
 ncore=64
 
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
 
 cell=Control # siCTCF siRad21
 fqdir=fastq/$cell

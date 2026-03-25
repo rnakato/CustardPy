@@ -16,7 +16,7 @@ wget -nv --timestamping ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR178/040/SRR1787074
 
 
 ### Download the reference genome and build genome index
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.0.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
 
 $sing gethg38genome.sh
 

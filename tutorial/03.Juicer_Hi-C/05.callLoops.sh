@@ -1,10 +1,9 @@
 build=hg38
 
-#sing="singularity exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.2.0.sif"
-sing="singularity exec --nv custardpy.sif"
+sing="apptainer exec --nv --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.1.1.sif"
 
 cell=Control # siCTCF siRad21
-odir=CustardPyResults_Hi-C/Juicer_$build/$cell
+odir=CustardPyResults/Juicer_$build/$cell
 hic=$odir/aligned/inter_30.hic
 ### In case of starting from .hic files:
 #hic=hic/$cell/GSE196034_${cell}_merged.hic
@@ -13,5 +12,5 @@ for norm in VC VC_SQRT KR SCALE
 do
     $sing call_HiCCUPS.sh $norm $odir $hic
 done
-motifdir=
+#motifdir=
 #$sing call_MotifFinder.sh $build $motifdir $odir/loops/$norm/merged_loops.bedpe

@@ -3,8 +3,8 @@
 build=hg38
 gt=genometable.$build.txt
 
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.1.7.0.sif"
-sing="singularity exec custardpy.sif"
+#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec custardpy.sif"
 
 outputdir=3DChromatin_ReplicateQC  # output directory
 mkdir -p $outputdir
@@ -29,7 +29,7 @@ rm -rf $outputdir/data
 mkdir -p $outputdir/data
 for cell in $samples
 do
-    hic=CustardPyResults_Hi-C/Juicer_hg38/$cell/aligned/inter_30.hic
+    hic=CustardPyResults/Juicer_hg38/$cell/aligned/inter_30.hic
     ### In case of starting from .hic files:
     #hic=hic/$cell/GSE196034_${cell}_merged.hic
 

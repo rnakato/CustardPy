@@ -1,11 +1,11 @@
 #!/bin/bash
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.2.1.sif"
-#sing="singularity exec custardpy.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.2.1.sif"
+#sing="apptainer exec custardpy.sif"
 
 outputdir=figure
 mkdir -p $outputdir
 
-Resdir=CustardPyResults_Hi-C/Juicer_hg38
+Resdir=CustardPyResults/Juicer_hg38
 norm=SCALE
 resolution=25000
 

@@ -152,7 +152,6 @@ ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=$PATH:/opt/micromamba/bin
 COPY micromamba /opt/micromamba
 RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
-    && micromamba run -n base pip install --no-cache-dir custardpy==0.7.8 \
     # JuiceBox
     && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git \
     # pastis

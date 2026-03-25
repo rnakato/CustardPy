@@ -1,5 +1,5 @@
-#sing="singularity exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.2.2.2.sif"
-sing="singularity exec custardpy.sif"
+#sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.2.2.2.sif"
+sing="apptainer exec custardpy.sif"
 
 $sing hictk --version
 

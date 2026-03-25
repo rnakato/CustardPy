@@ -1,6 +1,6 @@
 #!/bin/bash
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.0.0.sif"
-#sing="singularity exec custardpy.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.1.1.sif"
+#sing="apptainer exec custardpy.sif"
 
 outputdir=figure
 mkdir -p $outputdir

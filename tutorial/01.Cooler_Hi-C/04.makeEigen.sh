@@ -7,12 +7,13 @@ sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardp
 
 cell=Control
 cool=CustardPyResults/Cooler_$build/$cell/cool/cooler.dedup.q30.multires.cool
-odir=CustardPyResults/Cooler_$build/$cell/InsulationScore
+odir=CustardPyResults/Cooler_$build/$cell/
+genome=genome.$build.fa
 
 resolutions="25000 50000 100000"
 
 for resolution in $resolutions
 do
-    echo "calculate Insulation score.."
-    $sing cooltools_insulation.py $cool $odir $gt --resolution $resolution
+    echo "calculate PC1 with resolution $resolution.."
+    $sing makeEigen_cool.sh -p $ncore $odir/Eigen/$resolution $cool $resolution $gt $genome
 done

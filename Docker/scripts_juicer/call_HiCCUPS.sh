@@ -50,9 +50,9 @@ hicdir=$odir/loops/$norm
 mkdir -p $hicdir
 
 
-if test $usedver3 = "yes"; then
+if test "$usedver3" = "yes"; then
     ex "juicertools.sh -a hiccups -r $resolutions -k $norm $hic $hicdir"
-elif test $useoldversion = "no"; then
+elif test "$useoldversion" = "no"; then
     # juicer_tools.1.22.01.jar
     ex "juicertools.sh hiccups -r $resolutions -k $norm $hic $hicdir --ignore-sparsity"
 else 

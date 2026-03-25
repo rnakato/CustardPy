@@ -1,6 +1,6 @@
 reponame=custardpy
 
-tag=3.1.0
+tag=3.1.1
 docker build -f Dockerfile.$tag -t rnakato/$reponame:$tag . #--no-cache
 #apptainer build -F /work3/SingularityImages/$reponame.$tag.sif docker-daemon://rnakato/$reponame:$tag
 #exit

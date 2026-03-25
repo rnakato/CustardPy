@@ -11,6 +11,9 @@ The following are required before installing CustardPy:
 
 ## ChangeLog
 
+- 0.8.0 (2026.3.17)
+   - Bug fix in `plotMultiScaleInsulationScore` where the matplotlib.pyplot was not imported.
+
 - 0.7.8 (2026.3.16)
    - Bug fix in `plotInsulationScore` where the matplotlib.pyplot was not imported.
 
