@@ -4,6 +4,7 @@
 
 ### 3.2.0 (2026-3-29)
 - Bug fix in ``custardpy_cooler`` where the ``-n binsize_min`` option was not working correctly.
+- Changed the matplotlib backend used by plotting commands such as ``plotHiCfeature`` so that figures can be rendered more quickly.
 
 ### 3.1.1 (2026-3-25)
 - Bug fix in ``plotMultiScaleInsulationScore`` where the matplotlib.pyplot was not imported.
