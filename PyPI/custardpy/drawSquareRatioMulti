@@ -4,6 +4,9 @@
 # All rights reserved.
 
 import argparse
+import os
+os.environ["MPLBACKEND"] = "Agg"
+os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
@@ -62,14 +65,16 @@ def main():
     print (resolution)
     samples = []
     for dir in dirs:
-        if args.cooler:
+        if dir.endswith('.hic') or dir.endswith('.cool') or dir.endswith('.mcool'):
+            samples.append(JuicerMatrix("RPM", dir, resolution, chrom=chr))
+        elif args.cooler:
             observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
             eigen = f"{dir}/Eigen/{resolution}/eigs.cis.{chr}.txt.gz"
-            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
         else:
             observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
             eigen = dir + "/eigen/" + str(resolution) + "/gd_eigen."  + type + "." + chr + ".txt"
-            samples.append(JuicerMatrix("RPM", observed, resolution, eigenfile=eigen))
+            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
 
     ### Plot
     smooth_median_filter = 3

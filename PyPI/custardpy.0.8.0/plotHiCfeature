@@ -1,40 +1,24 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import argparse
-import matplotlib
-#print("backend =", matplotlib.get_backend())
-#print(matplotlib.get_cachedir())
 import matplotlib.pyplot as plt
-import time
 
 from custardpy.HiCmodule import JuicerMatrix
 from custardpy.plotHiCfeature_module import *
 
-def _is_hic_file(path):
-    return path.endswith('.hic') or path.endswith('.cool') or path.endswith('.mcool')
-
 def get_samples(dirs, chr, type, resolution):
     samples = []
     for dir in dirs:
-        if _is_hic_file(dir):
-            samples.append(JuicerMatrix("RPM", dir, resolution, chrom=chr, norm_matrix=type))
-        elif type == "Cooler":
+        if type == "Cooler":
             observed = dir + "/Matrix/" + str(resolution) + "/balanced." + chr + ".matrix.gz"
             eigen = dir + "/Eigen/" + str(resolution) + "/eigs.cis." + chr + ".txt.gz"
-            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
         else:
             observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
             eigen = dir + "/Eigen/" + str(resolution) + "/eigen."  + type + "." + chr + ".txt.gz"
-            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
+        samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
     return samples
 
-def log_timing(name, t0):
-    dt = time.perf_counter() - t0
-    print(f"[TIMER] {name}: {dt:.3f} sec")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -64,14 +48,9 @@ def main():
     parser.add_argument("--vmin_ratio", help="min value of color bar for logratio (default: -1)", type=int, default=-1)
     parser.add_argument("--anchor", help="(for --v4c) anchor point", type=int, default=500000)
     parser.add_argument("--xsize", help="xsize for figure (default: max(length/2M, 10))", type=int, default=0)
-    parser.add_argument("--tad", help="TAD file (BED/BEDPE) for overlay when using direct .hic/.cool/.mcool input", type=str, default="")
-    parser.add_argument("--loop", help="Loop file (BEDPE/TSV) for overlay when using direct .hic/.cool/.mcool input", type=str, default="")
-    parser.add_argument("--verbose",   help="Enable verbose output", action='store_true')
 
-    t0 = time.perf_counter()
     args = parser.parse_args()
 #    print(args)
-    log_timing("parse_args", t0)
 
     dirs = []
     labels = []
@@ -112,11 +91,8 @@ def main():
 
     print ("chr: " + chr + ", resolution: " + str(resolution) +  ", width: " + str(length) + ", " + str(binnum) + " bins.")
 
-    t0 = time.perf_counter()
     samples = get_samples(dirs, chr, type, resolution)
     nsample = len(samples)
-    if args.verbose:
-        log_timing("get_samples", t0)
 
     nrow_heatmap = 2
     nrow_eigen = 1
@@ -128,38 +104,25 @@ def main():
 
     ### Plot
     figsize_x = set_figsize_x(args.xsize, figstart, figend)
-
-    t0 = time.perf_counter()
     if (args.multi or args.multidiff or args.v4c):
         nrow = nrow_heatmap + nrow_eigen + nsample * nrow_feature
 #        figsize_y = 6 + nsample * nrow_feature
         figsize_y = nrow * 2
         plt.figure(figsize=(figsize_x, figsize_y))
-        if args.verbose:
-            log_timing("plot_HiC_Map_if", t0)
     elif args.triangle_ratio_multi:
         nrow = nrow_heatmap + nrow_eigen + (nsample-1) * (nrow_heatmap + nrow_feature*2)
         figsize_y = nrow * 2
         plt.figure(figsize=(figsize_x, figsize_y))
-        if args.verbose:
-            log_timing("plot_HiC_Map_elif", t0)
     else:
         nrow = nrow_heatmap + nrow_eigen + nrow_feature * 2
         figsize_y = nrow * 2
 #        figsize_y = 10
         plt.figure(figsize=(figsize_x, figsize_y))
-        if args.verbose:
-            log_timing("plot_HiC_Map_else", t0)
-
 
     nrow_now = 0
 
-    t0 = time.perf_counter()
     # Hi-C Map
-    if _is_hic_file(dirs[0]):
-        tadfile = args.tad
-        loopfile = args.loop
-    elif type == "Cooler":
+    if type == "Cooler":
         tadfile = dirs[0] + f"/InsulationScore/{resolution}/TADs.w100000.bed"
         loopfile = dirs[0] + f"/loops/cooltools/dots.25000.tsv"
     else:
@@ -171,16 +134,11 @@ def main():
                 colspan_plot, colspan_colorbar, colspan_full,
                 tadfile=tadfile, loopfile=loopfile)
     nrow_now += nrow_heatmap
-    if args.verbose:
-        log_timing("plot_HiC_Map", t0)
 
-    t0 = time.perf_counter()
     # Compartment
     plot_PC1(nrow, nrow_now, nrow_eigen, samples[0], labels[0], 
              s, e, colspan_plot, colspan_full)
     nrow_now += nrow_eigen
-    if args.verbose:
-        log_timing("plot_PC1", t0)
 
     # Directional Frequency Ratio
     if (args.drf):  

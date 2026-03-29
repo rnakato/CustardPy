@@ -3,9 +3,6 @@
 # Copyright(c) Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
 # All rights reserved.
 
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

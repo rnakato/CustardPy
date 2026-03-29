@@ -1,6 +1,3 @@
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 
 from custardpy.DirectionalityIndex import getDirectionalityIndexOfMultiSample

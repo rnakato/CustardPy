@@ -94,7 +94,7 @@ RUN wget --progress=dot:giga https://github.com/4dn-dcic/pairsqc/archive/0.2.3.t
 ENV Ncpus=16
 # CALDER2: https://github.com/CSOgroup/CALDER2
 RUN R -e "install.packages('BiocManager')" \
-    && R -e "BiocManager::install(ask = FALSE)" \
+    && R -e "BiocManager::install(version = '3.22', ask = FALSE)" \
     && R CMD javareconf \
     && R -e "install.packages(c('data.table', \
                                 'devtools', \
@@ -152,6 +152,7 @@ ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=$PATH:/opt/micromamba/bin
 COPY micromamba /opt/micromamba
 RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
+#    && micromamba run -n base pip install -i https://test.pypi.org/simple/ custardpy==0.9.3 \
     # JuiceBox
     && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git \
     # pastis

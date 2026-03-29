@@ -4,8 +4,6 @@
 # All rights reserved.
 
 import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import argparse
 import numpy as np
 import pandas as pd
@@ -152,8 +150,6 @@ def plot_DRFregion(mat_treated, mat_control, thre, xstart, xend, odir):
     return differentialDRFregions
 
 def loadJuicerData(dirname, type, resolution, chr, *, normalizetype="RPM"):
-    if dirname.endswith('.hic') or dirname.endswith('.cool') or dirname.endswith('.mcool'):
-        return JuicerMatrix(normalizetype, dirname, resolution, chrom=chr)
     return JuicerMatrix(normalizetype,
                         f"{dirname}/Matrix/intrachromosomal/{resolution}/observed.{type}.{chr}.matrix.gz",
                         resolution, chrom=chr)

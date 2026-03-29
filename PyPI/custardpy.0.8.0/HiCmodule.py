@@ -22,22 +22,18 @@ def getNonZeroMatrix(A, lim_pzero):
     return A
 
 class JuicerMatrix:
-    def __init__(self, norm, rawmatrix, res, *, chrom="", eigenfile="", norm_matrix=None):
+    def __init__(self, norm, rawmatrix, res, *, chrom="", eigenfile=""):
         self.res = res
-
         is_hic_cool = rawmatrix.endswith('.hic') or rawmatrix.endswith('.cool') or rawmatrix.endswith('.mcool')
         if is_hic_cool:
-            self.raw = loadDenseMatrix(rawmatrix, chrom=chrom, res=res, norm=norm_matrix)
+            self.raw = loadDenseMatrix(rawmatrix, chrom=chrom, res=res)
         elif os.path.exists(rawmatrix):
             self.raw = loadDenseMatrix(rawmatrix)
         else:
             print ("Error: " + rawmatrix + " does not exist.")
             sys.exit()
-
-        if norm == "RPM":
-            self.raw = self.raw * 10000000 / np.nansum(self.raw)
-
         if os.path.exists(eigenfile):
+#            self.eigen = np.loadtxt(eigenfile)
             df = pd.read_csv(eigenfile, header=None, skip_blank_lines=False)
             df[0] = pd.to_numeric(df[0], errors='coerce')
             df[0] = df[0].fillna(0)
@@ -45,9 +41,11 @@ class JuicerMatrix:
             eigen_sortindex = np.argsort(self.eigen)
             eigen_sort = self.eigen[eigen_sortindex]
             self.eigen_sortindex = eigen_sortindex[~np.isnan(eigen_sort)]
+#            eigen_sort = eigen[eigen_sortindex]
         else:
             self.eigen = np.zeros(self.raw.shape[0])
-
+        if norm == "RPM":
+            self.raw = self.raw * 10000000 / np.nansum(self.raw)
         self.InsulationScore = MultiInsulationScore(self.getmatrix().values,
                                                     1000000, 100000, self.res)
 
@@ -70,6 +68,13 @@ class JuicerMatrix:
         logmat = self.getlog()
         zmat = pd.DataFrame(sp.stats.zscore(logmat, axis=1), index=logmat.index, columns=logmat.index)
         return zmat
+
+#    def getPearson(self, *, isOE=False):
+#        oe = self.getlog(isOE=isOE)
+#        ccmat = np.corrcoef(oe)
+#        ccmat[np.isnan(ccmat)] = 0
+#        ccmat = pd.DataFrame(ccmat, index=oe.index, columns=oe.index)
+#        return ccmat
 
     def getEigen(self, *, sortEigen=False):
         if sortEigen:

@@ -5,9 +5,8 @@
 
 import sys
 import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 from custardpy.HiCmodule import *

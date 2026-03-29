@@ -4,32 +4,28 @@
 # All rights reserved.
 
 import argparse
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
+from scipy import ndimage
 from custardpy.HiCmodule import JuicerMatrix
-from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
-from custardpy.loadData import *
 from custardpy.PlotModule import *
+from custardpy.DirectionalRelativeFreq import make3dmatrixRatio
 
+#import pdb
 def main():
     parser = argparse.ArgumentParser()
     tp = lambda x:list(map(str, x.split(':')))
     parser.add_argument("input", help="<Input directory>:<label>", type=tp, nargs='*')
     parser.add_argument("-o", "--output", help="Output prefix", type=str, default="output")
     parser.add_argument("-c", "--chr", help="chromosome", type=str)
-    parser.add_argument("--log", help="logged count", action='store_true')
-    parser.add_argument("--xtickoff", help="omit x ticks", action='store_true')
     parser.add_argument("--type", help="normalize type (default: SCALE)", type=str, default="SCALE")
     parser.add_argument("-r", "--resolution", help="resolution (default: 25000)", type=int, default=25000)
     parser.add_argument("-s", "--start", help="start bp (default: 0)", type=int, default=0)
     parser.add_argument("-e", "--end", help="end bp (default: 1000000)", type=int, default=1000000)
-    parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
-    parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
+    parser.add_argument("--vmax", help="max value of color bar (default: 1)", type=int, default=1)
+    parser.add_argument("--vmin", help="min value of color bar (default: -1)", type=int, default=-1)
     parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
     args = parser.parse_args()
@@ -60,17 +56,13 @@ def main():
     e = int(figend   / resolution)
     vmax = args.vmax
     vmin = args.vmin
-    if (args.log):
-        vmax = np.log1p(vmax)
-        vmin = np.log1p(vmin)
+#    figsize_y = int((figend-figstart)/2000000)
 
     print (chr)
     print (resolution)
     samples = []
     for dir in dirs:
-        if dir.endswith('.hic') or dir.endswith('.cool') or dir.endswith('.mcool'):
-            samples.append(JuicerMatrix("RPM", dir, resolution, chrom=chr))
-        elif args.cooler:
+        if args.cooler:
             observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
             eigen = f"{dir}/Eigen/{resolution}/eigs.cis.{chr}.txt.gz"
             samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
@@ -80,43 +72,25 @@ def main():
             samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr, eigenfile=eigen))
 
     ### Plot
-    nsample = len(samples)
+    smooth_median_filter = 3
+    EnrichMatrices = make3dmatrixRatio(samples, smooth_median_filter)
+
+    nsample = len(samples) -1
+
     plt.figure(figsize=(6, 3 * max(2,math.ceil(nsample/2))))
+ #   plt.figure(figsize=(nsample*args.xsize/2, figsize_y))
 
-    for i, sample in enumerate(samples):
-        if dirs[i].endswith('.hic') or dirs[i].endswith('.cool') or dirs[i].endswith('.mcool'):
-            tads = None
-            loops = None
-        elif args.cooler:
-            tadfile = f"{dirs[i]}/InsulationScore/{resolution}/TADs.w500000.bed"
-            print(tadfile)
-            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-            loopfile = f"{dirs[i]}/loops/cooltools/dots.25000.tsv"
-            print(loopfile)
-            loops = loadloops(loopfile, chr, start=figstart, end=figend)
-        else:
-            tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-            print(tadfile)
-            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-            loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
-            print(loopfile)
-            loops = loadloops(loopfile, chr, start=figstart, end=figend)
-        
+    for i, sample in enumerate(EnrichMatrices):
         # Hi-C Map
+#        plt.subplot(math.ceil(nsample/2), 2, i+1)
         plt.subplot(int(len(labels)/2)+1, 2, i+1)
-        if (args.log):
-            drawHeatmapSquare(sample.getlog(), resolution,
-                                figstart=figstart, figend=figend,
-                                tads=tads, loops=loops,
-                                vmax=vmax, vmin=vmin,
-                                label=labels[i], xticks=(not args.xtickoff))
-        else:
-            drawHeatmapSquare(sample.getmatrix(), resolution,
-                                figstart=figstart, figend=figend,
-                                tads=tads, loops=loops,
-                                vmax=vmax, vmin=vmin,
-                                label=labels[i], xticks=(not args.xtickoff))
+        drawHeatmapSquare(sample, resolution,
+                          figstart=figstart, figend=figend,
+                          vmax=vmax, vmin=vmin,
+                          cmap=generate_cmap(['#1310cc', '#FFFFFF', '#d10a3f']),
+                          label=labels[i+1], xticks=False)
 
+    plt.tight_layout()
     plt.savefig(args.output + ".pdf")
 
 if(__name__ == '__main__'):

@@ -4,6 +4,9 @@
 # All rights reserved.
 
 import argparse
+import os
+os.environ["MPLBACKEND"] = "Agg"
+os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 from custardpy.HiCmodule import JuicerMatrix
@@ -70,9 +73,13 @@ def main():
     tads = []
     loops = []
     for dir in dirs:
-        if args.cooler:
+        if dir.endswith('.hic') or dir.endswith('.cool') or dir.endswith('.mcool'):
+            samples.append(JuicerMatrix("RPM", dir, resolution, chrom=chr))
+            tads.append(None)
+            loops.append(None)
+        elif args.cooler:
             observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
-            samples.append(JuicerMatrix("RPM", observed, resolution))
+            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr))
             tadfile = f"{dir}/InsulationScore/{resolution}/TADs.w500000.bed"
             print(tadfile)
             tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
@@ -81,7 +88,7 @@ def main():
             loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
         else:
             observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
-            samples.append(JuicerMatrix("RPM", observed, resolution))
+            samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr))
             tadfile = dir + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
             print(tadfile)
             tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))

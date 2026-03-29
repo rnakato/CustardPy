@@ -3,11 +3,7 @@
 # Copyright(c) Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
 # All rights reserved.
 
-
 import argparse
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 from custardpy.HiCmodule import JuicerMatrix
@@ -15,6 +11,8 @@ from custardpy.InsulationScore import getInsulationScoreOfMultiSample
 from custardpy.generateCmap import *
 from custardpy.loadData import *
 from custardpy.PlotModule import *
+
+#import pdb
 
 def main():
     parser = argparse.ArgumentParser()
@@ -30,6 +28,7 @@ def main():
     parser.add_argument("--vmax", help="max value of color bar (default: 50)", type=int, default=50)
     parser.add_argument("--vmin", help="min value of color bar (default: 0)", type=int, default=0)
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
+    parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
     parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
     parser.add_argument("--cooler", help="Assume the cooler output", action='store_true')
 
@@ -45,8 +44,8 @@ def main():
         else:
             labels.append("")
 
-    if len(dirs) == 0:
-        print ("Error: specify input data (-i).")
+    if len(dirs) != 2:
+        print ("Error: specify two samples (-i).")
         exit()
     if args.chr is None:
         print ("Error: specify chromosome (-c).")
@@ -68,58 +67,37 @@ def main():
     print (chr)
     print (resolution)
     samples = []
+    tads = []
+    loops = []
     for dir in dirs:
-        if dir.endswith('.hic') or dir.endswith('.cool') or dir.endswith('.mcool'):
-            samples.append(JuicerMatrix("RPM", dir, resolution, chrom=chr))
-        elif args.cooler:
+        if args.cooler:
             observed = f"{dir}/Matrix/{resolution}/balanced.{chr}.matrix.gz"
             samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr))
+            tadfile = f"{dir}/InsulationScore/{resolution}/TADs.w500000.bed"
+            print(tadfile)
+            tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
+            loopfile = f"{dir}/loops/cooltools/dots.25000.tsv"
+            print(loopfile)
+            loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
         else:
             observed = dir + "/Matrix/intrachromosomal/" + str(resolution) + "/observed."  + type + "." + chr + ".matrix.gz"
             samples.append(JuicerMatrix("RPM", observed, resolution, chrom=chr))
-
-    nsample = len(samples)
+            tadfile = dir + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
+            print(tadfile)
+            tads.append(loadTADs(tadfile, chr, start=figstart, end=figend))
+            loopfile = dir + "/loops/"  + type + "/merged_loops.bedpe"
+            print(loopfile)
+            loops.append(loadloops(loopfile, chr, start=figstart, end=figend))
 
     ### Plot
-    figsize_x = max(int((figend-figstart)/2000000), 10)
-    figsize_y = nsample * args.ysize
-    plt.figure(figsize=(figsize_x, figsize_y))
+    drawHeatmapTrianglePair(samples[0].getmatrix(), samples[1].getmatrix(),
+                            resolution,
+                            figstart=figstart, figend=figend,
+                            tads=tads[0], loops=loops[0],
+                            tads2=tads[1], loops2=loops[1],
+                            vmax=vmax, vmin=vmin, distance_max=args.vizdistancemax,
+                            label=labels[0] + "(upper)-" + labels[1] + "(lower)", xticks=True)
 
-    for i, sample in enumerate(samples):
-        if dirs[i].endswith('.hic') or dirs[i].endswith('.cool') or dirs[i].endswith('.mcool'):
-            tads = None
-            loops = None
-        elif args.cooler:
-            tadfile = f"{dirs[i]}/InsulationScore/{resolution}/TADs.w500000.bed"
-            print(tadfile)
-            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-            loopfile = f"{dirs[i]}/loops/cooltools/dots.25000.tsv"
-            print(loopfile)
-            loops = loadloops(loopfile, chr, start=figstart, end=figend)
-        else:
-            tadfile = dirs[i] + "/TAD/" + type + "/" + str(resolution) + "_blocks.bedpe"
-            print(tadfile)
-            tads = loadTADs(tadfile, chr, start=figstart, end=figend)
-            loopfile = dirs[i] + "/loops/" + type + "/merged_loops.bedpe"
-            print(loopfile)
-            loops = loadloops(loopfile, chr, start=figstart, end=figend)
-
-        # Hi-C Map
-        plt.subplot2grid((nsample*2, 4), (i*2,0), rowspan=2, colspan=4)
-        if (args.log):
-            drawHeatmapTriangle_subplot2grid(sample.getlog(), resolution,
-                                             figstart=figstart, figend=figend,
-                                             tads=tads, loops=loops,
-                                             vmax=vmax, vmin=vmin, distance_max=args.vizdistancemax,
-                                             label=labels[i], xticks=True)
-        else:
-            drawHeatmapTriangle_subplot2grid(sample.getmatrix(), resolution,
-                                             figstart=figstart, figend=figend,
-                                             tads=tads, loops=loops,
-                                             vmax=vmax, vmin=vmin, distance_max=args.vizdistancemax,
-                                             label=labels[i], xticks=True)
-
-    plt.tight_layout()
     plt.savefig(args.output + ".pdf")
 
 if(__name__ == '__main__'):

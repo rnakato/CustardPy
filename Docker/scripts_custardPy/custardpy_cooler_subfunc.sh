@@ -75,11 +75,12 @@ parse_pairtools(){
 gen_cool_hic(){
     odir=$1
     gt=$2
-    binsize_multi=$3
-    max_distance=$4
-    max_split=$5
-    qthre=$6
-    pair=$7
+    binsize_min=$3
+    binsize_multi=$4
+    max_distance=$5
+    max_split=$6
+    qthre=$7
+    pair=$8
 
     prefix=cooler.dedup.q$qthre
 
@@ -92,9 +93,9 @@ gen_cool_hic(){
         cooler balance -p $ncore $odir/cool/$prefix.cool >$odir/log/cooler_balance.log
 
         for binsize in 25000 50000 100000; do
-            cfile=$odir/cool/$prefix.$binsize.cool
-            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $cfile >$odir/log/cooler_cload_pairix.$binsize.log
-            cooler balance -p $ncore $cfile >$odir/log/cooler_balance.$binsize.log
+            coolfile=$odir/cool/$prefix.$binsize.cool
+            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $coolfile >$odir/log/cooler_cload_pairix.$binsize.log
+            cooler balance -p $ncore $coolfile >$odir/log/cooler_balance.$binsize.log
         done
         run-cool2multirescool.sh -i $odir/cool/$prefix.cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
 

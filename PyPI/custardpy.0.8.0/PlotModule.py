@@ -3,9 +3,6 @@
 
 import numpy as np
 import pandas as pd
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 from scipy import ndimage
 from custardpy.generateCmap import *

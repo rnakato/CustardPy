@@ -4,9 +4,6 @@
 # All rights reserved.
 
 import argparse
-import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 from custardpy.HiCmodule import JuicerMatrix

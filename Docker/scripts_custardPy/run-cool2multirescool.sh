@@ -48,9 +48,9 @@ if [[ ! -z $custom_res ]]; then
 fi
 
 if [[ $balance == "1" ]]; then
-    cooler zoomify --balance --balance-args '--convergence-policy store_nan' -n $ncores -o $outprefix.multires.cool -c $chunksize $RES_ARG $input
+    cooler zoomify --balance --balance-args '--convergence-policy store_nan' -n $ncores -o $outprefix.mcool -c $chunksize $RES_ARG $input
 else
-    cooler zoomify -n $ncores -o $outprefix.multires.cool -c $chunksize $RES_ARG $input
+    cooler zoomify -n $ncores -o $outprefix.mcool -c $chunksize $RES_ARG $input
 fi
 
 

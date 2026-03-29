@@ -5,6 +5,9 @@
 
 
 import argparse
+import os
+os.environ["MPLBACKEND"] = "Agg"
+os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import matplotlib.pyplot as plt
 import seaborn as sns
 from custardpy.HiCmodule import JuicerMatrix
@@ -29,6 +32,7 @@ def main():
     parser.add_argument("-d", "--vizdistancemax", help="max distance in heatmap", type=int, default=0)
     parser.add_argument("--xsize", help="xsize for figure", type=int, default=10)
     parser.add_argument("--ysize", help="ysize (* times of samples)", type=int, default=3)
+    parser.add_argument("-c", "--chr", help="chromosome (required for .hic/.cool/.mcool input)", type=str, default="")
 
     args = parser.parse_args()
 #    print(args)
@@ -60,7 +64,7 @@ def main():
     print (resolution)
     samples = []
     for inputfile in inputfiles:
-        samples.append(JuicerMatrix("RPM", inputfile, resolution))
+        samples.append(JuicerMatrix("RPM", inputfile, resolution, chrom=args.chr))
 
     plt.subplot(1, 1, 1)
     if (args.log):

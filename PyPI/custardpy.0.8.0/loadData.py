@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 
 
-def _load_from_hic(filename, chrom, res, norm=None):
+def _load_from_hic(filename, chrom, res):
     import hicstraw
-    records = hicstraw.straw('observed', norm, filename, chrom, chrom, "BP", res)
+    records = hicstraw.straw("NONE", filename, chrom, chrom, "BP", res)
     if not records:
         raise ValueError(f"No data found for {chrom} at resolution {res} in {filename}")
     positions = sorted(set([r.binX for r in records] + [r.binY for r in records]))
@@ -22,32 +22,27 @@ def _load_from_hic(filename, chrom, res, norm=None):
     return pd.DataFrame(mat, index=positions, columns=positions)
 
 
-def _load_from_cool(filename, chrom, res, norm=None):
+def _load_from_cool(filename, chrom, res):
     import cooler
-    if filename.endswith('.mcool') or filename.endswith('.multires.cool'):
+    if filename.endswith('.mcool'):
         c = cooler.Cooler(f"{filename}::/resolutions/{res}")
     else:
         c = cooler.Cooler(filename)
-
-    if norm is not None:
-        mat = c.matrix(balance=True).fetch(chrom)
-    else:   
-        mat = c.matrix(balance=False).fetch(chrom)
-
+    mat = c.matrix(balance=False).fetch(chrom)
     bins = c.bins().fetch(chrom)['start'].values
     return pd.DataFrame(mat, index=bins, columns=bins)
 
 
-def loadDenseMatrix(filename, chrom=None, res=None, norm=None):
+def loadDenseMatrix(filename, chrom=None, res=None):
     print(filename)
     if filename.endswith('.hic'):
         if chrom is None or res is None:
             raise ValueError("chrom and res are required for .hic files")
-        return _load_from_hic(filename, chrom, res, norm)
+        return _load_from_hic(filename, chrom, res)
     elif filename.endswith('.cool') or filename.endswith('.mcool'):
         if chrom is None or res is None:
             raise ValueError("chrom and res are required for .cool/.mcool files")
-        return _load_from_cool(filename, chrom, res, norm)
+        return _load_from_cool(filename, chrom, res)
     else:
         data = pd.read_csv(filename, delimiter='\t', index_col=0)
         data.columns = data.columns.astype('int')

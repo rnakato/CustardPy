@@ -8,8 +8,8 @@ ncore=64
 enzyme=MboI
 fastq_post="_"  # "_" or "_R"
 
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
-sing_gpu="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.0.sif"
+sing_gpu="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.0.sif"
 
 for cell in Control siCTCF siRad21 siNIPBL
 do

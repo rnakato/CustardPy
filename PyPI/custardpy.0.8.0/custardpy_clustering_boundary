@@ -4,8 +4,6 @@
 # All rights reserved.
 
 import os
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 import argparse
 import numpy as np
 import pandas as pd

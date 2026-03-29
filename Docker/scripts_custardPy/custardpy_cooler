@@ -155,8 +155,7 @@ if [ -z "$stage_map" ]; then
     # Generate .cool and .hic files
     pair=$odir/pairs/dedup.bwa.q$qthre.pairs.gz
  #   pair=$odir/pairs/dedup.restricted.q$qthre.pairs.gz # not used
-#    gen_cool_hic $odir $gt $prefix $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
-    gen_cool_hic $odir $gt $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
+    gen_cool_hic $odir $gt $binsize_min $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
     if [ $? -ne 0 ]; then
         echo "Error: cooler processing failed. Check the log files in $odir/log"
         exit 1
