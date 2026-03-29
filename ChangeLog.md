@@ -2,7 +2,7 @@
 
 ## CustardPy
 
-### 3.2.0 (2026-3-30)
+### 3.2.0 (2026-3-29)
 - Bug fix in ``custardpy_cooler`` where the ``-n binsize_min`` option was not working correctly.
 
 ### 3.1.1 (2026-3-25)
