@@ -1,12 +1,12 @@
 #!/bin/bash
-sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.2.0.sif"
 #sing="apptainer exec custardpy.sif"
 
 outputdir=figure
 mkdir -p $outputdir
 
 Resdir=CustardPyResults/Cooler_hg38
-resolution=50000
+resolution=25000
 norm=Cooler
 
 chr=chr20
@@ -14,10 +14,10 @@ start=8000000
 end=16000000
 
 cell=Control
-#$sing plotHiCMatrix \
-#      $Resdir/$cell/Matrix/$resolution/balanced.$chr.matrix.gz \
-#      $outputdir/ContactMap.$cell.$chr.$start-$end.pdf \
-#      $start $end $cell
+$sing plotHiCMatrix \
+      $Resdir/$cell/Matrix/$resolution/balanced.$chr.matrix.gz \
+      $outputdir/ContactMap.$cell.$chr.$start-$end.pdf \
+      $start $end $cell
 
 $sing plotHiCfeature \
       $Resdir/Control:Control \
@@ -26,6 +26,14 @@ $sing plotHiCfeature \
       -c $chr --start $start --end $end -r $resolution \
       --type $norm -d 5000000 \
       -o $outputdir/IS.$chr.$start-$end
+
+$sing plotHiCfeature \
+      $Resdir/Control/cool/cooler.dedup.q30.multires.cool:Control \
+      $Resdir/siCTCF/cool/cooler.dedup.q30.multires.cool:siCTCF \
+      $Resdir/siRad21/cool/cooler.dedup.q30.multires.cool:siRad21 \
+      -c $chr --start $start --end $end -r $resolution \
+      --type $norm -d 5000000 \
+      -o $outputdir/IS2.$chr.$start-$end
 
 
 $sing plotHiCfeature \

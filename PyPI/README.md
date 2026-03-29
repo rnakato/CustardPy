@@ -11,6 +11,9 @@ The following are required before installing CustardPy:
 
 ## ChangeLog
 
+- 0.9.1 (2026-3-30)
+   - Changed the matplotlib backend used by plotting commands such as `plotHiCfeature` so that figures can be rendered more quickly.
+
 - 0.8.0 (2026.3.17)
    - Bug fix in `plotMultiScaleInsulationScore` where the matplotlib.pyplot was not imported.
 
