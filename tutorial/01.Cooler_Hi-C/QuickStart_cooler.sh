@@ -18,14 +18,14 @@ do
 
     # downstream analysis of .cool files (eigenvector, insulation score, loop calling, etc.)
     odir=CustardPyResults/Cooler_$build/$cell
-    cool=$odir/cool/cooler.dedup.q30.multires.cool
+    cool=$odir/cool/cooler.dedup.q30.mcool
     $sing custardpy_process_cool -t $ncore -g $gt -f $genome $cool $odir $cell
-#exit
+
     ## (Optional) loop calling with fithic (take long time, so run separately)
     resolutions_fithic=25000
     pairfile=$odir/pairs/dedup.bwa.q30.pairs.gz
     odir_fithic=$odir/loops/fithic/$resolutions_fithic
-    $sing run_fithic.sh -g $gt $pairfile $odir_fithic $cell $resolutions_fithic | tee $odir/log/fithic.$resolutions_fithic.log
+#    $sing run_fithic.sh -g $gt $pairfile $odir_fithic $cell $resolutions_fithic | tee $odir/log/fithic.$resolutions_fithic.log
 
     ## (Optional) Juicer analysis (requires GPU, so run separately)
     hic=$odir/hic/contact_map.q30.hic

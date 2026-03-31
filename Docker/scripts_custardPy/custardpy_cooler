@@ -18,12 +18,9 @@ printHelpAndExit() {
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)" 1>&2
     echo "    -p ncore : number of CPUs (default: 4)" 1>&2
     echo '    -z [_|_R]: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R". (default: "_")' 1>&2
-#    echo "    -x postfix" 1>&2
-#    echo "       1: '*_1.fastq.gz' and '*_2.fastq.gz' (default)" 1>&2
-#    echo "       2: '*_R1.fastq.gz' and '*_R2.fastq.gz'" 1>&2
     echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)" 1>&2
     echo "    -n binsize_min : binsize_min (for cooler cload pairix, default: 5000)" 1>&2
-    echo "    -r binsize_multi : binsize_multi (for multirescool, default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')" 1>&2
+    echo "    -r binsize_multi : binsize_multi (for multirescool (.mcool), default: '5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000')" 1>&2
    exit 0
 }
 

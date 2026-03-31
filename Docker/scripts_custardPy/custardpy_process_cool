@@ -16,7 +16,7 @@ function usage()
     echo '      -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
     echo '      -a: Use juicer_tools.jar version 3 (takes precedence over -o)' 1>&2
     echo '   Example:' 1>&2
-    echo "      $cmdname cooler.dedup.q30.multires.cool CustardPyResults/ Control" 1>&2
+    echo "      $cmdname cooler.dedup.q30.mcool CustardPyResults/ Control" 1>&2
 }
 
 gt=""

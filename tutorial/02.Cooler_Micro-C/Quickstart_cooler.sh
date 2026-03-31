@@ -7,11 +7,11 @@ gene=refFlat.$build.txt
 genome=genome.$build.fa
 index_bwa=bwa-indexes/$build
 
-sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.0.sif"
 #sing="apptainer exec custardpy.sif"
 
 cell=C36_rep1
-#$sing custardpy_cooler -g $gt -f $genome -b $build -e None -i $index_bwa -p $ncore fastq/$cell $cell
+$sing custardpy_cooler -g $gt -f $genome -b $build -e None -i $index_bwa -p $ncore fastq/$cell $cell
 #exit
 
 # downstream analysis of .cool files (eigenvector, insulation score, loop calling, etc.)

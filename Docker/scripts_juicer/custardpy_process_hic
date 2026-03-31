@@ -33,7 +33,7 @@ while getopts g:n:r:a:p:oa option; do
     p) ncore=${OPTARG} ;;
     o) useversion="-o" ;;
     a) useversion="-a" ;;
-    \?) 
+    \?)
         echo "Invalid option: -$OPTARG" >&2
         usage
         exit 1
@@ -74,7 +74,7 @@ do
     ex "makeMatrix_intra.sh $useversion $norm $odir $hic $resolution $gt"
     # InsulationScore
     echo "calculate Insulation score.."
-    ex "makeInslationScore.sh $norm $odir $resolution $gt"
+    ex "makeInsulationScore.sh $norm $odir $resolution $gt"
 
     # Eigen
     if test "$gene" = ""; then
