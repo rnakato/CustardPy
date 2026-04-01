@@ -1,6 +1,5 @@
 #!/bin/bash
-sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.2.2.1.sif"
-#sing="apptainer exec custardpy.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.0.sif"
 
 outputdir=figure
 mkdir -p $outputdir
@@ -43,7 +42,7 @@ $sing plotHiCfeature \
       --multidiff --type $norm -d 5000000 \
       -o $outputdir/MultiISdiff.$chr.$start-$end
 
-$sing plotHiCfeature \
+0;136;0c$sing plotHiCfeature \
       $Resdir/Control:Control \
       $Resdir/siCTCF:siCTCF \
       $Resdir/siRad21:siRad21 \
@@ -139,3 +138,7 @@ $sing drawTrianglePair \
       $Resdir/siRad21:siRad21 \
       -o $outputdir/TrianglePair.$chr \
       -c $chr --start $start --end $end --type $norm -d 5000000 -r $resolution
+
+#hic=$Resdir/Control/aligned/inter_30.hic
+#loop=$Resdir/Control/loops/SCALE/merged_loops.bedpe
+#$sing juicertools.sh apa $hic $loop $outputdir/Juicer_APA-$cell

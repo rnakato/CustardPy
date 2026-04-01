@@ -68,10 +68,8 @@ def main():
     parser.add_argument("--loop", help="Loop file (BEDPE/TSV) for overlay when using direct .hic/.cool/.mcool input", type=str, default="")
     parser.add_argument("--verbose",   help="Enable verbose output", action='store_true')
 
-    t0 = time.perf_counter()
     args = parser.parse_args()
 #    print(args)
-    log_timing("parse_args", t0)
 
     dirs = []
     labels = []
