@@ -3,8 +3,7 @@
 build=hg38
 gt=genometable.$build.txt
 
-#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/custardpy.3.1.1.sif"
-sing="apptainer exec custardpy.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.0.sif"
 
 outputdir=3DChromatin_ReplicateQC  # output directory
 mkdir -p $outputdir
