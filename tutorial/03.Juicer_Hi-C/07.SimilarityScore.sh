@@ -8,6 +8,8 @@ sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardp
 outputdir=3DChromatin_ReplicateQC  # output directory
 mkdir -p $outputdir
 
+# execute with bash
+
 samples="Control siCTCF siRad21" # Samples to be compared
 
 chrs="chr21 chr22" # chromosomes to be considered

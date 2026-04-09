@@ -460,9 +460,24 @@ Convert interaction frequency file dumped by Juicertools to dense (two-dimension
         25000
 
 
-HiChIP analysis
+Stripe analysis
 ------------------------------------------------
 
+Stripenn
++++++++++++++++++++++++++++++++++++
+
+`Stripenn <https://github.com/VahediLab/stripenn>`_ is a tool for stripe calling and is installed in the virtual environment.
+You can launch it using the ``run_env.sh`` command.
+
+.. code-block:: bash
+
+    # For Docker
+    docker run --rm -it -u root rnakato/shortcake run_env.sh stripenn stripenn
+    # For Apptainer
+    apptainer exec custardpy.sif run_env.sh stripenn stripenn
+
+HiChIP analysis
+------------------------------------------------
 
 FitHiChIP
 +++++++++++++++++++++++++++++++++++

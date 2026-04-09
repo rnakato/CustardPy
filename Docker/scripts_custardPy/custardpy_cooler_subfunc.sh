@@ -89,18 +89,19 @@ gen_cool_hic(){
     else
         echo "generate .cool file..."
         mkdir -p $odir/cool $odir/log
-        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $odir/cool/$prefix.cool >$odir/log/cooler_cload_pairix.log
-        cooler balance -p $ncore $odir/cool/$prefix.cool >$odir/log/cooler_balance.log
+        cool=$odir/cool/$prefix.$binsize_min.cool
+        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $cool >$odir/log/cooler_cload_pairix.log
+        cooler balance -p $ncore $cool >$odir/log/cooler_balance.log
 
-        for binsize in 25000 50000 100000; do
-            coolfile=$odir/cool/$prefix.$binsize.cool
-            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $coolfile >$odir/log/cooler_cload_pairix.$binsize.log
-            cooler balance -p $ncore $coolfile >$odir/log/cooler_balance.$binsize.log
-        done
-        run-cool2multirescool.sh -i $odir/cool/$prefix.cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
+#        for binsize in 25000 50000 100000; do
+#            coolfile=$odir/cool/$prefix.$binsize.cool
+#            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $coolfile >$odir/log/cooler_cload_pairix.$binsize.log
+#            cooler balance -p $ncore $coolfile >$odir/log/cooler_balance.$binsize.log
+#        done
+        run-cool2multirescool.sh -i $cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
 
         echo "postprocess finished!"
-        echo "Output file: $odir/cool/$prefix.cool"
+        echo "Output file: $cool and $odir/cool/$prefix.mcool"
     fi
 
     if test -e "$odir/hic/contact_map.q$qthre.hic"; then
