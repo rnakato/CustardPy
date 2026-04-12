@@ -147,25 +147,33 @@ RUN tar zxvf bedtools-$v.tar.gz \
     && cd bedtools2 && make \
     && rm /opt/bedtools-$v.tar.gz
 
-# micromamba
+### Python environment with micromamba
 ENV MAMBA_ROOT_PREFIX=/opt/micromamba
 ENV PATH=$PATH:/opt/micromamba/bin
 COPY micromamba /opt/micromamba
 RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
 #    && micromamba run -n base pip install -i https://test.pypi.org/simple/ custardpy==0.9.3 \
     # JuiceBox
-    && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git \
-    # pastis
-    # iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
-    # about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
-    && micromamba run -n base pip install --no-cache-dir --no-build-isolation iced==0.5.10 \
-    && micromamba run -n base pip install --no-cache-dir pastis==0.4.0 --no-build-isolation \
-    && micromamba clean --all --yes
+    && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 
+### Virtual environments for Python packages
+# pastis
+# iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
+# about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
+RUN micromamba create -n pastis python=3.8 numpy=1.23.5 setuptools=68.2.2 pandas=1.5.3 scikit-learn scipy=1.10.1 -c defaults \
+    && micromamba run -n pastis pip install --no-cache-dir --no-build-isolation iced==0.5.10 \
+    && micromamba run -n pastis pip install --no-cache-dir --no-build-isolation pastis==0.4.0 \
+# hicexplorer
+    && micromamba create -n hicexplorer python=3.8 hicexplorer=3.7.6 -c bioconda -c conda-forge \
 # stripenn (pandas==1.5.3)
-RUN micromamba create -n stripenn python==3.8 -c defaults \
-   && micromamba run -n stripenn pip install --no-cache-dir stripenn==1.1.65.22 \
-   && micromamba clean --all --yes
+    && micromamba create -n stripenn python=3.8 -c defaults \
+    && micromamba run -n stripenn pip install --no-cache-dir stripenn==1.1.65.22 \
+# hictk
+    && micromamba create -n hictk -c defaults -c conda-forge -c bioconda hictk==2.2.0 \
+# MultiQC
+    && micromamba create -n multiqc python=3.8 -c defaults \
+    && micromamba run -n multiqc pip install --upgrade --force-reinstall git+https://github.com/open2c/MultiQC.git \
+    && micromamba clean --all --yes
 
 # 3DChromatin_ReplicateQC v1.0.1
 COPY 3DChromatin_ReplicateQC.v1.0.1.modified.tar.gz 3DChromatin_ReplicateQC.v1.0.1.tar.gz
@@ -176,25 +184,26 @@ RUN micromamba create -n ReplicateQC python==2.7.18 scikit-learn psutil -c defau
     && rm 3DChromatin_ReplicateQC.v1.0.1.tar.gz \
     && micromamba clean --all --yes
 
-# HiCUP
-COPY HiCUP-0.9.2.tar.gz HiCUP-0.9.2.tar.gz
-RUN tar zxvf HiCUP-0.9.2.tar.gz \
-    && rm HiCUP-0.9.2.tar.gz
-
 # HiC-Pro
 # (remove R to use local R)
 COPY HiC-Pro_3.1.0.modified.tar.gz HiC-Pro_3.1.0.tar.gz
 RUN tar zxvf HiC-Pro_3.1.0.tar.gz \
     && micromamba create -n hic-pro -f HiC-Pro-3.1.0/environment.yml \
     && cd HiC-Pro-3.1.0 \
+    # make configure PATHを通すのをカットした。baseのpythonが起動してしまうため
     && micromamba run -n hic-pro make configure \
     && micromamba run -n hic-pro make install \
     && micromamba remove -n hic-pro r-base r-ggplot2 r-rcolorbrewer r-gridbase \
     && rm -rf /opt/HiC-Pro-3.1.0 /opt/HiC-Pro_3.1.0.tar.gz
 
-# FitHiChIP
-RUN git clone https://github.com/ay-lab/FitHiChIP.git \
-    && micromamba run -n hic-pro pip install --no-cache-dir networkx==3.1 numpy==1.22.* hic-straw==1.3.1 cooler==0.9.3 macs2==2.2.9.1
+# FitHiC & FitHiChIP
+# MACS2がImportError: /opt/micromamba/lib/python3.10/site-packages/MACS2/IO/ScoreTrack.cpython-310-x86_64-linux-gnu.so: undefined symbol: __log_finite　でエラーになるので苦肉の策
+RUN git clone https://github.com/rnakato/fithic.git \
+    && git clone https://github.com/ay-lab/FitHiChIP.git \
+    && micromamba run -n hic-pro pip install --no-cache-dir \
+        networkx==3.1 numpy==1.22.* hic-straw==1.3.1 cooler==0.9.3 macs2==2.2.9.1 \
+    && ln -s /opt/micromamba/envs/hic-pro/bin/macs2  /opt/micromamba/bin/macs2
+
 COPY localbin/bedToBigBed /opt/FitHiChIP/bedToBigBed
 COPY scripts_Docker/interact.as /opt/FitHiChIP/interact.as
 RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as
@@ -204,23 +213,15 @@ RUN git clone https://github.com/wangjk321/mango_multithreads_wang.git \
     && mv mango_multithreads_wang mango \
     && R CMD INSTALL --no-multiarch --with-keep.source mango
 
+# HiCUP
+COPY HiCUP-0.9.2.tar.gz HiCUP-0.9.2.tar.gz
+RUN tar zxvf HiCUP-0.9.2.tar.gz \
+    && rm HiCUP-0.9.2.tar.gz
+
 # ChIAPoP
 COPY ChIAPoP_0.99.9.7.tar.gz ChIAPoP_0.99.9.7.tar.gz
 RUN R CMD INSTALL ChIAPoP_0.99.9.7.tar.gz \
     && rm ChIAPoP_0.99.9.7.tar.gz
-
-# Hi-C Simulation (FreeHiC)
-#RUN git clone https://github.com/yezhengSTAT/FreeHiC \
-#    && cd FreeHiC \
-#    && pip install -r python-requirements.txt
-
-# hictk
-RUN micromamba create -n hictk -c defaults -c conda-forge -c bioconda hictk==2.2.0
-
-# MultiQC
-RUN micromamba create -n multiqc python==3.8 -c defaults \
-   && micromamba run -n multiqc pip install --upgrade --force-reinstall git+https://github.com/open2c/MultiQC.git \
-   && micromamba clean --all --yes
 
 RUN mkdir /opt/restriction_sites/
 
@@ -250,9 +251,6 @@ RUN wget --quiet https://x.gd/5ND8F -O Juicer-restriction_sites.tar.gz \
 COPY motiffiles motiffiles
 RUN unpigz /opt/motiffiles/*gz
 COPY Juicebox.jar /opt/Juicebox.jar
-
-# FitHiC
-RUN git clone https://github.com/rnakato/fithic.git
 
 # Final settings
 COPY scripts_juicer /opt/scripts_juicer
