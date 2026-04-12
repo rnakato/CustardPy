@@ -4,7 +4,7 @@
 
 ### 3.3.0 (2026.4.12)
 - Bug fix: Fixed an error that caused ``macs2`` to fail.
-- Moved ``pastis`` into the virtual environment. Along with this change, updated the arguments of ``custardpy_pastis@` so that it can also be used with Cooler.
+- Moved ``pastis`` into the virtual environment. Along with this change, updated the arguments of ``custardpy_pastis`` so that it can also be used with Cooler.
 
 ### 3.2.1 (2026.4.6)
 - Changed ``custardpy_cooler`` so that it only uses 5,000 bp for a single-resolution .cool file. Also, the filename was changed from ``cooler.dedup.q30.cool`` to ``cooler.dedup.q30.5000.cool``.
