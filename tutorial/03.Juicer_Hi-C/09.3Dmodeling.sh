@@ -15,4 +15,4 @@ matrix=$odir/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz
 eigen=$odir/Eigen/$resolution/Compartment.$norm.$chr.All.bed
 dir=$odir/pastis/${resolution}/$chr
 
-$sing ../../Docker/scripts_custardPy/custardpy_pastis $odir $matrix $eigen $s $e $resolution
+$sing custardpy_pastis $odir $matrix $eigen $s $e $resolution
