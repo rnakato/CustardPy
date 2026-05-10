@@ -1,0 +1,18 @@
+services:
+  r:
+    image: rnakato/custardpy_r:${TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.R
+  juicer:
+    image: rnakato/custardpy_juicer:${TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.Juicer
+
+  custardpy:
+    image: rnakato/custardpy:${TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.CustardPy
+

@@ -2,6 +2,14 @@
 
 ## CustardPy
 
+### 3.4.1 (2026.5.10)
+- Splitted Dockerfile into two files: ``Dockerfile.R``, ``Dockerfile.Juicer`` and ``Dockerfile.CustardPy``. The ``.env`` and ``compose.yaml`` files were added.
+
+### 3.4.0 (2026.5.5)
+- Updated ``mango``
+- Added Bowtie v1.3.1
+- Removed ``Chicago`` because the Bitbucket repository is no longer public.
+
 ### 3.3.0 (2026.4.12)
 - Bug fix: Fixed an error that caused ``macs2`` to fail.
 - Moved ``pastis`` into the virtual environment. Along with this change, updated the arguments of ``custardpy_pastis`` so that it can also be used with Cooler.

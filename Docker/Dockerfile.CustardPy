@@ -1,0 +1,142 @@
+FROM rnakato/custardpy_juicer:3.4.1 AS base
+LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+
+# For sorting, LC_ALL is C
+ENV LC_ALL=C
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=all
+
+WORKDIR /opt/
+USER root
+
+SHELL ["/bin/bash", "-c"]
+
+### Python environment with micromamba
+ENV MAMBA_ROOT_PREFIX=/opt/micromamba
+ENV PATH=$PATH:/opt/micromamba/bin
+COPY micromamba /opt/micromamba
+RUN micromamba install -y -n base -f /opt/micromamba/env.yaml \
+#    && micromamba run -n base pip install -i https://test.pypi.org/simple/ custardpy==0.9.3 \
+    # JuiceBox
+    && micromamba run -n base pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
+
+### Virtual environments for Python packages
+# pastis
+# iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
+# about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
+RUN micromamba create -n pastis python=3.8 numpy=1.23.5 setuptools=68.2.2 pandas=1.5.3 scikit-learn scipy=1.10.1 -c defaults \
+    && micromamba run -n pastis pip install --no-cache-dir --no-build-isolation iced==0.5.10 \
+    && micromamba run -n pastis pip install --no-cache-dir --no-build-isolation pastis==0.4.0 \
+# hicexplorer
+    && micromamba create -n hicexplorer python=3.8 hicexplorer=3.7.6 -c bioconda -c conda-forge \
+# stripenn (pandas==1.5.3)
+    && micromamba create -n stripenn python=3.8 -c defaults \
+    && micromamba run -n stripenn pip install --no-cache-dir stripenn==1.1.65.22 \
+# hictk
+    && micromamba create -n hictk -c defaults -c conda-forge -c bioconda hictk==2.2.0 \
+# MultiQC
+    && micromamba create -n multiqc python=3.8 -c defaults \
+    && micromamba run -n multiqc pip install --upgrade --force-reinstall git+https://github.com/open2c/MultiQC.git \
+    && micromamba clean --all --yes
+
+# 3DChromatin_ReplicateQC v1.0.1
+COPY 3DChromatin_ReplicateQC.v1.0.1.modified.tar.gz 3DChromatin_ReplicateQC.v1.0.1.tar.gz
+RUN micromamba create -n ReplicateQC python==2.7.18 scikit-learn psutil -c defaults \
+    && tar zxvf 3DChromatin_ReplicateQC.v1.0.1.tar.gz \
+    && mv 3DChromatin_ReplicateQC-1.0.1 3DChromatin_ReplicateQC \
+    && micromamba run -n ReplicateQC 3DChromatin_ReplicateQC/install_scripts/install_3DChromatin_ReplicateQC.sh \
+    && rm 3DChromatin_ReplicateQC.v1.0.1.tar.gz \
+    && micromamba clean --all --yes
+
+# HiC-Pro
+# (remove R to use local R)
+COPY HiC-Pro_3.1.0.modified.tar.gz HiC-Pro_3.1.0.tar.gz
+RUN tar zxvf HiC-Pro_3.1.0.tar.gz \
+    && micromamba create -n hic-pro -f HiC-Pro-3.1.0/environment.yml \
+    && cd HiC-Pro-3.1.0 \
+    # make configure PATHを通すのをカットした。baseのpythonが起動してしまうため
+    && micromamba run -n hic-pro make configure \
+    && micromamba run -n hic-pro make install \
+    && micromamba remove -n hic-pro r-base r-ggplot2 r-rcolorbrewer r-gridbase \
+    && rm -rf /opt/HiC-Pro-3.1.0 /opt/HiC-Pro_3.1.0.tar.gz
+
+# FitHiC & FitHiChIP
+# MACS2がImportError: /opt/micromamba/lib/python3.10/site-packages/MACS2/IO/ScoreTrack.cpython-310-x86_64-linux-gnu.so: undefined symbol: __log_finite　でエラーになるので苦肉の策
+RUN git clone https://github.com/rnakato/fithic.git \
+    && git clone https://github.com/ay-lab/FitHiChIP.git \
+    && micromamba run -n hic-pro pip install --no-cache-dir \
+        networkx==3.1 numpy==1.22.* hic-straw==1.3.1 cooler==0.9.3 macs2==2.2.9.1 \
+    && ln -s /opt/micromamba/envs/hic-pro/bin/macs2  /opt/micromamba/bin/macs2
+
+COPY localbin/bedToBigBed /opt/FitHiChIP/bedToBigBed
+COPY scripts_Docker/interact.as /opt/FitHiChIP/interact.as
+RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as
+
+# Mango (modified version by Wang & Nagaoka)
+RUN git clone https://github.com/nakatolab/mango_multithreads_wang.git \
+    && mv mango_multithreads_wang mango \
+    && R CMD INSTALL --no-multiarch --with-keep.source mango
+
+# Final settings
+COPY scripts_juicer /opt/scripts_juicer
+COPY scripts_custardPy /opt/scripts_custardPy
+RUN chmod +x scripts*/* /opt/juicer/scripts/common/* /opt/juicer/scripts/* /opt/scripts_custardPy/pastis/*
+RUN ln -s /opt/micromamba/pkgs/pairix-0.3.8-py310*/bin /opt/pairix
+
+RUN gcc -Wall /opt/scripts_juicer/Juicer_statistics.c -o /opt/scripts_juicer/Juicer_statistics -lz -O3 \
+    && gcc -Wall /opt/scripts_juicer/Juicer_remove_duplicate.c -o /opt/scripts_juicer/Juicer_remove_duplicate -lz -O3 \
+    && gcc -Wall /opt/scripts_juicer/Juicer_fragment.c -o /opt/scripts_juicer/Juicer_fragment -lz -O3 \
+    && gcc -Wall /opt/scripts_juicer/Juicer_chimeric_blacklist.c -o /opt/scripts_juicer/Juicer_chimeric_blacklist -lz -O3 \
+    && gcc -Wall /opt/scripts_juicer/distance_vs_count.Juicer.c -o /opt/scripts_juicer/distance_vs_count.Juicer -lz -O3 \
+    && gcc -Wall /opt/scripts_juicer/distance_vs_count.Juicer.log.c -o /opt/scripts_juicer/distance_vs_count.Juicer.log -lz -O3 -lm
+
+FROM rnakato/ubuntu_gpu_20.04:cuda11.0.3-cudnn8
+COPY --from=base / /
+COPY --from=rnakato/homer:20.04 /opt/HOMER /opt/HOMER
+LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+
+SHELL ["/bin/bash", "-c"]
+USER root
+# GAWK has the 'and' function, needed for chimeric_blacklist
+RUN echo 'alias awk=gawk' >> ~/.bashrc
+# Need to be sure we have this for stats
+RUN locale-gen en_US.UTF-8
+
+ENV LC_ALL=C
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV PATH=$PATH:/opt:/opt/scripts:/opt/scripts_custardPy:/opt/scripts_juicer:/opt/micromamba/bin:/usr/local/bin/HiC-Pro_3.1.0/bin
+ENV PATH=$PATH:/opt/bwa-0.7.17:/opt/juicer/scripts:/opt/juicer/scripts/common
+ENV PATH=$PATH:/opt/bowtie2-2.4.5-linux-x86_64:/opt/bowtie-1.3.1-linux-x86_64:/opt/bedtools2/bin:/opt/scripts_custardPy/pastis:/opt/pairix:/opt/pairsqc:/opt/HOMER/bin/:/opt/HiCUP-0.9.2
+
+COPY scripts_Docker/run_env.sh /opt/scripts/run_env.sh
+COPY scripts_Docker/run_fithichip.sh /opt/scripts/run_fithichip.sh
+RUN chmod +x /opt/scripts/run_env.sh /opt/scripts/run_fithichip.sh
+
+# Error "Qt: Failed to create XKB context!"
+# https://stackoverflow.com/questions/26974644/no-keyboard-input-in-qt-creator-after-update-to-qt5
+ENV QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
+#RUN qtcreator
+ENV XDG_RUNTIME_DIR=/tmp/.xdg
+
+RUN mkdir -p /.singularity.d
+COPY scripts_Docker/runscript /.singularity.d/runscript
+COPY scripts_Docker/entrypoint.sh /entrypoint.sh
+RUN chmod 777 /entrypoint.sh /.singularity.d/runscript
+COPY localbin/hictk /usr/local/bin/
+COPY localbin/bedToBigBed /usr/local/bin/bedToBigBed
+RUN chmod +x /usr/local/bin/hictk /usr/local/bin/bedToBigBed
+
+COPY scripts_Docker/hicpro /usr/local/bin/hicpro
+COPY scripts_Docker/multiqc /usr/local/bin/multiqc
+RUN chmod +x /usr/local/bin/hicpro /usr/local/bin/multiqc
+
+RUN micromamba clean --all --yes
+
+ENV MAMBA_ROOT_PREFIX=/opt/micromamba
+
+USER ubuntu
+WORKDIR /home/ubuntu
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/bin/bash"]

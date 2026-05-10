@@ -30,7 +30,6 @@ This image contains various tools for 3D genome analysis in addition to **Custar
 
 - Loop calling
     - `FitHiC <https://github.com/ay-lab/fithic>`_
-    - `CHiCAGO <https://bitbucket.org/chicagoTeam/chicago/src/master/>`_
  
 - Stripe analysis
     - `STRIPENN <https://github.com/VahediLab/stripenn>`_

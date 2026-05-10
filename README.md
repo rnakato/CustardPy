@@ -81,9 +81,13 @@ First clone and move to the repository
     git clone https://github.com/rnakato/CustardPy.git
     cd CustardPy/Docker
 
+Modify the ``.env`` and ``compose.yaml`` files to change the version and repository. 
+
 Then type:
 
-    docker build -f Dokerfile.<version> -t <account>/custardpy_juicer .
+    docker compose -f compose.yaml build r
+    docker compose -f compose.yaml build juicer
+    docker compose -f compose.yaml build custardpy
 
 ## 5. Citation
 Please cite this reference when using CustardPy in your study.
