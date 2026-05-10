@@ -1,4 +1,4 @@
-docker compose -f compose.yaml build r
+#docker compose -f compose.yaml build r
 docker compose -f compose.yaml build juicer
 docker compose -f compose.yaml build custardpy
 
