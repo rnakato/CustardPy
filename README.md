@@ -81,7 +81,8 @@ First clone and move to the repository
     git clone https://github.com/rnakato/CustardPy.git
     cd CustardPy/Docker
 
-Modify the ``.env`` and ``compose.yaml`` files to change the version and repository. 
+- Modify the ``.env`` to change the version.
+- Modify  ``compose.yaml``, ``Dockerfile.Juicer`` and  ``Dockerfile.CustardPy`` to change the image repository from ``rnakato`` to yours.
 
 Then type:
 
