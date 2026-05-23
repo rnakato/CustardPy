@@ -57,9 +57,9 @@ author = 'Ryuichiro Nakato'
 # built documents.
 #
 # The short X.Y version.
-version = '3.1'
+version = '3.5'
 # The full version, including alpha/beta/rc tags.
-release = '3.1.0'
+release = '3.5.0'
 
 numfig = True
 
