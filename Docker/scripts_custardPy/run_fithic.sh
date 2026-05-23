@@ -9,13 +9,16 @@ function usage()
     echo "   <resolution> : Resolution for fithic (e.g., 25000, 50000, 100000)"
     echo '   Options:' 1>&2
     echo "      -g genometable: genome table file (describing the chromosome length)"
+    echo "      -q <float>: q-value threshold (default: 0.01)"
     echo '   Example:' 1>&2
     echo "      $cmdname dedup.bwa.q30.pairs.gz fithicresult/ Control 25000" 1>&2
 }
 
-while getopts g: option; do
+qval=0.01
+while getopts g:q: option; do
     case ${option} in
     g) gt=${OPTARG} ;;
+    q) qval=${OPTARG} ;;
     \?)
         echo "Invalid option: -$OPTARG" >&2
         usage
@@ -34,7 +37,7 @@ if [ $# -ne 4 ]; then
   exit 1
 fi
 
-pairfile=$1
+cool=$1
 odir=$2
 prefix=$3
 resolution=$4
@@ -46,52 +49,43 @@ fi
 
 ex(){ echo $1; eval $1; }
 
+fithicdir=/opt/fithic/fithic
+#fithicdir=./fithic/fithic
+
 echo -e "\nRun fithic..."
-mkdir -p $odir
+mkdir -p $odir $odir/intermediate
 
-ex "zcat $pairfile | grep -v \# | awk -F'\t' 'BEGIN{OFS=\"\t\"} {print \$1, \$2, \$3, \$6, \$4, \$5, \$7, \$5 - \$3}' \
-    > $odir/dedup.bwa.q30.validpair"
+ex "cool2fithicdata.py \
+  --cool $cool::/resolutions/$resolution \
+  --resolution $resolution \
+  --lower $resolution \
+  --upper 1000000 \
+  --out-prefix $odir/intermediate/${prefix}_$resolution.fromcool"
 
-ex "/opt/fithic/fithic/utils/validPairs2FitHiC-fixedSize.sh \
-     $resolution \
-     ${prefix}_$resolution \
-     $odir/dedup.bwa.q30.validpair \
-     $odir"
+ex "$fithicdir/fithic.py \
+  -i $odir/intermediate/${prefix}_${resolution}.fromcool.contactCounts.gz \
+  -f $odir/intermediate/${prefix}_${resolution}.fromcool.fragments.gz \
+  -t $odir/intermediate/${prefix}_${resolution}.fromcool.biasValues.gz \
+  -r $resolution \
+  -o $odir \
+  -l ${prefix}_${resolution} \
+  -L $resolution \
+  -U 1000000 \
+  -v"
 
-ex "rm $odir/dedup.bwa.q30.validpair"
-
-ex "/opt/fithic/fithic/utils/createFitHiCFragments-fixedsize.py \
-       --chrLens $gt \
-       --resolution $resolution \
-       --outFile $odir/fragmentsfile.$resolution.gz"
-
-ex "/opt/fithic/fithic/utils/HiCKRy.py \
-       -i $odir/${prefix}_${resolution}_fithic.contactCounts.gz \
-       -f $odir/fragmentsfile.$resolution.gz \
-       -o $odir/biasValues.$resolution.gz"
-
-fitoutput=$odir
-
-ex "/opt/fithic/fithic/fithic.py \
-       -i $odir/${prefix}_${resolution}_fithic.contactCounts.gz \
-       -f $odir/fragmentsfile.$resolution.gz \
-       -t $odir/biasValues.$resolution.gz \
-       -r $resolution \
-       -o $fitoutput \
-       -l ${prefix}_${resolution} \
-       -U 1000000 \
-       -L 15000 \
-       -v"
-
-ex "/opt/fithic/fithic/utils/createFitHiCHTMLout.sh \
+ex "$fithicdir/utils/createFitHiCHTMLout.sh \
      ${prefix}_${resolution} \
      1 \
-     $fitoutput"
+     $odir"
 
-ex "/opt/fithic/fithic/utils/merge-filter.sh \
-     $fitoutput/${prefix}_${resolution}.spline_pass1.res$resolution.significances.txt.gz \
-     5000 \
-     $fitoutput/${prefix}_${resolution}.merged.gz \
-     0.01"
+ex "$fithicdir/utils/merge-filter.sh \
+     $odir/${prefix}_${resolution}.spline_pass1.res$resolution.significances.txt.gz \
+     $resolution \
+     $odir/${prefix}_${resolution}.merged.gz \
+     $qval > $odir/${prefix}_${resolution}.merged.log"
 
-ex "rm $odir/${prefix}_${resolution}_fithic.contactCounts.gz $odir/biasValues.${resolution}.gz $odir/fragmentsfile.${resolution}.gz"
+echo -e "\nNumber of candidate interactions:"
+zcat $odir/${prefix}_${resolution}.spline_pass1.res$resolution.significances.txt.gz |wc -l 
+echo "Number of significant interactions after merging (FDR < $qval):"
+zcat $odir/${prefix}_${resolution}.merged.gz |wc -l
+

@@ -5,13 +5,17 @@ printHelpAndExit() {
     echo '  fastqdir: Directory that contains input fastq files (e.g., "fastq/")' 1>&2
     echo "  odir: Name of output directory" 1>&2
     echo -e "\n  Options:" 1>&2
-    echo "    -S stage : steps to be executed [all|map|proc] (default: all)" 1>&2
-    echo "       all: execute all process (default)" 1>&2
-    echo "       map: map reads and exit" 1>&2
-    echo "       proc: generate .pair, .cool, and .hic files from the map file" 1>&2
-    echo "    -i index : BWA index" 1>&2
+    echo "    -M mapper : mapping tool for mapping reads [bwa|chromap] (default: bwa)" 1>&2
+    echo "       bwa: use BWA for mapping" 1>&2
+    echo "       chromap: use Chromap for mapping" 1>&2
+#    echo "    -S stage : steps to be executed [all|map|proc] (default: all)" 1>&2
+#    echo "       all: execute all process (default)" 1>&2
+#    echo "       map: map reads and exit" 1>&2
+#    echo "       proc: generate .pair, .cool, and .hic files from the map file" 1>&2
+    echo "    -i index : index for BWA or chromap" 1>&2
     echo "    -f genome : Genome fasta file" 1>&2
     echo "    -g genometable : Genometable file (describing the chromosome length)" 1>&2
+    echo "    -w : Apply restriction site filtering (default: not applied)" 1>&2
     echo "    -e enzyme : enzyme (HindIII|MboI|DpnII|Sau3AI|None, default: HindIII)" 1>&2
     echo "    -b build : genome build (hg19|hg38|mm10|mm39|rn7|galGal6|ce11|danRer11|dm6|xenLae2|sacCer3|S.pombe|HVAEP)" 1>&2
     echo "    -o outputdir : output directory (default: 'CustardPyResults')" 1>&2
@@ -25,7 +29,7 @@ printHelpAndExit() {
 }
 
 ncore=4
-index_bwa=""
+index=""
 genome=""
 gt=""
 enzyme="HindIII"
@@ -33,17 +37,17 @@ build=""
 outputdir="CustardPyResults"
 fastq_post="_"
 qthre=30
-stage="all"
+mapper="bwa"
+#stage="all"
 max_split=2
 max_distance=8.4
 binsize_min=5000
 binsize_multi="5000,10000,25000,50000,100000,500000,1000000,2500000,5000000,10000000"
-#postfix1=_1.fastq.gz
-#postfix2=_2.fastq.gz
+do_restrictionsite_filtering="no"
 
-while getopts "i:f:g:e:b:o:q:p:S:m:n:r:z:h" opt; do
+while getopts "i:f:g:e:b:o:q:p:m:M:wn:r:z:h" opt; do # S:
     case $opt in
-        i) index_bwa=$OPTARG;;
+        i) index=$OPTARG;;
         f) genome=$OPTARG;;
         g) gt=$OPTARG;;
         e) enzyme=$OPTARG;;
@@ -51,28 +55,14 @@ while getopts "i:f:g:e:b:o:q:p:S:m:n:r:z:h" opt; do
         o) outputdir=${OPTARG};;
         q) qthre=$OPTARG;;
         p) ncore=$OPTARG;;
-        S) stage=$OPTARG;;
+#        S) stage=$OPTARG;;
         m) max_distance=$OPTARG;;
+        M) mapper=$OPTARG;;
+        w) do_restrictionsite_filtering="yes";;
         n) binsize_min=$OPTARG;;
         r) binsize_multi=$OPTARG;;
 	    s) resolutions=${OPTARG};;
    	    z) fastq_post=${OPTARG} ;;
-#        x) case ${OPTARG} in
-#            1)
-#                postfix1=_1.fastq.gz
-#                postfix2=_2.fastq.gz
-#                ;;
-#            2)
-#                postfix1=_R1.fastq.gz
-#                postfix2=_R2.fastq.gz
-#                ;;
-#            *)
-#                echo "Error: Specify 1 or 2 to the option '-x'."
-#                printHelpAndExit
-#                exit 1
-#                ;;
-#           esac
-#           ;;
         h) printHelpAndExit;;
         [?]) printHelpAndExit;;
         esac
@@ -83,17 +73,16 @@ if [ $# -ne 2 ]; then
     printHelpAndExit
 fi
 
-if [ ! -z "$stage" ]
-then
-    case $stage in
-       all) stage_all=1 ;;
-#       all-fastqc) stage_all_omitfastqc=1 ;;
-       map) stage_map=1 ;;
-       proc) stage_proc=1 ;;
-       *) echo "Error: specify [all|map|proc] for stage (-S)."
-          printHelpAndExit
-    esac
-fi
+#if [ ! -z "$stage" ]
+#then
+#    case $stage in
+#       all) stage_all=1 ;;
+#       map) stage_map=1 ;;
+#       proc) stage_proc=1 ;;
+#       *) echo "Error: specify [all|map|proc] for stage (-S)."
+#          printHelpAndExit
+#    esac
+#fi
 
 if test "$build" = ""; then
     echo "Error: specify genome build (-b)."
@@ -137,13 +126,58 @@ mkdir -p $logdir
 
 echo "Analyzing $fqdir..."
 
+if test "$mapper" = "bwa"; then
+    mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index" "$genome" \
+                      "$ncore" "$postfix1" "$postfix2"
+    # Generate .pair file
+    parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen $do_restrictionsite_filtering \
+        | tee $logdir/custardpy_parse_pairtools.logs
+    if [ $? -ne 0 ]; then
+        echo "Error: pairtools parse failed. Check the log file $logdir/pairtools_parse.log"
+        exit 1
+    fi
+    if test "$do_restrictionsite_filtering" = "yes"; then
+        pair=$odir/pairs/dedup.bwa.restriction_filtered.q$qthre.pairs.gz
+    else
+        pair=$odir/pairs/dedup.bwa.q$qthre.pairs.gz
+    fi
+elif test "$mapper" = "chromap"; then
+    mapping_reads_chromap "$fqdir" "$odir" "$prefix" "$index" "$genome" \
+                          "$ncore" "$postfix1" "$postfix2"
+    pair=$odir/pairs/mapped.chromap.q$qthre.rmdup.pairs.gz
+else
+    echo "Error: specify mapping tool for mapping reads (-M) [bwa|chromap]."
+    exit 1
+fi
+
+# Generate .cool and .hic files
+if test "$mapper" = "bwa"; then
+    prefix=contact.bwa.q$qthre
+elif test "$mapper" = "chromap"; then
+    prefix=contact.chromap.q$qthre
+fi
+
+gen_cool_hic $odir $gt $binsize_min $binsize_multi $max_distance $max_split $prefix $pair \
+    | tee $logdir/custardpy_gen_cool_hic.log
+if [ $? -ne 0 ]; then
+    echo "Error: cooler processing failed. Check the log files in $odir/log"
+    exit 1
+fi
+
+echo "${0##*/} finished!"
+
+exit
+# With stage control
+
 if [ -z "$stage_proc" ]; then
-    mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index_bwa" "$genome" "$ncore" "$postfix1" "$postfix2"
+    mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index" "$genome" "$ncore" "$postfix1" "$postfix2"
 fi
 
 if [ -z "$stage_map" ]; then
     # Generate .pair file
-    parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen | tee $logdir/custardpy_parse_pairtools.log
+    parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen \
+       | tee $logdir/custardpy_parse_pairtools.log
+
     if [ $? -ne 0 ]; then
         echo "Error: pairtools parse failed. Check the log file $logdir/pairtools_parse.log"
         exit 1
@@ -151,15 +185,11 @@ if [ -z "$stage_map" ]; then
 
     # Generate .cool and .hic files
     pair=$odir/pairs/dedup.bwa.q$qthre.pairs.gz
- #   pair=$odir/pairs/dedup.restricted.q$qthre.pairs.gz # not used
     gen_cool_hic $odir $gt $binsize_min $binsize_multi $max_distance $max_split $qthre $pair | tee $logdir/custardpy_gen_cool_hic.log
     if [ $? -ne 0 ]; then
         echo "Error: cooler processing failed. Check the log files in $odir/log"
         exit 1
     fi
-
-    # MultiQC
-    /opt/micromamba/envs/multiqc/bin/multiqc $odir/qc_report/ --outdir $odir/qc_report/
 fi
 
 echo "${0##*/} finished!"

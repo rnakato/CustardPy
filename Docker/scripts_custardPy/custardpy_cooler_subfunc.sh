@@ -38,6 +38,7 @@ parse_pairtools(){
 #            --output-dups $pairdir/dup.bwa.q$qthre.pairs.gz \
 #            --output-unmapped $pairdir/unmapped.bwa.q$qthre.pairs.gz \
     pairix -f $pairdir/dedup.bwa.q$qthre.pairs.gz # sanity check
+    rm $pairdir/mapped.bwa.q$qthre.pairs.gz
 
     get_qc.py -p $qcdir/pairtools_dedup.stats.txt > $qcdir/mapping_stats.txt
 
@@ -45,28 +46,33 @@ parse_pairtools(){
 #    multiqc -o $qcdir/ $qcdir/pairtools.stats.txt
 #    rm $qcdir/pairtools.stats.txt
 
-
-### currently restrict is not used (aka Pairtools paper)
-    #    if test "$restrictionsite" != ""; then
-    #        echo "add restrictionsite information..."
-    #        ffpairs=$pairdir/bwa.ff.pairs
-    #        gunzip -c $pairdir/dedup.bwa.q$qthre.pairs.gz | fragment_4dnpairs.pl -a - $ffpairs $restrictionsite
-    #        bgzip  -f $ffpairs
-    #        pairix -f $ffpairs.gz
-    #        pairs=$pairdir/dedup.restricted.q$qthre.pairs.gz
-    #        pairtools restrict -f $restrictionsite $pairdir/dedup.bwa.q$qthre.pairs.gz -o $pairs
-    #        pairix -f $pairs
-
-    #        echo "Implement pairsqc..."
-    #        python /opt/pairsqc/pairsqc.py -p $pairs -c $gt -tP -s $prefix -O $odir/qc -M $max_distance
-    #        Rscript /opt/pairsqc/plot.r $enzymelen $odir/qc_report
-    #    else
-    #        pairs=$pairdir/dedup.bwa.q$qthre.pairs.gz
-    #    fi
-###
-
     pairs=$pairdir/dedup.bwa.q$qthre.pairs.gz
     rm -rf $tempdir
+
+    ### currently restrict is not used (aka Pairtools paper)
+    if test "$do_restrictionsite_filtering" = "yes"; then
+        if test "$restrictionsite" != ""; then
+            echo "Add restrictionsite information..."
+            ffpairs=$pairdir/bwa.ff.pairs
+            gunzip -c $pairdir/dedup.bwa.q$qthre.pairs.gz | fragment_4dnpairs.pl -a - $ffpairs $restrictionsite
+            bgzip  -f $ffpairs
+            pairix -f $ffpairs.gz
+            pairs=$pairdir/dedup.bwa.restriction_filtered.q$qthre.pairs.gz
+            pairtools restrict -f $restrictionsite $pairdir/dedup.bwa.q$qthre.pairs.gz -o $pairs
+            pairix -f $pairs
+
+            echo "Implement pairsqc..."
+            python /opt/pairsqc/pairsqc.py -p $pairs -c $gt -tP -s $prefix -O $odir/qc -M $max_distance
+            Rscript /opt/pairsqc/plot.r $enzymelen $qcdir
+
+        else
+            echo "Error: restriction site filtering is requested but no restriction site is specified. Skipping restriction site filtering."
+            exit 1
+        fi
+    fi
+
+    # MultiQC
+    /opt/micromamba/envs/multiqc/bin/multiqc $odir/qc_report/ --outdir $odir/qc_report/
 
     echo "pairtools finished!"
     echo "Output pairs file: $pairs"
@@ -79,10 +85,11 @@ gen_cool_hic(){
     binsize_multi=$4
     max_distance=$5
     max_split=$6
-    qthre=$7
+    prefix=$7
+#    qthre=$7
     pair=$8
 
-    prefix=cooler.dedup.q$qthre
+#    prefix=cooler.dedup.q$qthre
 
     if test -e "$odir/cool/$prefix.cool"; then
         echo "$odir/cool/$prefix.cool already exists. Skipping .cool generation."
@@ -104,15 +111,15 @@ gen_cool_hic(){
         echo "Output file: $cool and $odir/cool/$prefix.mcool"
     fi
 
-    if test -e "$odir/hic/contact_map.q$qthre.hic"; then
-        echo "$odir/hic/contact_map.q$qthre.hic already exists. Skipping .hic generation."
+    if test -e "$odir/hic/$prefix.hic"; then
+        echo "$odir/hic/$prefix.hic already exists. Skipping .hic generation."
         return
     fi
 
     echo "generate .hic..."
     mkdir -p $odir/hic
-    juicertools.sh pre -q $qthre $pair $odir/hic/contact_map.q$qthre.hic $gt
+    juicertools.sh pre -q $qthre $pair $odir/hic/$prefix.hic $gt
 
     echo "postprocess finished!"
-    echo "Output file: $odir/hic/contact_map.q$qthre.hic"
+    echo "Output file: $odir/hic/$prefix.hic"
 }

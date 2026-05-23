@@ -68,6 +68,19 @@ RUN git clone https://github.com/rnakato/fithic.git \
         networkx==3.1 numpy==1.22.* hic-straw==1.3.1 cooler==0.9.3 macs2==2.2.9.1 \
     && ln -s /opt/micromamba/envs/hic-pro/bin/macs2  /opt/micromamba/bin/macs2
 
+# OnTAD
+RUN git clone https://github.com/anlin00007/OnTAD.git \
+    && cd OnTAD/src \
+    && make \
+    && chmod +x OnTAD \
+    && mv OnTAD /usr/local/bin/ \
+    && cd /opt 
+# Mustache
+#    && git clone https://github.com/ay-lab/mustache \
+#    && micromamba create -n mustache -f ./mustache/environment.yml \
+#    && rm -rf /opt/OnTAD /opt/mustache
+
+
 COPY localbin/bedToBigBed /opt/FitHiChIP/bedToBigBed
 COPY scripts_Docker/interact.as /opt/FitHiChIP/interact.as
 RUN chmod +x /opt/FitHiChIP/bedToBigBed /opt/FitHiChIP/interact.as

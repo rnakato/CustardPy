@@ -7,7 +7,7 @@ gene=refFlat.$build.txt
 genome=genome.$build.fa
 index_bwa=bwa-indexes/$build
 
-sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.2.1.sif"
+sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.4.1.sif"
 #sing="apptainer exec custardpy.sif"
 
 cell=C36_rep1

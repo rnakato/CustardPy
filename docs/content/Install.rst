@@ -20,17 +20,22 @@ This image contains various tools for 3D genome analysis in addition to **Custar
     - `cooltools <https://cooltools.readthedocs.io/en/latest/>`_
     - `Pairtools <https://pairtools.readthedocs.io/en/latest/>`_ 
     - `coolpup.py <https://github.com/open2c/coolpuppy>`_
-    - `HiCExplorer <https://hicexplorer.readthedocs.io/en/latest/>`_
     - `HOMER <http://homer.ucsd.edu/homer/interactions/index.html>`_
     - `FAN-C <https://fan-c.readthedocs.io/en/latest/index.html>`_
     - `HiC-Pro <https://github.com/nservant/HiC-Pro>`_ 
     - `HiCUP <https://www.bioinformatics.babraham.ac.uk/projects/hicup/read_the_docs/html/>`_
-    - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_ 
+    - `HiCExplorer <https://hicexplorer.readthedocs.io/en/latest/>`_
+    - `HiC1Dmetrics <https://h1d.readthedocs.io/en/latest/>`_
+
+- TAD/subcompartment calling
+    - `OnTAD <https://github.com/anlin00007/OnTAD.git>`_
     - `CALDER2 <https://github.com/CSOgroup/CALDER2>`_
+    - `chromosight <https://github.com/koszullab/chromosight>`_
 
 - Loop calling
     - `FitHiC <https://github.com/ay-lab/fithic>`_
- 
+    - `Mustache <https://github.com/ay-lab/mustache>`_
+
 - Stripe analysis
     - `STRIPENN <https://github.com/VahediLab/stripenn>`_
 
@@ -39,7 +44,7 @@ This image contains various tools for 3D genome analysis in addition to **Custar
 
 - Sample comparison
     - `GENOVA <https://github.com/robinweide/GENOVA>`_
-    - `CHESS <https://chess-hic.readthedocs.io/en/latest/index.html>`_ 
+    - `CHESS <https://chess-hic.readthedocs.io/en/latest/index.html>`_
 
 - 3D/4D modeling
     - `PASTIS <https://github.com/hiclib/pastis>`_ 
@@ -56,7 +61,7 @@ This image contains various tools for 3D genome analysis in addition to **Custar
     - `Mango <https://github.com/dphansti/mango>`_
     - `ChIAPop <https://github.com/wh90999/ChIAPoP>`_
 
-- Genome analysis
+- peak calling
     - `MACS2 <https://github.com/macs3-project/MACS>`_ 
 
 - File processing

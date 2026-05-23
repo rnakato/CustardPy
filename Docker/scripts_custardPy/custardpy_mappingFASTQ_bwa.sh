@@ -134,14 +134,14 @@ mapping_reads_chromap(){
     pairdir=$odir/pairs
     logdir=$odir/log
     mkdir -p $pairdir $logdir
+    oprefix=mapped.chromap.q$qthre.rmdup
+    chromap --preset hic -t $ncore -q $qthre --remove-pcr-duplicates \
+            -x $index_chromap -r $genome \
+            -1 $fq1_list -2 $fq2_list -o $pairdir/$oprefix.pairs \
+            2> $logdir/chromap.q$qthre.rmdup.log
 
-    chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index_chromap -r $genome \
-            -1 $fq1_list -2 $fq2_list -o $pairdir/mapped.chromap.rmdup.pairs \
-            2> $logdir/chromap.rmdup.log
-            
-    bgzip -f $pairdir/mapped.chromap.rmdup.pairs
-    pair=$pairdir/mapped.chromap.rmdup.pairs.gz
-    pairix $pair # sanity check
+    bgzip -f $pairdir/$oprefix.pairs
+    pairix $pairdir/$oprefix.pairs.gz # sanity check
 
     echo "mapping finished!"
     echo "Output file: $pair"

@@ -2,6 +2,15 @@
 
 ## CustardPy
 
+### 3.5.0 (2026.5.XX)
+- The ``-S`` option in ``custardpy_cooler`` was deprecated.
+- Bug fix in ``run_fithic.sh`` where the normalization scale calculation with ``HiCKRy.py`` was not working correctly. Also, modified the script to use a ``.cool`` file for input instead of a ``.pair`` file.
+- Added [Mustache](https://github.com/ay-lab/mustache) for loop calling.
+- Added [OnTAD](https://github.com/anlin00007/OnTAD.git) for TAD calling.
+- Added [chromap](https://github.com/haowenz/chromap) for the mapping tool. Also added the ``-M`` option to choose the mapping tools.
+- Modify the name of the output .cool and .hic files in ``custardpy_cooler`` to include the mapping tool and Q-value threshold. For example, if you use chromap with a Q-value threshold of 30, the output files will be named ``contact.chromap.q30.cool`` and ``contact.chromap.q30.hic``.
+- Added the option ``-w`` to apply restriction site filtering in ``custardpy_cooler``. As default, the restriction site filtering is not applied because it is not used in the Pairtools paper.
+
 ### 3.4.1 (2026.5.10)
 - Splitted Dockerfile into two files: ``Dockerfile.R``, ``Dockerfile.Juicer`` and ``Dockerfile.CustardPy``. The ``.env`` and ``compose.yaml`` files were added.
 
