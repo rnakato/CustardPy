@@ -516,9 +516,9 @@ You can use FitHiChIP with the following command:
 
 .. code-block:: bash
 
-    run_fithic.sh FitHiChIP_HiCPro.sh -C <configfile>
+    run_env.sh hic-pro FitHiChIP_HiCPro.sh -C <configfile>
 
-``run_fithic.sh`` is a script to activate the ``hic-pro`` environment and execute the commands of FitHiChIP.
+``run_env.sh`` is a script to activate the ``hic-pro`` environment and execute the commands of FitHiChIP.
 
 If you want to use any commands in the ``hic-pro`` environment, use the ``run_env.sh`` script:
 
