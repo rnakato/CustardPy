@@ -11,6 +11,7 @@
 - Modify the name of the output .cool and .hic files in ``custardpy_cooler`` to include the mapping tool and Q-value threshold. For example, if you use chromap with a Q-value threshold of 30, the output files will be named ``contact.chromap.q30.cool`` and ``contact.chromap.q30.hic``.
 - Added the option ``-w`` to apply restriction site filtering in ``custardpy_cooler``. As default, the restriction site filtering is not applied because it is not used in the Pairtools paper.
 - Bug fix in ``custardpy_process_hic`` where the ``-a`` optiomn was duplicated.
+- Bug fix in ``call_HiCCUPS.sh`` where the ``-a`` optiomn was not functioning correctly.
 
 ### 3.4.1 (2026.5.10)
 - Splitted Dockerfile into two files: ``Dockerfile.R``, ``Dockerfile.Juicer`` and ``Dockerfile.CustardPy``. The ``.env`` and ``compose.yaml`` files were added.
