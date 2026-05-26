@@ -12,7 +12,7 @@ function usage()
     echo '      -r resolutions : Resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
     echo '      -p ncore: Number of CPUs (default: 32)' 1>&2
     echo '      -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
-    echo '      -a: Use juicer_tools.jar version 3 (takes precedence over -o)' 1>&2
+    echo '      -q: Use juicer_tools.jar version 2 (juicer_tools.2.20.00.jar, , takes precedence over -o)' 1>&2
     echo '   Example:' 1>&2
     echo "      $cmdname -g genometable.hg38.txt -a refFlat.hg38.txt Hap1-A/inter_30.hic Hap1-A" 1>&2
 }
@@ -24,7 +24,7 @@ norm="SCALE"
 resolutions="25000 50000 100000"
 gene=""
 useversion=""
-while getopts g:n:r:a:p:oa option; do
+while getopts g:n:r:a:p:oq option; do
     case ${option} in
 	g) gt=${OPTARG} ;;
 	n) norm=${OPTARG} ;;
@@ -32,7 +32,7 @@ while getopts g:n:r:a:p:oa option; do
 	a) gene=${OPTARG} ;;
     p) ncore=${OPTARG} ;;
     o) useversion="-o" ;;
-    a) useversion="-a" ;;
+    q) useversion="-a" ;;
     \?)
         echo "Invalid option: -$OPTARG" >&2
         usage
