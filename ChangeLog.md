@@ -2,6 +2,9 @@
 
 ## CustardPy
 
+### 3.5.1 (2026.5.29)
+- Change a method to create a ``.cool`` file from a ``.pair`` file from ``cooler cload pairix`` to ``hictk load``
+
 ### 3.5.0 (2026.5.26)
 - The ``-S`` option in ``custardpy_cooler`` was deprecated.
 - Bug fix in ``run_fithic.sh`` where the normalization scale calculation with ``HiCKRy.py`` was not working correctly. Also, modified the script to use a ``.cool`` file for input instead of a ``.pair`` file.

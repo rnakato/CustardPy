@@ -78,6 +78,18 @@ parse_pairtools(){
     echo "Output pairs file: $pairs"
 }
 
+to_hictk_res() {
+    local r=$1
+
+    if (( r % 1000000 == 0 )); then
+        echo "$((r / 1000000))mbp"
+    elif (( r % 1000 == 0 )); then
+        echo "$((r / 1000))kbp"
+    else
+        echo "${r}bp"
+    fi
+}
+
 gen_cool_hic(){
     odir=$1
     gt=$2
@@ -86,10 +98,9 @@ gen_cool_hic(){
     max_distance=$5
     max_split=$6
     prefix=$7
-#    qthre=$7
     pair=$8
 
-#    prefix=cooler.dedup.q$qthre
+    hictk_res=$(to_hictk_res "$binsize_min")
 
     if test -e "$odir/cool/$prefix.cool"; then
         echo "$odir/cool/$prefix.cool already exists. Skipping .cool generation."
@@ -97,15 +108,14 @@ gen_cool_hic(){
         echo "generate .cool file..."
         mkdir -p $odir/cool $odir/log
         cool=$odir/cool/$prefix.$binsize_min.cool
-        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $cool >$odir/log/cooler_cload_pairix.log
-        cooler balance -p $ncore $cool >$odir/log/cooler_balance.log
 
-#        for binsize in 25000 50000 100000; do
-#            coolfile=$odir/cool/$prefix.$binsize.cool
-#            cooler cload pairix -p $ncore -s $max_split $gt:$binsize $pair $coolfile >$odir/log/cooler_cload_pairix.$binsize.log
-#            cooler balance -p $ncore $coolfile >$odir/log/cooler_balance.$binsize.log
-#        done
+#        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $cool >$odir/log/cooler_cload_pairix.log
+        hictk load --format 4dn --bin-size $hictk_res $pair $cool --chrom-sizes=$gt >$odir/log/hictk_load.log
+        # multi resolutions and balance .cool file
         run-cool2multirescool.sh -i $cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
+
+        # balancing the original .cool file
+        cooler balance -p $ncore $cool >$odir/log/cooler_balance.log
 
         echo "postprocess finished!"
         echo "Output file: $cool and $odir/cool/$prefix.mcool"
