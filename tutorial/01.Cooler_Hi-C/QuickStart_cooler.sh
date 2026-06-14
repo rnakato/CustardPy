@@ -9,14 +9,13 @@ enzyme=MboI
 gene=refFlat.$build.txt
 fastq_post="_"  # "_" or "_R"
 
-version=3.5.0
+version=3.5.1
 sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.$version.sif"
 
-for cell in Control #siCTCF siRad21 siNIPBL
+for cell in Control siCTCF siRad21 siNIPBL
 do
     # generate .cool and .hic files
     $sing custardpy_cooler -o CustardPyResults_$version -g $gt -f $genome -b $build -e $enzyme -z $fastq_post -i $index_bwa -p $ncore fastq/$cell $cell
-    exit
 
     # downstream analysis of .cool files (eigenvector, insulation score, loop calling, etc.)
     odir=CustardPyResults_$version/Cooler_$build/$cell
@@ -37,5 +36,5 @@ do
     ## (Optional) Juicer analysis (requires GPU, so run separately)
     hic=$odir/hic/contact.bwa.q30.hic
     norm=SCALE
-#    $sing custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
+    $sing custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
 done

@@ -8,15 +8,16 @@ ncore=64
 enzyme=MboI
 gene=refFlat.$build.txt
 fastq_post="_"  # "_" or "_R"
+qthre=10
 
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.0.sif"
-sing_gpu="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.0.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.2.sif"
+sing_gpu="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.2.sif"
 
-for cell in Control #siCTCF siRad21 siNIPBL
+for cell in Control siCTCF siRad21 siNIPBL
 do
     # generate .cool and .hic files
     $sing custardpy_cooler -M chromap -o CustardPyResults_chromap \
-          -g $gt -f $genome -b $build -e $enzyme -z $fastq_post \
+          -g $gt -f $genome -b $build -e $enzyme -z $fastq_post -q $qthre \
           -i $index_chromap -p $ncore fastq/$cell $cell
 
     # downstream analysis of .cool files (eigenvector, insulation score, loop calling, etc.)

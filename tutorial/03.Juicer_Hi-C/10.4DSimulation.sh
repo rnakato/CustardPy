@@ -2,18 +2,21 @@
 
 build=hg38
 
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.2.sif"
 
 cell=Control # siCTCF siRad21
-odir=CustardPyResults/Juicer_$build/$cell
-hic=$odir/aligned/inter_30.hic
+cdir=CustardPyResults/Juicer_$build/$cell
+odir=$cdir/phic
+hic=$cdir/aligned/inter_30.hic
+
 ### In case of starting from .hic files:
 #hic=hic/$cell/GSE196034_${cell}_merged.hic
 
-chr=chr21
+chr=chr21  #chr21
 start=24000000
 end=32000000
-resolution=25000
-norm=SCALE
+resolution=100000
+norm=KR
+#tolerance=0.4
 
-$sing custardpy_phic $odir $hic $chr $start $end $resolution $norm
+$sing custardpy_phic -n $norm $odir $hic $chr $start $end $resolution

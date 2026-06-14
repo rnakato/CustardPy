@@ -128,7 +128,8 @@ echo "Analyzing $fqdir..."
 
 if test "$mapper" = "bwa"; then
     mapping_reads_bwa "$fqdir" "$odir" "$prefix" "$index" "$genome" \
-                      "$ncore" "$postfix1" "$postfix2"
+                      "$ncore" "$postfix1" "$postfix2" \
+                      | tee $logdir/custardpy_mapping_bwa.log
     # Generate .pair file
     parse_pairtools $odir $gt $qthre $restrictionsite $enzymelen $do_restrictionsite_filtering \
         | tee $logdir/custardpy_parse_pairtools.logs
@@ -143,7 +144,8 @@ if test "$mapper" = "bwa"; then
     fi
 elif test "$mapper" = "chromap"; then
     mapping_reads_chromap "$fqdir" "$odir" "$prefix" "$index" "$genome" \
-                          "$ncore" "$postfix1" "$postfix2"
+                          "$ncore" "$postfix1" "$postfix2" "$qthre" \
+                            | tee $logdir/custardpy_mapping_chromap.log
     pair=$odir/pairs/mapped.chromap.q$qthre.rmdup.pairs.gz
 else
     echo "Error: specify mapping tool for mapping reads (-M) [bwa|chromap]."

@@ -96,6 +96,7 @@ mapping_reads_chromap(){
     ncore=$6
     postfix1=$7
     postfix2=$8
+    qthre=$9
 
     if [ ! -d "$dir" ]; then
         echo "Error: $dir does not exist."
@@ -135,10 +136,15 @@ mapping_reads_chromap(){
     logdir=$odir/log
     mkdir -p $pairdir $logdir
     oprefix=mapped.chromap.q$qthre.rmdup
+    command="chromap --preset hic -t $ncore -q $qthre --remove-pcr-duplicates \
+            -x $index_chromap -r $genome \
+            -1 $fq1_list -2 $fq2_list -o $pairdir/$oprefix.pairs \
+            2> $logdir/chromap.q$qthre.rmdup.log"
+    echo $command >$logdir/chromap.q$qthre.rmdup.log
     chromap --preset hic -t $ncore -q $qthre --remove-pcr-duplicates \
             -x $index_chromap -r $genome \
             -1 $fq1_list -2 $fq2_list -o $pairdir/$oprefix.pairs \
-            2> $logdir/chromap.q$qthre.rmdup.log
+            2>> $logdir/chromap.q$qthre.rmdup.log
 
     bgzip -f $pairdir/$oprefix.pairs
     pairix $pairdir/$oprefix.pairs.gz # sanity check

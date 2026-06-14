@@ -1,18 +1,37 @@
 #!/bin/bash
+set -euo pipefail
 
 printHelpAndExit() {
-    echo "Usage: ${0##*/} <outputdir> <hic> <chr> <start> <end> <resolution> <norm>"
-    echo "  <outputdir>: directory where the output files are generaged"
-    echo "  <hic>: .hic file"
+    echo "Usage: ${0##*/} [options] <outputdir> <hic> <chr> <start> <end> <resolution>"
+    echo "  <outputdir>: directory where the PHi-C2 output directory will be created"
+    echo "  <hic>: input Hi-C file (.hic or .mcool)"
     echo "  <chr> <start> <end>: chromosome, start and end positions for simulation"
     echo "  <resolution>: resolution of the matrix"
-    echo "  <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)"
-    echo "  Example:"
-    echo "     ${0##*/} JuicerResults/sample1 JuicerResults/sample1/aligned/inter_30.hic chr21 24000000 32000000 1000000 SCALE"
+    echo -e "\n  Options:"
+    echo "     -n <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE, default: SCALE)"
+    echo "     -t <tolerance>: NaN filtering threshold for phic preprocessing (default: 0.4)"
+    echo "     -f <frame>: Number of framesg (default: 500)"
+    echo -e "\n  Example:"
+    echo "     ${0##*/} CustardPyResults/sample1 contact.hic 21 24000000 32000000 25000"
     exit 0
 }
 
-if [ $# -ne 7 ]; then
+norm="SCALE"
+tolerance=0.4
+frame=500
+
+while getopts "n:t:f:" opt; do
+    case $opt in
+        n) norm=$OPTARG;;
+        t) tolerance=$OPTARG;;
+        f) frame=$OPTARG;;
+        h) printHelpAndExit;;
+        [?]) printHelpAndExit;;
+        esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 6 ]; then
     printHelpAndExit
 fi
 
@@ -22,38 +41,93 @@ chr=$3
 start=$4
 end=$5
 resolution=$6
-norm=$7
+#tolerance=${8:-0.4}
 
-echo "Start 4D simulation by PHi-C..."
-cell=$start-$end
-dir=$odir/4dmodel/$resolution/$chr/
-mkdir -p $dir
-strawMatrixFromHiC.py $hic $dir/$cell.txt $chr --start $start --end $end --dense
-phic preprocessing --input $dir/$cell.txt --res $resolution --plt-max-c 0.1
-#for prefix in C_normalized P_normalized
-#do
-#    convert -define registry:temporary-path="$dir/tmp" $(pwd)/$dir/$cell/$prefix.svg $(pwd)/$dir/$cell/$prefix.png
-#done
-phic optimization --name $dir/$cell
-phic plot-optimization --name $dir/$cell --res $resolution --plt-max-c 0.1 \
-     --plt-max-k-backbone 1.0 --plt-max-k 0.1 --plt-k-dis-bins 200 --plt-max-k-dis 100
-phic dynamics --name $dir/$cell --interval 100 --frame 1000
-phic sampling --name $dir/$cell --sample 1000
+echo "Input:"
+echo "   hic: $hic"
+echo "   chr: $chr"
+echo "   start: $start"
+echo "   end: $end"
+echo "   resolution: $resolution"
+echo "   norm: $norm"
+echo "   tolerance: $tolerance"
+echo -e "   frame: $frame\n"
+
+plt_max_c=0.1
+plt_max_k=0.1
+interval=100
+#frame=500
+sample=500
+filter_findfont_stderr() {
+    grep -Ev "^findfont: .*Arial.*" >&2 || true
+}
+
+ex(){ echo "$1"; eval "$1"; }
+
+originaldir=$(pwd)
+
+mkdir -p "$odir"
+cd "$odir"
+
+hicbase=$(basename "$hic")
+hicbase=${hicbase%.*}
+name="${hicbase}_${norm}_chr${chr}_${start}-${end}_res${resolution}bp"
+
+if [[ "$hic" = /* ]]; then
+    hic_path="$hic"
+else
+    hic_path="$originaldir/$hic"
+fi
+
+echo "Inspect Hi-C file..."
+
+ex "phic fetch-fileinfo --input $hic_path"
+
+echo "Start 4D simulation by PHi-C2..."
+ex "phic preprocessing \
+    --input $hic_path \
+    --res $resolution \
+    --plt-max-c $plt_max_c \
+    --chr $chr \
+    --grs $start \
+    --gre $end \
+    --norm $norm \
+    --tolerance $tolerance \
+    2> >(filter_findfont_stderr)"
+
+ex "phic optimization --name $name"
+ex "phic plot-optimization --name $name --plt-max-c $plt_max_c --plt-max-k $plt_max_k \
+    2> >(filter_findfont_stderr)"
+ex "phic dynamics --name $name --interval $interval --frame $frame"
+ex "phic sampling --name $name --sample $sample"
 echo "done."
 
-echo "Estimate rheology..."
-phic rheology --name $dir/$cell
-phic plot-compliance --name $dir/$cell --plt-upper 0 --plt-lower -3 --plt-max-log 1.3 --plt-min-log -0.3
-phic plot-modulus    --name $dir/$cell --plt-upper 0 --plt-lower -3 --plt-max-log 0.4 --plt-min-log -1.2
-phic plot-tangent    --name $dir/$cell --plt-upper 0 --plt-lower -3 --plt-max-log 0.2
+echo "Estimate dynamics-derived spectra..."
+ex "phic msd --name $name"
+ex "phic plot-msd --name $name --plt-upper 3 --plt-lower 0 --plt-max-log 2.0 --plt-min-log 0.5 --aspect 1.5 \
+    2> >(filter_findfont_stderr)"
+ex "phic losstangent --name $name"
+ex "phic plot-losstangent --name $name --plt-upper 0 --plt-lower -3 --plt-max-log 0.3 --aspect 1.5 \
+    2> >(filter_findfont_stderr)"
 echo "done."
 
 echo "Generate Hi-C map movie..."
-nframe=1000
-N=`echo $start $end $resolution | awk '{printf ("%d",($2-$1)/$3 +1)}'`
-plot_distance_map.py $dir/$cell/data_dynamics/sample0.xyz $N $nframe $dir/$cell/distance_map/
-ffmpeg -framerate 24 -i $dir/$cell/distance_map/frame_%04d.jpg -pix_fmt yuv420p \
-      -c:v libx264 -preset slow -crf 24 -r 24 \
-      -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
-      $dir/$cell/distance_map/movie.mp4
+N=$(( (end - start) / resolution + 1 ))
+ex "plot_distance_map.py $name/data_dynamics/sample0.xyz $N $frame $name/distance_map/ \
+    2> >(filter_findfont_stderr)"
+
+#動画化は未完成
+#if command -v ffmpeg >/dev/null 2>&1; then
+#    # Strip Singularity-injected GPU library paths from LD_LIBRARY_PATH to prevent
+#    # host libs (libOpenCL, libGL) requiring newer GLIBC from being loaded.
+#    _clean_ld=$(echo "${LD_LIBRARY_PATH:-}" | tr ':' '\n' | grep -v '^/.singularity\.d' | paste -sd ':')
+#    LD_LIBRARY_PATH="$_clean_ld" ffmpeg \
+#          -framerate 24 -i "$name/distance_map/frame_%04d.jpg" -pix_fmt yuv420p \
+#          -c:v libx264 -preset slow -crf 24 -r 24 \
+#          -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+#          "$name/distance_map/movie.mp4"
+#else
+#    echo "ffmpeg not found; skipping movie generation."
+#fi
+
 echo "done."
