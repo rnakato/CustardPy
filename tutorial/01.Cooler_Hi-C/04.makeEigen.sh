@@ -3,7 +3,7 @@
 build=hg38
 gt=genometable.$build.txt
 
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.1.1.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/custardpy.3.5.2.sif"
 
 cell=Control
 cool=CustardPyResults/Cooler_$build/$cell/cool/cooler.dedup.q30.multires.cool

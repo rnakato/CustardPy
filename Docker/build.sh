@@ -5,7 +5,7 @@ docker compose -f compose.yaml build custardpy
 #exit
 reponame=custardpy
 tag=3.5.2
-#apptainer build -F /work3/SingularityImages/$reponame.$tag.sif docker-daemon://rnakato/$reponame:$tag
+apptainer build -F /work3/SingularityImages/$reponame.$tag.sif docker-daemon://rnakato/$reponame:$tag
 #exit
 docker push rnakato/$reponame:$tag
 docker tag rnakato/$reponame:$tag rnakato/$reponame:latest

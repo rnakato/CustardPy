@@ -5,6 +5,7 @@
 ### 3.5.2 (2026.6.11)
 - Updated ``custardpy_cooler`` to output the log files for the mapping step.
 - Updated ``phi-c`` from 2.0.13 to v2.2.1. Also, updated ``custardpy_phic`` to use the new version of phi-c.
+- Bug fix in ``Coolerstats.sh``.
 
 ### 3.5.1 (2026.5.29)
 - Change a method to create a ``.cool`` file from a ``.pair`` file from ``cooler cload pairix`` to ``hictk load``
