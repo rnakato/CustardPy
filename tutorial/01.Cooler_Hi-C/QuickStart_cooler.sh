@@ -15,7 +15,8 @@ sing="apptainer exec --nv --bind /work,/work2,/work3 /work/SingularityImages/cus
 for cell in Control siCTCF siRad21 siNIPBL
 do
     # generate .cool and .hic files
-    $sing custardpy_cooler -o CustardPyResults_$version -g $gt -f $genome -b $build -e $enzyme -z $fastq_post -i $index_bwa -p $ncore fastq/$cell $cell
+    $sing custardpy_cooler -o CustardPyResults_$version -g $gt -f $genome \
+        -b $build -e $enzyme -z $fastq_post -i $index_bwa -p $ncore fastq/$cell $cell
 
     # downstream analysis of .cool files (eigenvector, insulation score, loop calling, etc.)
     odir=CustardPyResults_$version/Cooler_$build/$cell
@@ -39,5 +40,5 @@ do
 done
 
 # Stats for all samples
-odir=CustardPyResults/Cooler_$build/
+odir=CustardPyResults_$version/Cooler_$build/
 $sing Coolerstats.sh $odir
