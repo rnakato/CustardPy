@@ -9,7 +9,7 @@ Quickstart
 CustardPy using Docker or Apptainer
 ---------------------------------------------
 
-Since CustardPy is provided as a Docker image, you need to use ``docker`` or ``apptainer`` commands. We recommended to use Apptainer. 
+Since CustardPy is provided as a Docker image, you need to use ``docker`` or ``apptainer`` commands. We recommend using Apptainer. 
 
 The command below is a general example of how to run CustardPy using Docker or Apptainer.
 It will mount the ``/work`` directory of the host machine to the ``/work`` directory of the container.
@@ -44,7 +44,7 @@ The CustardPy docker image includes restriction enzyme files for the following g
    :class: align-center
 
    "**Species**", "**Builds**"
-   "Human", "hg38, hg39, T2T"
+   "Human", "hg19, hg38, T2T"
    "Mouse", "mm10, mm39"
    "Rat",   "rn7"
    "Zebrafish", "danRer11"

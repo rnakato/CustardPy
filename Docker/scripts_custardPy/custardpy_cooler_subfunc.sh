@@ -110,7 +110,7 @@ gen_cool_hic(){
         cool=$odir/cool/$prefix.$binsize_min.cool
 
 #        cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $cool >$odir/log/cooler_cload_pairix.log
-        hictk load --format 4dn --bin-size $hictk_res $pair $cool --chrom-sizes=$gt >$odir/log/hictk_load.log
+        hictk load --force --format 4dn --bin-size $hictk_res $pair $cool --chrom-sizes=$gt >$odir/log/hictk_load.log
         # multi resolutions and balance .cool file
         run-cool2multirescool.sh -i $cool -p $ncore -o $odir/cool/$prefix -u $binsize_multi
 

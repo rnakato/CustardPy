@@ -1,7 +1,7 @@
-3D/4D modeling form Hi-C data
+3D/4D modeling from Hi-C data
 ====================================
 
-**CustardPy** has an advanced command for 3D modeling and 4D simulatuion using the Hi-C matrix.
+**CustardPy** has an advanced command for 3D modeling and 4D simulation using the Hi-C matrix.
 
 
 run-pastis.sh

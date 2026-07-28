@@ -66,7 +66,7 @@ Generate contact data for all samples.
   mkdir -p $outputdir/data
   for cell in $samples
   do
-      hic=CustardPyResults_Hi-C/Juicer_hg38/$cell/aligned/inter_30.hic
+      hic=CustardPyResults/Juicer_hg38/$cell/aligned/inter_30.hic
 
       echo "preparing $cell..."
       for chr in $chrs; do

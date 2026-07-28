@@ -29,7 +29,7 @@ Example:
      resolution=25000
      norm=SCALE
 
-     matrix=CustardPyResults_Hi-C/Juicer_hg38/Control/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz
+     matrix=CustardPyResults/Juicer_hg38/Control/Matrix/intrachromosomal/$resolution/observed.$norm.$chr.matrix.gz
 
      plotHiCMatrix \
           $matrix \
@@ -52,7 +52,7 @@ The input data is a dense matrix output from ``makeMatrix_intra.sh``.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -106,7 +106,7 @@ The input data is a dense matrix output from ``makeMatrix_intra.sh``.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -137,7 +137,7 @@ The first and second samples are visualzed in the upper and bottom triagles, res
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -166,7 +166,7 @@ This command visualize the log-scale frequency of ``sample2/sample1`` and ``samp
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -198,7 +198,7 @@ The input data is a dense matrix output from ``makeMatrix_intra.sh``.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -229,7 +229,7 @@ drawTrianglePair
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -320,7 +320,7 @@ By default, ``plotHiCfeature`` outputs a single insulation score (500 kbp distan
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -364,7 +364,7 @@ The lower and upper sides of the heatmap are 100 kbp to 1 Mbp distances, respect
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -395,7 +395,7 @@ To directory investigate the difference of multi-insulation score, we provide **
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -429,7 +429,7 @@ This plot can be used to explore compartment switching.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -460,7 +460,7 @@ The "left side" and "right side" of a TAD are likely to have positve and negativ
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -498,7 +498,7 @@ This score estimates the inconsistency of relative contact frequence (log scale)
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -527,7 +527,7 @@ drawTriangleRatioMulti
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -559,7 +559,7 @@ This command is useful if you want to do a downstream analysis using the matrice
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -583,7 +583,7 @@ Use ``--anchor`` option to specify the anchor site.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20
@@ -613,7 +613,7 @@ Plot a PC1 value of multiple samples for the whole genome.
 
 .. code-block:: bash
 
-     Resdir=CustardPyResults_Hi-C/Juicer_hg38
+     Resdir=CustardPyResults/Juicer_hg38
      norm=SCALE
      resolution=25000
      chr=chr20

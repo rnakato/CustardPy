@@ -150,6 +150,6 @@ mapping_reads_chromap(){
     pairix $pairdir/$oprefix.pairs.gz # sanity check
 
     echo "mapping finished!"
-    echo "Output file: $pair"
+    echo "Output file: $pairdir/$oprefix.pairs.gz"
 }
 
