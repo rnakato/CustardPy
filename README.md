@@ -56,16 +56,16 @@ This command mounts the `/work` directory.
 
 When calling loops using Juicer HICCUPS, supply ``--nv`` option to allow GPU computation (GPU card needed):
 
-    singularity exec --bind /work custardpy.sif call_HiCCUPS.sh
+    singularity exec --nv --bind /work custardpy.sif call_HiCCUPS.sh
 
 ## 2. Quickstart
 
-    # download Churros/tutorial directory
+    # download CustardPy/tutorial directory
     git clone https://github.com/rnakato/CustardPy.git
-    cd CustardPy/tutorial/Hi-C/
+    cd CustardPy/tutorial/03.Juicer_Hi-C/
 
     # download fastq and genome data and make index
-    bash 00_getdata.sh
+    bash 00.GetData.sh
 
     # Execute Juicer pipeline
     bash QuickStart_juicer.sh

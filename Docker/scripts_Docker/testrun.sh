@@ -69,6 +69,33 @@ check_env() {
     check "$label" run_env.sh "$envname" "$@"
 }
 
+# check_cmd <label> <command>: PASS if the command is on PATH and executable.
+# Used for scripts that do not handle --help and fail on dummy arguments.
+check_cmd() {
+    local p
+    p=$(command -v "$2")
+    if [ -n "$p" ] && [ -x "$p" ]; then
+        echo "[ OK ] $1"
+        npass=$((npass + 1))
+    else
+        echo "[FAIL] $1 (not found on PATH)"
+        failed_checks+=("$1")
+        nfail=$((nfail + 1))
+    fi
+}
+
+# check_path <label> <path>: PASS if the file or directory exists
+check_path() {
+    if [ -e "$2" ]; then
+        echo "[ OK ] $1"
+        npass=$((npass + 1))
+    else
+        echo "[FAIL] $1 ($2 not found)"
+        failed_checks+=("$1")
+        nfail=$((nfail + 1))
+    fi
+}
+
 skip() {
     echo "[SKIP] $1 ($2)"
     nskip=$((nskip + 1))
@@ -82,6 +109,7 @@ check "bowtie2"         bowtie2 --version
 check "chromap"         chromap -h
 check "samtools"        samtools --version
 check "bedtools"        bedtools --version
+check "HiCUP"           hicup --help
 
 # ---------------------------------------------------------------------------
 section "Juicer pipeline"
@@ -91,10 +119,9 @@ check "custardpy_juicer"           custardpy_juicer
 check "juicer_map.sh"              juicer_map.sh
 check "juicer_pigz.sh"             juicer_pigz.sh nonexistent_dir
 check "juicer_unpigz.sh"           juicer_unpigz.sh nonexistent_dir
-check "plot_distance_count.sh"     plot_distance_count.sh dummy nonexistent_dir
+check_cmd "plot_distance_count.sh" plot_distance_count.sh
 check "juicer_callTAD.sh"          juicer_callTAD.sh
 check "makeMatrix_intra.sh"        makeMatrix_intra.sh
-check "makeMatrix_inter.sh"        makeMatrix_inter.sh
 check "makeEigen.sh"               makeEigen.sh
 check "makeInsulationScore.sh"     makeInsulationScore.sh
 check "call_MotifFinder.sh"        call_MotifFinder.sh
@@ -126,6 +153,9 @@ check "custardpy_process_cool"   custardpy_process_cool -h
 check "run-cool2multirescool.sh" run-cool2multirescool.sh
 check "run_fithic.sh"            run_fithic.sh
 check "custardpy_phic"           custardpy_phic -h
+check "custardpy_pastis"         custardpy_pastis
+check "makeEigen_cool.sh"        makeEigen_cool.sh
+check "Coolerstats.sh"           Coolerstats.sh
 
 # ---------------------------------------------------------------------------
 section "custardpy (PyPI) scripts"
@@ -144,24 +174,25 @@ check "getBoundaryfromInsulationScore" getBoundaryfromInsulationScore --help
 check "plotCompartmentGenome"         plotCompartmentGenome --help
 check "plotInsulationScore"           plotInsulationScore --help
 check "plotMultiScaleInsulationScore" plotMultiScaleInsulationScore --help
-check "plotHiCMatrix"                 plotHiCMatrix --help
+check_cmd "plotHiCMatrix"             plotHiCMatrix
 check "plotHiCfeature"                plotHiCfeature --help
 
 # ---------------------------------------------------------------------------
 section "Utility tools (base environment)"
 check "calculate_compartment_strength" calculate_compartment_strength
 check "run_3DChromatin_ReplicateQC.sh" run_3DChromatin_ReplicateQC.sh -h
-check "visualize_QC.py"                visualize_QC.py --help
-check "generate_binlist_from_gtfile.py" generate_binlist_from_gtfile.py --help
+check_cmd "visualize_QC.py"            visualize_QC.py
+check_cmd "generate_binlist_from_gtfile.py" generate_binlist_from_gtfile.py
 check "get_qc.py"                      get_qc.py --help
 check "OnTAD"                          OnTAD
 check "bedToBigBed"                    bedToBigBed
-check "SRAtoolkit (prefetch)"          prefetch --version
-check "genomepy"                       genomepy --help
 check "chess"                          chess --help
 check "mustache"                       mustache --help
 check "chromosight"                    chromosight --help
 check "HOMER (homerTools)"             homerTools
+check "h1d"                            h1d --help
+check "fithic"                         fithic --help
+check "HiCLift"                        python -c 'import importlib.metadata as m; print(m.version("HiCLift"))'
 
 # ---------------------------------------------------------------------------
 section "Virtual environments (micromamba)"
@@ -172,19 +203,32 @@ check "multiqc"                     multiqc --version
 check "hicpro"                      hicpro --help
 check_env "macs2"                   hic-pro macs2 --version
 check "run_fithichip.sh"            run_fithichip.sh FitHiChIP_HiCPro.sh -h
+check_path "ChIA-PIPE (source)"     /opt/ChIA-PIPE
+check_env "ChIA-PIPE env (python2 modules)" chiapipe python -c 'import numpy, Bio, pysam, regex'
+check_env "ChIA-PIPE env (java)"    chiapipe java -version
 
 # ---------------------------------------------------------------------------
 section "R packages"
 check "R"               Rscript --version
 check "R: GENOVA"        Rscript -e 'library(GENOVA)'
 check "R: FIREcaller"    Rscript -e 'library(FIREcaller)'
-check "R: CALDER2"       Rscript -e 'library(CALDER2)'
-check "R: ChIAPoP"       Rscript -e 'library(ChIAPoP)'
+check "R: CALDER2"       Rscript -e 'library(CALDER)'
 check "R: mango"         Rscript -e 'library(mango)'
 check "R: hicrep"        Rscript -e 'library(hicrep)'
 check "R: strawr"        Rscript -e 'library(strawr)'
 check "R: edgeR"         Rscript -e 'library(edgeR)'
 check "R: GenomicRanges" Rscript -e 'library(GenomicRanges)'
+
+# ---------------------------------------------------------------------------
+section "Data files"
+check_path "Cooler restriction sites"  /opt/restriction_sites/Cooler-restriction_sites
+check_path "HiC-Pro restriction sites" /opt/restriction_sites/HiCPro-restriction_sites
+check_path "Juicer restriction sites"  /opt/restriction_sites/Juicer-restriction_sites
+check_path "motif files"               /opt/motiffiles
+check_path "juicer_tools 1.22.01"      /opt/juicer/juicer_tools.1.22.01.jar
+check_path "juicer_tools 1.9.9 (jcuda)" /opt/juicer/juicer_tools.1.9.9_jcuda.0.8.jar
+check_path "juicer_tools 2.20.00"      /opt/juicer/juicer_tools.2.20.00.jar
+check_path "Juicebox.jar"              /opt/Juicebox.jar
 
 # ---------------------------------------------------------------------------
 echo

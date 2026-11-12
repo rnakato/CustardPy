@@ -1,6 +1,13 @@
-# Changelog
+kaete# Changelog
 
 ## CustardPy
+
+### 3.6.1 (2026.11.12)
+- Bug fix in ``makeEigen.sh`` where the normalization type was fixed to ``SCALE`` when merging the compartment ``.bed`` files of all chromosomes.
+- Bug fix in ``makeEigen_cool.sh`` where the genome-wide compartment ``.bed`` files (``PC1.cis.genome.*.bed``) were not generated due to a wrong file name pattern.
+- Bug fix in ``custardpy_juicer`` where the ``-r`` option was not passed to ``custardpy_process_hic``.
+- Bug fix in ``custardpy_process_hic`` where the ``-p`` option was not passed to ``juicer_callTAD.sh``.
+- Bug fix where ``h1d`` (used in ``makeEigen.sh``) failed with an ImportError due to ``statsmodels`` 0.15. ``statsmodels`` is now pinned to ``<0.15``.
 
 ### 3.6.0 (2026.9.19)
 - Added [ChIA-PIPE](https://github.com/TheJacksonLaboratory/ChIA-PIPE)

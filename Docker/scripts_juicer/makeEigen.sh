@@ -114,7 +114,7 @@ echo ${chrlist[@]} | tr ' ' '\n' | xargs -n1 -I {} -P $ncore bash -c "func {} $d
 
 for str in A B All StrongA WeakA WeakB StrongB
 do
-    if find $dir -maxdepth 1 -name "Compartment.SCALE.chr*.$str.bed" | read; then
+    if find $dir -maxdepth 1 -name "Compartment.$norm.chr*.$str.bed" | read; then
         cat $dir/Compartment.$norm.chr*.$str.bed > $dir/Compartment.$norm.genome.$str.bed
     fi
 

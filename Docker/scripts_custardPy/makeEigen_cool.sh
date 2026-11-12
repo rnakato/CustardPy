@@ -106,7 +106,7 @@ echo ${chrlist[@]} | tr ' ' '\n' | xargs -n1 -I {} -P $ncore bash -c "getCompart
 
 for str in A B All StrongA WeakA WeakB StrongB
 do
-    if find $odir -maxdepth 1 -name "Compartment.SCALE.chr*.$str.bed" | read; then
+    if find $odir -maxdepth 1 -name "PC1.cis.chr*.$str.bed" | read; then
         cat $odir/PC1.cis.chr*.$str.bed > $odir/PC1.cis.genome.$str.bed
     fi
     rm $odir/PC1.cis.chr*.$str.bed

@@ -87,7 +87,7 @@ done
 
 # TAD
 echo "call TAD..."
-ex "juicer_callTAD.sh $useversion $norm $odir $hic $gt"
+ex "juicer_callTAD.sh $useversion -p $ncore $norm $odir $hic $gt"
 
 # Loop
 echo "call loops..."

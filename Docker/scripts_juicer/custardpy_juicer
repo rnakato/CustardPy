@@ -119,7 +119,7 @@ ex "plot_distance_count.sh $label $odir"
 hic=$odir/aligned/inter_30.hic
 
 if test "$gene" = ""; then
-    custardpy_process_hic -p $ncore -n $norm -g $gt $hic $odir
+    custardpy_process_hic -p $ncore -n $norm -r "$resolutions" -g $gt $hic $odir
 else
-    custardpy_process_hic -p $ncore -n $norm -g $gt -a $gene $hic $odir
+    custardpy_process_hic -p $ncore -n $norm -r "$resolutions" -g $gt -a $gene $hic $odir
 fi

@@ -1,4 +1,4 @@
-FROM rnakato/custardpy_juicer:3.5.3 AS base
+FROM rnakato/custardpy_juicer:3.6.1 AS base
 LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 # For sorting, LC_ALL is C

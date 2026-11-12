@@ -1,10 +1,10 @@
 #docker compose -f compose.yaml build r
 #docker compose -f compose.yaml build juicer
-docker compose -f compose.yaml build custardpy #--no-cache
+#docker compose -f compose.yaml build custardpy #--no-cache
 
-exit
+#exit
 reponame=custardpy
-tag=3.6.0
+tag=3.6.1
 apptainer build -F /work3/SingularityImages/$reponame.$tag.sif docker-daemon://rnakato/$reponame:$tag
 exit
 docker push rnakato/$reponame:$tag

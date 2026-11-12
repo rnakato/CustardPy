@@ -11,7 +11,7 @@ function usage()
     echo '      -f genome: Genome file' 1>&2
 #    echo '      -p pair: .pair file (for fithic)' 1>&2
     echo '      -r resolutions : Resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
-    echo '      -s resolutions : Resolutions for loop calling (default: "5000 10000 250000", should be quoted and separated by spaces)' 1>&2
+    echo '      -s resolutions : Resolutions for loop calling (default: "5000 10000 25000", should be quoted and separated by spaces)' 1>&2
     echo '      -t ncore: Number of CPUs (default: 32)' 1>&2
     echo '      -o: Use older version of juicer_tools.jar for old .hic files (juicer_tools.1.9.9_jcuda.0.8.jar, default: juicer_tools.1.22.01.jar)' 1>&2
     echo '      -a: Use juicer_tools.jar version 3 (takes precedence over -o)' 1>&2
@@ -22,7 +22,6 @@ function usage()
 gt=""
 ncore=32
 
-norm="SCALE"
 resolutions="25000 50000 100000"
 resolutions_loops="5000 10000 25000"
 genome=""
